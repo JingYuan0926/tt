@@ -1,5 +1,14 @@
 import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +34,24 @@ export default function Home() {
           height={38}
           priority
         />
+
+        {/* shadcn/ui Demo Section */}
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>shadcn/ui Demo</CardTitle>
+            <CardDescription>
+              Beautiful components built with Radix UI and Tailwind CSS.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Input placeholder="Enter your email..." />
+            <div className="flex gap-2">
+              <Button>Primary Button</Button>
+              <Button variant="outline">Outline Button</Button>
+            </div>
+          </CardContent>
+        </Card>
+
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2">
             Get started by editing{" "}
@@ -34,6 +61,10 @@ export default function Home() {
             .
           </li>
           <li>Save and see your changes instantly.</li>
+          <li className="mb-2">
+            <strong>shadcn/ui components are now available!</strong> Check out
+            the demo above.
+          </li>
         </ol>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
