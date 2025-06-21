@@ -4,6 +4,7 @@ import NewsHeader from '../components/NewsHeader';
 import SearchBar from '../components/SearchBar';
 import CategoryFilter from '../components/CategoryFilter';
 import NewspaperLayout from '../components/NewspaperLayout';
+import Footer from '../components/Footer';
 import newsData from '../data/news.json';
 
 const NewsPage = () => {
@@ -53,6 +54,8 @@ const NewsPage = () => {
           <NewspaperLayout articles={filteredArticles} />
         </motion.div>
       </div>
+      
+      <Footer />
     </div>
   );
 };
