@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const NewspaperLayout = ({ articles }) => {
   const [columns, setColumns] = useState(3);
@@ -188,28 +190,30 @@ const NewspaperLayout = ({ articles }) => {
     );
 
     return (
-      <motion.article 
-        className={`${getMarginBottom(article.size)} p-4 border-b border-gray-400 break-inside-avoid group cursor-pointer`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: (article.originalIndex || index) * 0.1 }}
-      >
-        {/* Category tag */}
-        <div className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3 pb-2 border-b border-gray-300">
-          {article.category}
-        </div>
-        
-        {renderContent()}
-        
-        {/* Date */}
-        <div className="text-xs text-gray-500 mt-3 pt-2 border-t border-gray-200">
-          {new Date(article.date).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          })}
-        </div>
-      </motion.article>
+      <Link href={`/details?id=${article.id}`} passHref>
+        <motion.article 
+          className={`${getMarginBottom(article.size)} p-4 border-b border-gray-400 break-inside-avoid group cursor-pointer hover:bg-gray-50 transition-colors duration-200`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: (article.originalIndex || index) * 0.1 }}
+        >
+          {/* Category tag */}
+          <div className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3 pb-2 border-b border-gray-300">
+            {article.category}
+          </div>
+          
+          {renderContent()}
+          
+          {/* Date */}
+          <div className="text-xs text-gray-500 mt-3 pt-2 border-t border-gray-200">
+            {new Date(article.date).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            })}
+          </div>
+        </motion.article>
+      </Link>
     );
   };
 

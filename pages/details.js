@@ -1,19 +1,61 @@
 import React from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
 import { Button, Chip, Divider, Avatar, Textarea } from "@heroui/react";
 import { ArrowLeftIcon, ShareIcon, BookmarkIcon, HeartIcon, ChatBubbleLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { CheckCircleIcon, CpuChipIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
+import newsData from '../data/news.json';
 
 export default function Details() {
+  const router = useRouter();
+  const { id } = router.query;
+  
+  // Find the article by ID
+  const article = newsData.find(item => item.id === id);
+  
+  // If article not found, show loading or error
+  if (!article && id) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Article not found</h1>
+          <Link href="/news">
+            <Button color="primary">Back to News</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+  
+  // Show loading state while router is loading
+  if (!id) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading article...</p>
+        </div>
+      </div>
+    );
+  }
+
   const [isLiked, setIsLiked] = React.useState(false);
   const [isBookmarked, setIsBookmarked] = React.useState(false);
   const [isCommentsSidebarOpen, setIsCommentsSidebarOpen] = React.useState(false);
   const [newComment, setNewComment] = React.useState('');
 
-  // Sample comments data
-  const [comments, setComments] = React.useState([
+  // Use comments from the article data, or fall back to sample comments
+  const [comments, setComments] = React.useState(article?.comments?.map(comment => ({
+    id: comment.id,
+    author: comment.user,
+    avatar: `https://images.unsplash.com/photo-150${Math.floor(Math.random() * 9) + 1}003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=150&q=80`,
+    time: new Date(comment.timestamp).toLocaleDateString(),
+    content: comment.content,
+    likes: comment.vote?.upvotes || 0
+  })) || [
     {
       id: 1,
       author: "John Mitchell",
@@ -73,12 +115,24 @@ export default function Details() {
 
       <main className="bg-white relative">
         {/* Comments Sidebar */}
-        <div className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
-          isCommentsSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}>
+        <motion.div 
+          className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
+            isCommentsSidebarOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+          initial={false}
+          animate={{
+            x: isCommentsSidebarOpen ? 0 : '100%'
+          }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+        >
           <div className="h-full flex flex-col">
             {/* Sidebar Header */}
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+            <motion.div 
+              className="p-6 border-b border-gray-200 flex items-center justify-between"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
               <div className="flex items-center gap-2">
                 <ChatBubbleLeftIcon className="w-6 h-6 text-gray-700" />
                 <h2 className="text-xl font-bold text-gray-900">Comments ({comments.length})</h2>
@@ -92,10 +146,15 @@ export default function Details() {
               >
                 <XMarkIcon className="w-5 h-5" />
               </Button>
-            </div>
+            </motion.div>
 
             {/* Add Comment Section */}
-            <div className="p-6 border-b border-gray-200">
+            <motion.div 
+              className="p-6 border-b border-gray-200"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
               <Textarea
                 placeholder="Share your thoughts on this article..."
                 value={newComment}
@@ -111,12 +170,18 @@ export default function Details() {
               >
                 Post Comment
               </Button>
-            </div>
+            </motion.div>
 
             {/* Comments List */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              {comments.map((comment) => (
-                <div key={comment.id} className="flex gap-3">
+              {comments.map((comment, index) => (
+                <motion.div 
+                  key={comment.id} 
+                  className="flex gap-3"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: 0.3 + (index * 0.1) }}
+                >
                   <Avatar
                     src={comment.avatar}
                     alt={comment.author}
@@ -139,11 +204,11 @@ export default function Details() {
                       </button>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Overlay */}
         {isCommentsSidebarOpen && (
@@ -154,7 +219,12 @@ export default function Details() {
         )}
 
         {/* Comments Button - Fixed Position */}
-        <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-30">
+        <motion.div 
+          className="fixed right-6 top-1/2 transform -translate-y-1/2 z-30"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 1.8 }}
+        >
           <Button
             color="primary"
             variant="shadow"
@@ -168,18 +238,37 @@ export default function Details() {
               {comments.length}
             </Chip>
           </Button>
-        </div>
+        </motion.div>
 
         {/* Article Header */}
-        <article className="max-w-4xl mx-auto px-6 pb-12 pt-24">
+        <motion.article 
+          className="max-w-4xl mx-auto px-6 pb-12 pt-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          {/* Navigation */}
+          <div className="mb-6">
+            <Link href="/news">
+              <Button 
+                variant="light" 
+                size="sm" 
+                startContent={<ArrowLeftIcon className="w-4 h-4" />}
+                className="text-gray-600 hover:text-gray-900"
+              >
+                Back to News
+              </Button>
+            </Link>
+          </div>
+
           {/* Main Title */}
           <h1 className="text-4xl md:text-5xl font-bold text-black leading-tight mb-6">
-            The Future of Tea Culture: How Modern Brewing Techniques Are Revolutionizing Ancient Traditions
+            {article.title}
           </h1>
 
           {/* Subtitle/Description */}
           <p className="text-xl text-gray-700 leading-relaxed mb-8 font-light">
-            From precision temperature control to AI-powered steeping algorithms, technology is transforming how we experience tea. But are we losing the soul of this ancient practice in our quest for the perfect cup?
+            {article.description}
           </p>
 
           {/* Horizontal line and verification badges */}
@@ -189,12 +278,12 @@ export default function Details() {
               <div className="flex items-center gap-2">
                 <CheckCircleIcon className="w-5 h-5 text-green-500" />
                 <Chip 
-                  color="success" 
+                  color={article.verification_status ? "success" : "warning"} 
                   variant="flat" 
                   size="sm"
-                  className="text-green-700 bg-green-50"
+                  className={article.verification_status ? "text-green-700 bg-green-50" : "text-yellow-700 bg-yellow-50"}
                 >
-                  Verified
+                  {article.verification_status ? "Verified" : "Pending Verification"}
                 </Chip>
               </div>
               <div className="flex items-center gap-2">
@@ -205,40 +294,61 @@ export default function Details() {
                   size="sm"
                   className="text-blue-700 bg-blue-50"
                 >
-                  High AI Score
+                  AI Score: {Math.round(article.ai_score * 100)}%
                 </Chip>
               </div>
             </div>
           </div>
 
           {/* Hero Image */}
-          <div className="mb-8">
-            <img 
-              src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2141&q=80"
-              alt="Modern tea brewing setup with traditional elements"
-              className="w-full h-[400px] md:h-[500px] object-cover rounded-lg shadow-lg"
-            />
-            <p className="text-sm text-gray-500 mt-2 italic">
-              A modern tea ceremony combines traditional techniques with precision brewing technology. Credit: Tea Masters International
-            </p>
-          </div>
+          {article.imageurl && article.imageurl.length > 0 && (
+            <motion.div 
+              className="mb-8"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <img 
+                src={article.imageurl[0]}
+                alt={article.title}
+                className="w-full h-[400px] md:h-[500px] object-cover rounded-lg shadow-lg"
+                onError={(e) => {
+                  e.target.src = 'https://via.placeholder.com/800x500/f3f4f6/6b7280?text=Image+Not+Available';
+                }}
+              />
+              <p className="text-sm text-gray-500 mt-2 italic">
+                {article.title} - Category: {article.category}
+              </p>
+            </motion.div>
+          )}
 
-          {/* Article Meta Information */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 border-b border-gray-200">
+          {/* Article Meta */}
+          <motion.div 
+            className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 pb-6 border-b border-gray-200"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
             <div className="flex items-center mb-4 md:mb-0">
               <Avatar 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=150&q=80"
-                alt="Author"
+                src={`https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=150&q=80`}
+                alt="News Author"
                 className="mr-3"
                 size="md"
               />
               <div>
-                <p className="font-semibold text-black">Sarah Chen</p>
-                <p className="text-sm text-gray-600">Tea Culture Correspondent</p>
-                <p className="text-sm text-gray-500">Published March 15, 2024 • 8 min read</p>
+                <p className="font-semibold text-black">News Team</p>
+                <p className="text-sm text-gray-600">{article.category} Correspondent</p>
+                <p className="text-sm text-gray-500">
+                  Published {new Date(article.date).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })} • 5 min read
+                </p>
               </div>
             </div>
-            
+
             {/* Action Buttons */}
             <div className="flex items-center gap-3">
               <Button
@@ -246,146 +356,134 @@ export default function Details() {
                 variant="light"
                 size="sm"
                 onClick={() => setIsLiked(!isLiked)}
-                className="text-gray-600 hover:text-red-500"
+                className={isLiked ? "text-red-500" : "text-gray-500"}
               >
-                {isLiked ? (
-                  <HeartSolidIcon className="w-5 h-5 text-red-500" />
-                ) : (
-                  <HeartIcon className="w-5 h-5" />
-                )}
+                {isLiked ? <HeartSolidIcon className="w-5 h-5" /> : <HeartIcon className="w-5 h-5" />}
               </Button>
               <Button
                 isIconOnly
                 variant="light"
                 size="sm"
                 onClick={() => setIsBookmarked(!isBookmarked)}
-                className="text-gray-600 hover:text-blue-500"
+                className={isBookmarked ? "text-blue-500" : "text-gray-500"}
               >
-                <BookmarkIcon className={`w-5 h-5 ${isBookmarked ? 'fill-blue-500 text-blue-500' : ''}`} />
+                <BookmarkIcon className="w-5 h-5" />
               </Button>
               <Button
                 isIconOnly
                 variant="light"
                 size="sm"
-                className="text-gray-600 hover:text-green-500"
+                className="text-gray-500"
               >
                 <ShareIcon className="w-5 h-5" />
               </Button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Article Content */}
-          <div className="prose prose-lg max-w-none">
+          <motion.div 
+            className="prose prose-lg max-w-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+          >
             <p className="text-lg leading-relaxed mb-6 text-gray-800">
-              In a small tea house tucked away in the mountains of Fujian Province, Master Liu Wei performs a ritual that has remained unchanged for centuries. His weathered hands move with practiced precision as he rinses the clay teapot with hot water, measures out leaves of aged oolong, and begins the first of many careful infusions.
+              {article.description}
             </p>
+            
+            {/* Additional Images */}
+            {article.imageurl && article.imageurl.length > 1 && (
+              <div className="my-10 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {article.imageurl.slice(1).map((img, index) => (
+                  <motion.img 
+                    key={index}
+                    src={img}
+                    alt={`${article.title} - Image ${index + 2}`}
+                    className="w-full h-[250px] object-cover rounded-lg shadow-md"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 1.0 + (index * 0.1) }}
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/400x250/f3f4f6/6b7280?text=Image+Not+Available';
+                    }}
+                  />
+                ))}
+              </div>
+            )}
 
-            <p className="text-lg leading-relaxed mb-6 text-gray-800">
-              But step into any modern specialty tea shop in New York, London, or Tokyo, and you'll encounter a very different scene. Digital thermometers ensure water reaches exactly 185°F. Precision scales measure tea to the gram. Some establishments even employ AI algorithms to determine optimal steeping times based on humidity, altitude, and dozens of other variables.
-            </p>
-
-            <h2 className="text-2xl font-bold mt-10 mb-6 text-black">The Technology Revolution</h2>
-
-            <p className="text-lg leading-relaxed mb-6 text-gray-800">
-              This technological transformation of tea culture represents more than just gadgetry—it's a fundamental shift in how we approach one of humanity's oldest beverages. Companies like TeaBot and Precision Leaf have raised millions in venture capital to develop smart brewing systems that promise to eliminate human error from the tea-making process.
-            </p>
-
-            <blockquote className="border-l-4 border-blue-500 pl-6 my-8 italic text-xl text-gray-700">
-              "We're not trying to replace the tea master," explains Dr. Jennifer Park, founder of Precision Leaf. "We're trying to democratize their knowledge. Why should a perfect cup of tea require decades of training?"
-            </blockquote>
-
-            <p className="text-lg leading-relaxed mb-6 text-gray-800">
-              The numbers seem to support this technological enthusiasm. Sales of premium tea equipment have grown 340% over the past five years, while traditional tea ceremony classes have seen enrollment drop by nearly half in major metropolitan areas.
-            </p>
-
-            {/* Embedded Image */}
-            <div className="my-10">
-              <img 
-                src="https://images.unsplash.com/photo-1571934811356-5cc061b6821f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2067&q=80"
-                alt="Traditional tea ceremony"
-                className="w-full h-[300px] object-cover rounded-lg shadow-md"
-              />
-              <p className="text-sm text-gray-500 mt-2 italic">
-                Traditional tea ceremonies emphasize mindfulness and ritual over precision. Credit: Ancient Arts Foundation
-              </p>
-            </div>
-
-            <h2 className="text-2xl font-bold mt-10 mb-6 text-black">The Pushback from Traditionalists</h2>
-
-            <p className="text-lg leading-relaxed mb-6 text-gray-800">
-              Not everyone is embracing this digital revolution. Master Liu Wei, who has been practicing tea ceremony for over 40 years, believes something essential is being lost in translation.
-            </p>
-
-            <p className="text-lg leading-relaxed mb-6 text-gray-800">
-              "Tea is not just about the perfect temperature or the exact steeping time," he explains through a translator. "It's about the relationship between the person, the tea, and the moment. When you remove the human element, you remove the soul."
-            </p>
-
-            <p className="text-lg leading-relaxed mb-6 text-gray-800">
-              This sentiment is echoed by tea masters across Asia, who argue that the imperfections and variations in traditional brewing methods are not flaws to be corrected, but features that make each cup unique and meaningful.
-            </p>
-
-            <h2 className="text-2xl font-bold mt-10 mb-6 text-black">Finding Middle Ground</h2>
-
-            <p className="text-lg leading-relaxed mb-6 text-gray-800">
-              Perhaps the future of tea culture lies not in choosing between tradition and technology, but in finding ways to blend both approaches. Some tea houses are experimenting with hybrid models that use technology to enhance rather than replace traditional methods.
-            </p>
-
-            <p className="text-lg leading-relaxed mb-6 text-gray-800">
-              At the Tea Innovation Lab in San Francisco, researchers are developing tools that can measure the subtle chemical changes that occur during brewing, providing real-time feedback to help practitioners refine their traditional techniques rather than replace them entirely.
-            </p>
-
-            <p className="text-lg leading-relaxed mb-8 text-gray-800">
-              As we stand at this crossroads between ancient wisdom and modern innovation, one thing remains clear: our relationship with tea continues to evolve. Whether that evolution preserves the meditative, ritualistic aspects that have made tea culture so enduring, or transforms it into something entirely new, remains to be seen.
-            </p>
+            {/* External Links */}
+            {article.link && article.link.length > 0 && (
+              <motion.div 
+                className="my-8 p-4 bg-blue-50 rounded-lg"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.2 }}
+              >
+                <h3 className="font-semibold text-blue-900 mb-3">Related Links:</h3>
+                <ul className="space-y-2">
+                  {article.link.map((link, index) => (
+                    <li key={index}>
+                      <a 
+                        href={link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
 
             <Divider className="my-8" />
 
-            {/* Author Bio */}
-            <div className="bg-gray-50 rounded-lg p-6 mt-8">
+            {/* Author Bio Section - Simplified since we don't have author data */}
+            <motion.div 
+              className="bg-gray-50 rounded-lg p-6 mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.4 }}
+            >
               <div className="flex items-start gap-4">
                 <Avatar 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=150&q=80"
-                  alt="Sarah Chen"
+                  src={`https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=150&q=80`}
+                  alt="News Team"
                   size="lg"
                 />
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Sarah Chen</h3>
+                  <h3 className="font-bold text-lg mb-2">About Our News Team</h3>
                   <p className="text-gray-700 mb-2">
-                    Sarah Chen is Tea Time's culture correspondent, covering the intersection of tradition and innovation in beverage culture. She has written extensively about tea ceremonies across Asia and holds a certification from the International Tea Masters Association.
+                    Our dedicated news team covers the latest developments in {article.category.toLowerCase()} 
+                    and other important topics, bringing you verified and timely information.
                   </p>
                   <p className="text-sm text-gray-600">
-                    Follow her work at @sarahchentea
+                    Follow our coverage for more updates
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Related Articles */}
-            <div className="mt-12 pt-8 border-t border-gray-200">
-              <h3 className="text-xl font-bold mb-6">Related Articles</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <img 
-                    src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?ixlib=rb-4.0.3&w=300&q=80"
-                    alt="Related article"
-                    className="w-full h-32 object-cover rounded mb-3"
-                  />
-                  <h4 className="font-semibold mb-2">The Rise of Bubble Tea: A Cultural Phenomenon</h4>
-                  <p className="text-sm text-gray-600">How a Taiwanese invention became a global sensation...</p>
-                </div>
-                <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <img 
-                    src="https://images.unsplash.com/photo-1597318281675-7a350d8b1c4d?ixlib=rb-4.0.3&w=300&q=80"
-                    alt="Related article"
-                    className="w-full h-32 object-cover rounded mb-3"
-                  />
-                  <h4 className="font-semibold mb-2">Sustainable Tea Farming in the Climate Crisis</h4>
-                  <p className="text-sm text-gray-600">How tea farmers are adapting to changing weather patterns...</p>
-                </div>
+            {/* Related Articles - Simplified since we don't have related articles data */}
+            <motion.div 
+              className="border-t pt-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.6 }}
+            >
+              <h3 className="text-xl font-bold mb-6">More in {article.category}</h3>
+              <div className="text-center py-8">
+                <p className="text-gray-600 mb-4">Discover more articles in this category</p>
+                <Link href="/news">
+                  <Button color="primary" variant="flat">
+                    Browse All News
+                  </Button>
+                </Link>
               </div>
-            </div>
-          </div>
-        </article>
+            </motion.div>
+          </motion.div>
+        </motion.article>
       </main>
     </div>
   );
