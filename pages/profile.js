@@ -4,8 +4,6 @@ import { Inter } from "next/font/google";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,52 +12,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { ErrorModal } from "@/components/ui/modal";
 import userData from '../data/users.json';
+
+// Import modular components
+import LoginComponent from '@/components/auth/LoginComponent';
+import SignupComponent from '@/components/auth/SignupComponent';
+import KycFormComponent from '@/components/auth/KycFormComponent';
 
 // Configure Inter font
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
-});
-
-// Validation schema for regular signin
-const signinSchema = z.object({
-  username: z.string().min(1, {
-    message: "Username is required.",
-  }),
-  password: z.string().min(1, {
-    message: "Password is required.",
-  }),
-});
-
-// Validation schema for Gmail input (OTP flow step 1)
-const gmailSchema = z.object({
-  gmail: z.string()
-    .min(1, { message: "Email is required." })
-    .email({ message: "Please enter a valid Gmail address." })
-    .refine((email) => email.endsWith('@gmail.com'), {
-      message: "Please enter a valid Gmail address.",
-    }),
-});
-
-// Validation schema for OTP verification (OTP flow step 2)
-const otpSchema = z.object({
-  otp: z.string()
-    .min(6, { message: "OTP must be 6 digits." })
-    .max(6, { message: "OTP must be 6 digits." })
-    .regex(/^\d+$/, { message: "OTP must contain only numbers." }),
 });
 
 // Validation schema for signup using Zod
@@ -92,27 +56,20 @@ const signupSchema = z.object({
 });
 
 const ProfilePage = () => {
-  const router = useRouter();
   // Get the first user from the data
   const user = userData[0];
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [authMode, setAuthMode] = useState('signin'); // 'signin' or 'signup'
 
-  // Signin form states (copied from signin.js)
+  // Form states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   
-  // OTP flow states
-  const [signinMode, setSigninMode] = useState('regular');
-  const [userGmail, setUserGmail] = useState('');
-
-  // Signup states (copied from signup.js)
+  // Signup form states
   const [currentStep, setCurrentStep] = useState(1);
-  const [kycFile, setKycFile] = useState(null);
-  const [isProcessingIC, setIsProcessingIC] = useState(false);
   
   // Modal states
   const [errorModal, setErrorModal] = useState({
@@ -123,8 +80,6 @@ const ProfilePage = () => {
   });
   const [successModal, setSuccessModal] = useState(false);
   const [successModalTitle, setSuccessModalTitle] = useState('Sign In Successful');
-  const [checkDetailsModal, setCheckDetailsModal] = useState(false);
-  const [isCheckDetailsModalVisible, setIsCheckDetailsModalVisible] = useState(false);
 
   // LocalStorage functions
   const saveUserToLocalStorage = (userData) => {
@@ -172,7 +127,7 @@ const ProfilePage = () => {
     });
   };
 
-  const showSuccessModal = (title = 'Sign In Successful!') => {
+  const showSuccessModal = (title = 'Success!') => {
     setSuccessModalTitle(title);
     setSuccessModal(true);
     setIsModalVisible(true);
@@ -189,37 +144,7 @@ const ProfilePage = () => {
     }, 150);
   };
 
-  const closeCheckDetailsModal = () => {
-    setIsCheckDetailsModalVisible(false);
-    setTimeout(() => {
-      setCheckDetailsModal(false);
-    }, 150);
-  };
-
-  // Initialize forms with react-hook-form and Zod validation
-  const regularForm = useForm({
-    resolver: zodResolver(signinSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-
-  const gmailForm = useForm({
-    resolver: zodResolver(gmailSchema),
-    defaultValues: {
-      gmail: "",
-    },
-  });
-
-  const otpForm = useForm({
-    resolver: zodResolver(otpSchema),
-    defaultValues: {
-      otp: "",
-    },
-  });
-
-  // Signup form initialization
+  // Initialize signup form
   const signupForm = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -239,46 +164,42 @@ const ProfilePage = () => {
     },
   });
 
-  // Handle switching between signin and signup modes
-  const handleSwitchToSignup = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setAuthMode('signup');
-      setCurrentStep(1);
-      regularForm.reset();
-      gmailForm.reset();
-      otpForm.reset();
-      setSigninMode('regular');
-      setUserGmail('');
-      setIsTransitioning(false);
-    }, 150);
-  };
-
-  const handleSwitchToSignin = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setAuthMode('signin');
-      setCurrentStep(1);
-      signupForm.reset();
-      setKycFile(null);
-      setIsTransitioning(false);
-    }, 150);
-  };
-
   const handleLogout = () => {
     setIsLoggedIn(false);
     setCurrentUser(null);
     clearUserFromLocalStorage();
     // Reset all forms when logging out
-    regularForm.reset();
-    gmailForm.reset();
-    otpForm.reset();
     signupForm.reset();
-    setSigninMode('regular');
     setAuthMode('signin');
     setCurrentStep(1);
-    setUserGmail('');
-    setKycFile(null);
+  };
+
+  // Handle login from LoginComponent
+  const handleLogin = (authenticatedUser) => {
+    saveUserToLocalStorage(authenticatedUser);
+    setCurrentUser(authenticatedUser);
+    setIsLoggedIn(true);
+  };
+
+  // Switch between signin and signup modes
+  const switchToSignup = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setAuthMode('signup');
+      setCurrentStep(1);
+      signupForm.reset();
+      setIsTransitioning(false);
+    }, 150);
+  };
+
+  const switchToSignin = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setAuthMode('signin');
+      setCurrentStep(1);
+      signupForm.reset();
+      setIsTransitioning(false);
+    }, 150);
   };
 
   // Page load animation effect
@@ -290,431 +211,130 @@ const ProfilePage = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle regular signin submission
-  const onRegularSubmit = async (values) => {
-    setIsSubmitting(true);
-    
-    try {
-      // Simulate authentication process
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // For demo purposes, use the first user from userData
-      // In a real app, you'd validate credentials against a backend
-      const authenticatedUser = {
-        ...user,
-        username: values.username,
-        loginMethod: 'regular',
-        loginTime: new Date().toISOString()
-      };
-
-      // Save to localStorage and update state
-      saveUserToLocalStorage(authenticatedUser);
-      setCurrentUser(authenticatedUser);
-      setIsLoggedIn(true);
-      
-      showSuccessModal();
-      regularForm.reset();
-      
-    } catch (error) {
-      console.error('Sign in error:', error);
-      
-      showErrorModal(
-        'Sign In Failed',
-        error.message || 'Invalid username or password. Please try again.',
-        [
-          'Check your username and password',
-          'Make sure Caps Lock is not enabled',
-          'Contact support if you continue to have issues'
-        ]
-      );
-    } finally {
-      setIsSubmitting(false);
+  // Handle step navigation with smooth transitions for signup
+  const nextStep = async () => {
+    if (currentStep === 1) {
+      const stepFields = ['username', 'email', 'password', 'confirmPassword'];
+      const isValid = await signupForm.trigger(stepFields);
+      if (isValid) {
+        setIsTransitioning(true);
+        setTimeout(() => {
+          setCurrentStep(2);
+          setIsTransitioning(false);
+        }, 150);
+      }
+    } else if (currentStep === 2) {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentStep(3);
+        setIsTransitioning(false);
+      }, 150);
     }
   };
 
-  // Handle switching to OTP signin mode
-  const handleOtpSigninClick = () => {
+  const prevStep = () => {
     setIsTransitioning(true);
     setTimeout(() => {
-      setSigninMode('otp-gmail');
-      regularForm.reset();
+      setCurrentStep(currentStep - 1);
       setIsTransitioning(false);
     }, 150);
   };
 
-  // Handle back button clicks
-  const handleBackToRegular = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setSigninMode('regular');
-      gmailForm.reset();
-      otpForm.reset();
-      setUserGmail('');
-      setIsTransitioning(false);
-    }, 150);
-  };
-
-  const handleBackToGmail = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setSigninMode('otp-gmail');
-      otpForm.reset();
-      setIsTransitioning(false);
-    }, 150);
-  };
-
-  // Handle Gmail submission (send OTP)
-  const onGmailSubmit = async (values) => {
-    setIsSubmitting(true);
-    
+  // Save account data to JSON file
+  const saveAccountToJSON = async (accountData) => {
     try {
-      const response = await fetch('/api/send-otp', {
+      const response = await fetch('/api/save-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          gmail: values.gmail
-        }),
+        body: JSON.stringify(accountData),
       });
-
+      
       const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Failed to send OTP');
+      
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to save user');
       }
       
-      setUserGmail(values.gmail);
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setSigninMode('otp-verify');
-        setIsTransitioning(false);
-      }, 150);
-      
-      showSuccessModal('OTP Sent Successfully!');
-      
+      return result.user;
     } catch (error) {
-      console.error('Send OTP error:', error);
-      
-      showErrorModal(
-        'Failed to Send OTP',
-        error.message || 'Unable to send OTP. Please try again.',
-        [
-          'Check your internet connection',
-          'Verify your Gmail address is correct',
-          'Make sure you have a valid Resend API key configured',
-          'Try again in a few moments'
-        ]
-      );
-    } finally {
-      setIsSubmitting(false);
+      console.error('Error saving account:', error);
+      throw error;
     }
   };
 
-  // Handle OTP verification
-  const onOtpSubmit = async (values) => {
+  // Handle signup form submission
+  const onSignupSubmit = async (values) => {
+    if (currentStep < 3) {
+      nextStep();
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/verify-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          gmail: userGmail,
-          otp: values.otp
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || 'OTP verification failed');
-      }
+      const savedUser = await saveAccountToJSON(values);
       
-      console.log('OTP verification successful:', result.user);
-      
-      // Create authenticated user for OTP login
+      // Create authenticated user with signup data
       const authenticatedUser = {
-        ...user,
-        email: userGmail,
-        loginMethod: 'otp',
+        ...savedUser,
+        loginMethod: 'signup',
         loginTime: new Date().toISOString()
       };
 
-      // Save to localStorage and update state
+      // Automatically log the user in after successful signup
       saveUserToLocalStorage(authenticatedUser);
       setCurrentUser(authenticatedUser);
       setIsLoggedIn(true);
       
-      showSuccessModal('Sign In Successful!');
+      showSuccessModal('Account Created Successfully! You are now logged in.');
       
-      setIsTransitioning(true);
+      // Reset signup form and states
       setTimeout(() => {
-        otpForm.reset();
-        gmailForm.reset();
-        setUserGmail('');
-        setSigninMode('regular');
-        setIsTransitioning(false);
-      }, 150);
+        signupForm.reset();
+        setCurrentStep(1);
+        setAuthMode('signin'); // Reset to signin mode for next time
+        closeSuccessModal();
+      }, 2000);
       
     } catch (error) {
-      console.error('OTP verification error:', error);
+      console.error('Signup error:', error);
       
-      showErrorModal(
-        'OTP Verification Failed',
-        error.message || 'The OTP you entered is incorrect. Please try again.',
-        [
-          'Double-check the 6-digit code',
-          'Make sure you\'re entering the latest OTP',
-          'Request a new OTP if this one has expired',
-          'Check your email for the most recent code'
-        ]
-      );
+      if (error.message.includes('Duplicate')) {
+        showErrorModal(
+          'Account Already Exists',
+          error.message,
+          [
+            'Please use a different username if username is taken',
+            'Use a different email address if email is already registered',
+            'Contact support if you believe this is an error'
+          ]
+        );
+      } else if (error.message.includes('API configuration')) {
+        showErrorModal(
+          'System Configuration Error',
+          'There is a system configuration issue. Please contact support.',
+          ['This is not an issue with your input', 'Please try again later or contact support']
+        );
+      } else {
+        showErrorModal(
+          'Account Creation Failed',
+          error.message || 'An unexpected error occurred while creating your account.',
+          [
+            'Please check your internet connection',
+            'Verify all required fields are filled correctly',
+            'Try submitting the form again',
+            'Contact support if the problem persists'
+          ]
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Render regular signin form
-  const renderRegularSignin = () => (
-    <>
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
-        <CardDescription className="text-center">
-          Sign in to your account to continue
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent>
-        <div className={`transition-all duration-150 space-y-4 ${
-          isTransitioning ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
-        }`}>
-          <Form {...regularForm}>
-            <form onSubmit={regularForm.handleSubmit(onRegularSubmit)} className="space-y-4">
-              
-              <FormField
-                control={regularForm.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="Enter your username" 
-                        {...field}
-                        disabled={isSubmitting || isTransitioning}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={regularForm.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="password"
-                        placeholder="Enter your password" 
-                        {...field}
-                        disabled={isSubmitting || isTransitioning}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button 
-                type="submit" 
-                className="w-full"
-                disabled={isSubmitting || isTransitioning}
-              >
-                {isSubmitting ? "Signing In..." : "Sign In"}
-              </Button>
-            </form>
-          </Form>
-
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-muted-foreground">Or</span>
-            </div>
-          </div>
-
-          <Button 
-            type="button"
-            variant="outline" 
-            className="w-full"
-            onClick={handleOtpSigninClick}
-            disabled={isSubmitting || isTransitioning}
-          >
-            Sign in with OTP
-          </Button>
-
-          <div className="mt-4 text-center">
-            <Link 
-              href="/forgot-password" 
-              className="text-sm font-medium text-primary hover:underline"
-            >
-              Forgot your password?
-            </Link>
-          </div>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
-              <Link 
-                href="/signup" 
-                className="font-medium text-primary hover:underline"
-              >
-                Sign up
-              </Link>
-            </p>
-          </div>
-        </div>
-      </CardContent>
-    </>
-  );
-
-  // Render Gmail input form (OTP flow step 1)
-  const renderGmailInput = () => (
-    <>
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Sign in with OTP</CardTitle>
-      </CardHeader>
-      
-      <CardContent>
-        <div className={`transition-all duration-150 space-y-4 ${
-          isTransitioning ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
-        }`}>
-          <Form {...gmailForm}>
-            <form onSubmit={gmailForm.handleSubmit(onGmailSubmit)} className="space-y-4">
-              
-              <FormField
-                control={gmailForm.control}
-                name="gmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Gmail Address</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="email"
-                        placeholder="Enter your Gmail address" 
-                        {...field}
-                        disabled={isSubmitting || isTransitioning}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button 
-                type="submit" 
-                className="w-full"
-                disabled={isSubmitting || isTransitioning}
-              >
-                {isSubmitting ? "Sending OTP..." : "Send OTP"}
-              </Button>
-            </form>
-          </Form>
-
-          <Button 
-            type="button"
-            variant="outline" 
-            className="w-full mt-4"
-            onClick={handleBackToRegular}
-            disabled={isSubmitting || isTransitioning}
-          >
-            Back to Password Sign in
-          </Button>
-        </div>
-      </CardContent>
-    </>
-  );
-
-  // Render OTP verification form (OTP flow step 2)
-  const renderOtpVerification = () => (
-    <>
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Verify OTP</CardTitle>
-        <CardDescription className="text-center">
-          Enter the 6-digit code sent to {userGmail}
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent>
-        <div className={`transition-all duration-150 space-y-4 ${
-          isTransitioning ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
-        }`}>
-          <Form {...otpForm}>
-            <form onSubmit={otpForm.handleSubmit(onOtpSubmit)} className="space-y-4">
-              
-              <FormField
-                control={otpForm.control}
-                name="otp"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Verification Code</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="text"
-                        placeholder="Enter here" 
-                        maxLength={6}
-                        {...field}
-                        disabled={isSubmitting || isTransitioning}
-                        className="text-center text-lg tracking-widest"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button 
-                type="submit" 
-                className="w-full"
-                disabled={isSubmitting || isTransitioning}
-              >
-                {isSubmitting ? "Verifying..." : "Verify OTP"}
-              </Button>
-            </form>
-          </Form>
-
-          <Button 
-            type="button"
-            variant="outline" 
-            className="w-full mt-4"
-            onClick={() => onGmailSubmit({ gmail: userGmail })}
-            disabled={isSubmitting || isTransitioning}
-          >
-            Resend OTP
-          </Button>
-
-          <Button 
-            type="button"
-            variant="ghost" 
-            className="w-full mt-2"
-            onClick={handleBackToGmail}
-            disabled={isSubmitting || isTransitioning}
-          >
-            Change Gmail Address
-          </Button>
-        </div>
-      </CardContent>
-    </>
-  );
-
-  // Login Form Component (exact copy from signin.js)
+  // Main component render - Login/Signup Forms
   if (!isLoggedIn) {
     return (
       <div className={`${inter.className} min-h-screen flex items-start justify-center bg-white p-4 pt-20`}>
@@ -723,10 +343,41 @@ const ProfilePage = () => {
             isPageLoaded ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'
           }`}
         >
-          {/* Render different forms based on current signin mode */}
-          {signinMode === 'regular' && renderRegularSignin()}
-          {signinMode === 'otp-gmail' && renderGmailInput()}
-          {signinMode === 'otp-verify' && renderOtpVerification()}
+          {/* Render different forms based on current auth mode and step */}
+          {authMode === 'signin' && (
+            <LoginComponent
+              onLogin={handleLogin}
+              onSwitchToSignup={switchToSignup}
+              showErrorModal={showErrorModal}
+              showSuccessModal={showSuccessModal}
+              userData={user}
+            />
+          )}
+          
+          {authMode === 'signup' && currentStep === 1 && (
+            <SignupComponent
+              onSignup={nextStep}
+              onSwitchToSignin={switchToSignin}
+              signupForm={signupForm}
+              currentStep={currentStep}
+              isSubmitting={isSubmitting}
+              isTransitioning={isTransitioning}
+            />
+          )}
+
+          {authMode === 'signup' && (currentStep === 2 || currentStep === 3) && (
+            <KycFormComponent
+              signupForm={signupForm}
+              currentStep={currentStep}
+              onNextStep={nextStep}
+              onPrevStep={prevStep}
+              onSubmit={onSignupSubmit}
+              isSubmitting={isSubmitting}
+              isTransitioning={isTransitioning}
+              showErrorModal={showErrorModal}
+              onSwitchToSignin={switchToSignin}
+            />
+          )}
         </Card>
 
         {/* Modal Components */}
@@ -840,8 +491,6 @@ const ProfilePage = () => {
           <h1 className="text-5xl md:text-6xl font-serif font-bold text-gray-900 mb-2">PROFILE</h1>
           <div className="flex justify-center items-center gap-4 text-sm text-gray-600 font-mono">
             <span>ACCOUNT</span>
-            <span>•</span>
-            <span>{displayUser.accountNumber}</span>
             <span>•</span>
             <span>MEMBER SINCE {displayUser.registrationDate}</span>
             {currentUser && (
