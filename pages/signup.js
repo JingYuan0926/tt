@@ -686,43 +686,41 @@ export default function SignUp() {
                   <div className="space-y-4">
                     {!isCameraOpen && !capturedImage && (
                       <>
-                        {/* Upload Options */}
-                        <div className="grid grid-cols-2 gap-3">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={openCamera}
-                            disabled={isCameraLoading || isSubmitting}
-                            className="h-20 flex flex-col items-center justify-center space-y-2"
-                          >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span className="text-sm">
-                              {isCameraLoading ? "Starting Camera..." : "Use Camera"}
-                            </span>
-                          </Button>
+                                                 {/* Upload Options */}
+                         <div className="grid grid-cols-2 gap-3">
+                           <Button
+                             type="button"
+                             variant="outline"
+                             onClick={openCamera}
+                             disabled={isCameraLoading || isSubmitting}
+                             className="h-20 flex flex-col items-center justify-center space-y-2"
+                           >
+                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                             </svg>
+                             <span className="text-sm">
+                               {isCameraLoading ? "Starting Camera..." : "Use Camera"}
+                             </span>
+                           </Button>
 
-                          <div className="h-20 flex flex-col justify-center">
-                            <Label htmlFor="kyc-upload" className="cursor-pointer">
-                              <div className="border-2 border-dashed border-gray-300 rounded-lg h-full flex flex-col items-center justify-center space-y-2 hover:border-gray-400 transition-colors">
-                                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                </svg>
-                                <span className="text-sm text-gray-600">Upload File</span>
-                              </div>
-                            </Label>
-                            <Input
-                              id="kyc-upload"
-                              type="file"
-                              accept=".jpg,.jpeg,.png,.pdf"
-                              onChange={handleFileUpload}
-                              disabled={isSubmitting}
-                              className="hidden"
-                            />
-                          </div>
-                        </div>
+                           <Label htmlFor="kyc-upload" className="cursor-pointer h-20">
+                             <div className="border-2 border-dashed border-gray-300 rounded-lg h-full flex flex-col items-center justify-center space-y-2 hover:border-gray-400 transition-colors">
+                               <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                               </svg>
+                               <span className="text-sm text-gray-600">Upload File</span>
+                             </div>
+                             <Input
+                               id="kyc-upload"
+                               type="file"
+                               accept=".jpg,.jpeg,.png,.pdf"
+                               onChange={handleFileUpload}
+                               disabled={isSubmitting}
+                               className="hidden"
+                             />
+                           </Label>
+                         </div>
 
                         <p className="text-sm text-muted-foreground text-center">
                           Capture your Malaysian IC with camera or upload from device (JPEG, PNG, PDF - Max 5MB)
