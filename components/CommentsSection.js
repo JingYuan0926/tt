@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Avatar, Textarea, Card, CardContent, CardHeader, CardTitle, Spinner } from "@heroui/react";
-import { ChatBubbleLeftIcon, XMarkIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import { ChatBubbleLeftIcon, XMarkIcon, ChartBarIcon, UserIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 
 export default function CommentsSection({ article, onAddComment }) {
@@ -14,7 +14,7 @@ export default function CommentsSection({ article, onAddComment }) {
   const [comments, setComments] = React.useState(article?.comments?.map(comment => ({
     id: comment.id,
     author: comment.user,
-    avatar: `https://images.unsplash.com/photo-150${Math.floor(Math.random() * 9) + 1}003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=150&q=80`,
+    avatar: null, // Use default avatar for all comments
     time: new Date(comment.timestamp).toLocaleDateString(),
     content: comment.content
   })) || []);
@@ -32,7 +32,7 @@ export default function CommentsSection({ article, onAddComment }) {
       const newCommentForDisplay = {
         id: comment.id,
         author: comment.user,
-        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&w=150&q=80",
+        avatar: null, // Use default avatar for new comments
         time: "Just now",
         content: comment.content
       };
@@ -234,12 +234,18 @@ export default function CommentsSection({ article, onAddComment }) {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: 0.3 + (index * 0.1) }}
                   >
-                    <Avatar
-                      src={comment.avatar}
-                      alt={comment.author}
-                      size="sm"
-                      className="flex-shrink-0"
-                    />
+                    {comment.avatar ? (
+                      <Avatar
+                        src={comment.avatar}
+                        alt={comment.author}
+                        size="sm"
+                        className="flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
+                        <UserIcon className="w-4 h-4 text-gray-500" />
+                      </div>
+                    )}
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-semibold text-sm text-gray-900">{comment.author}</span>
