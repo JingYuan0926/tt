@@ -115,7 +115,7 @@ const NewspaperLayout = ({ articles }) => {
                 />
               </div>
               <div className="flex-1">
-                <h3 className={`${textSizes.title} text-gray-900 mb-2`}>
+                <h3 className={`${textSizes.title} text-gray-900 mb-2 group-hover:underline transition-all duration-200`}>
                   {article.title}
                 </h3>
                 <p className={`${textSizes.description} text-gray-700`}>
@@ -129,7 +129,7 @@ const NewspaperLayout = ({ articles }) => {
           return hasImage ? (
             <div className="flex gap-3">
               <div className="flex-1">
-                <h3 className={`${textSizes.title} text-gray-900 mb-2`}>
+                <h3 className={`${textSizes.title} text-gray-900 mb-2 group-hover:underline transition-all duration-200`}>
                   {article.title}
                 </h3>
                 <p className={`${textSizes.description} text-gray-700`}>
@@ -165,7 +165,7 @@ const NewspaperLayout = ({ articles }) => {
                   }}
                 />
               )}
-              <h3 className={`${textSizes.title} text-gray-900 mb-2`}>
+              <h3 className={`${textSizes.title} text-gray-900 mb-2 group-hover:underline transition-all duration-200`}>
                 {article.title}
               </h3>
               <p className={`${textSizes.description} text-gray-700`}>
@@ -178,7 +178,7 @@ const NewspaperLayout = ({ articles }) => {
 
     const renderTextOnly = () => (
       <div>
-        <h3 className={`${textSizes.title} text-gray-900 mb-2`}>
+        <h3 className={`${textSizes.title} text-gray-900 mb-2 group-hover:underline transition-all duration-200`}>
           {article.title}
         </h3>
         <p className={`${textSizes.description} text-gray-700`}>
@@ -189,13 +189,10 @@ const NewspaperLayout = ({ articles }) => {
 
     return (
       <motion.article 
-        className={`${getMarginBottom(article.size)} p-4 border-b border-gray-400 break-inside-avoid`}
+        className={`${getMarginBottom(article.size)} p-4 border-b border-gray-400 break-inside-avoid group cursor-pointer`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: (article.originalIndex || index) * 0.1 }}
-        whileHover={{ 
-          backgroundColor: 'rgba(0,0,0,0.02)'
-        }}
       >
         {/* Category tag */}
         <div className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3 pb-2 border-b border-gray-300">
