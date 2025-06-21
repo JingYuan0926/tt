@@ -6,25 +6,10 @@ import { useRouter } from 'next/router';
 export default function Success() {
   const router = useRouter();
   const { session_id } = router.query;
-  const [countdown, setCountdown] = useState(3);
 
-  useEffect(() => {
-    if (session_id) {
-      // Countdown timer
-      const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            router.push('/news');
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [session_id, router]);
+  const handleGoToProfile = () => {
+    router.push('/profile');
+  };
 
   return (
     <>
@@ -62,12 +47,20 @@ export default function Success() {
             </h1>
             
             <p className="text-lg text-gray-600 mb-8">
-              Welcome to Tea Time Pro. Your subscription is now active.
+              Welcome to Tea Time Pro! Your subscription is now active and you have access to all premium features.
             </p>
 
-            <p className="text-sm text-gray-500">
-              Redirecting in {countdown} seconds...
-            </p>
+            <motion.button
+              onClick={handleGoToProfile}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              Go to Profile
+            </motion.button>
           </motion.div>
         </motion.div>
       </div>
