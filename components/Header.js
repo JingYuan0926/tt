@@ -2,6 +2,14 @@ import { Button, Tabs, Tab, Navbar, NavbarBrand, NavbarContent, NavbarItem } fro
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import Head from "next/head";
+import { Inter } from "next/font/google";
+
+// Configure Inter font
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 import { useRouter } from "next/router";
 
@@ -183,7 +191,7 @@ export default function Header() {
           rel="stylesheet"
         />
       </Head>
-      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center w-full">
+      <div className={`${inter.variable} fixed top-0 left-0 right-0 z-50 flex justify-center w-full font-[family-name:var(--font-inter)]`}>
         {/* Container with fixed position and width for the navigation tabs */}
         <div className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none" style={{ zIndex: 51 }}>
           <div className="w-full max-w-screen-xl mx-auto px-6 flex justify-center">
@@ -201,7 +209,7 @@ export default function Header() {
                 classNames={{
                   base: "bg-transparent mt-2",
                   tabList: "gap-6 bg-transparent",
-                  tab: "px-5 py-2 text-gray-600 data-[hover=true]:text-black data-[selected=true]:font-bold transition-colors",
+                  tab: "px-5 py-2 text-gray-600 data-[hover=true]:text-black data-[selected=true]:font-bold transition-colors font-[family-name:var(--font-inter)]",
                   cursor: "bg-transparent shadow-sm border border-gray-200",
                   panel: "bg-transparent"
                 }}
