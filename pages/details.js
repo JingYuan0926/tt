@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { Button, Chip, Divider, Avatar, Textarea, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from "@heroui/react";
-import { ArrowLeftIcon, ShareIcon, BookmarkIcon, HeartIcon, ChatBubbleLeftIcon, XMarkIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ShareIcon, BookmarkIcon, HeartIcon, ChatBubbleLeftIcon, XMarkIcon, ShieldCheckIcon, LinkIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { CheckCircleIcon, CpuChipIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
@@ -48,6 +48,9 @@ export default function Details() {
   const [newComment, setNewComment] = React.useState('');
   const [biasAnalysis, setBiasAnalysis] = React.useState(null);
   const [isAnalyzing, setIsAnalyzing] = React.useState(false);
+  const [aiSources, setAiSources] = React.useState([]);
+  const [isGeneratingSources, setIsGeneratingSources] = React.useState(false);
+  const [sourcesGenerated, setSourcesGenerated] = React.useState(false);
   const {isOpen, onOpen, onClose} = useDisclosure();
 
   // Use comments from the article data
@@ -101,6 +104,46 @@ export default function Details() {
       setIsAnalyzing(false);
     }
   };
+
+  const handleGenerateSources = async () => {
+    setIsGeneratingSources(true);
+    
+    try {
+      const response = await fetch('/api/generate-sources', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: article.title,
+          description: article.description,
+          category: article.category
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setAiSources(data.sources);
+        setSourcesGenerated(true);
+      } else {
+        console.error('Failed to generate sources:', data.error);
+        setAiSources([]);
+      }
+    } catch (error) {
+      console.error('Error generating sources:', error);
+      setAiSources([]);
+    } finally {
+      setIsGeneratingSources(false);
+    }
+  };
+
+  // Auto-generate sources when component mounts
+  React.useEffect(() => {
+    if (article && !sourcesGenerated) {
+      handleGenerateSources();
+    }
+  }, [article, sourcesGenerated]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -264,7 +307,7 @@ export default function Details() {
           </h1>
 
           {/* Subtitle/Description */}
-          <p className="text-xl text-gray-700 leading-relaxed mb-8 font-light">
+          <p className="text-xl text-gray-700 leading-relaxed mb-8 font-light text-justify">
             {article.description}
           </p>
 
@@ -401,29 +444,84 @@ export default function Details() {
             </div>
           )}
 
-          {/* External Links */}
-          {article.link && article.link.length > 0 && (
+          {/* External Links - Updated Section */}
+          {((article.link && article.link.length > 0) || aiSources.length > 0) && (
             <motion.div 
-              className="my-8 p-4 bg-blue-50 rounded-lg"
+              className="my-8 p-6 bg-blue-50 rounded-lg"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.2 }}
             >
-              <h3 className="font-semibold text-blue-900 mb-3">Related Links:</h3>
-              <ul className="space-y-2">
-                {article.link.map((link, index) => (
-                  <li key={index}>
-                    <a 
-                      href={link} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 underline"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-blue-900">Related Sources:</h3>
+                {!isGeneratingSources && aiSources.length === 0 && (
+                  <Button
+                    size="sm"
+                    color="primary"
+                    variant="flat"
+                    startContent={<LinkIcon className="w-4 h-4" />}
+                    onClick={handleGenerateSources}
+                  >
+                    Generate AI Sources
+                  </Button>
+                )}
+              </div>
+
+              {/* Original article links */}
+              {article.link && article.link.length > 0 && (
+                <div className="mb-6">
+                  <h4 className="text-sm font-medium text-blue-800 mb-2">Original Sources:</h4>
+                  <ul className="space-y-2">
+                    {article.link.map((link, index) => (
+                      <li key={index}>
+                        <a 
+                          href={link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline text-sm"
+                        >
+                          {link}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* AI Generated Sources */}
+              {isGeneratingSources && (
+                <div className="flex items-center gap-2 text-blue-700">
+                  <Spinner size="sm" color="primary" />
+                  <span className="text-sm">Generating related sources...</span>
+                </div>
+              )}
+
+              {aiSources.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-blue-800 mb-2 flex items-center gap-2">
+                    <CpuChipIcon className="w-4 h-4" />
+                    AI-Generated Related Sources:
+                  </h4>
+                  <ul className="space-y-3">
+                    {aiSources.map((source, index) => (
+                      <li key={index} className="border-l-2 border-blue-200 pl-3">
+                        <a 
+                          href={source.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline font-medium text-sm block"
+                        >
+                          {source.title}
+                        </a>
+                        <span className="text-xs text-gray-600 break-all">{source.url}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 text-xs text-gray-500 italic">
+                    * AI-generated sources are suggestions and should be verified for accuracy
+                  </div>
+                </div>
+              )}
             </motion.div>
           )}
 
