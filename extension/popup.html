@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Bias Analyzer</title>
+    <title>Tea Time - News Bias Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -18,30 +19,29 @@
             background: #f8fafc;
             color: #334155;
             line-height: 1.5;
+            border-radius: 16px;
+            overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 24px 20px;
+            background: white;
+            color: #334155;
+            padding: 20px;
             text-align: center;
-            border-radius: 0 0 16px 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .header h1 {
             margin: 0;
-            font-size: 20px;
+            font-size: 28px;
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            font-family: 'UnifrakturCook', cursive;
+            color: #1e293b;
         }
 
         .header p {
             margin: 8px 0 0;
-            opacity: 0.9;
+            color: #64748b;
             font-size: 14px;
             font-weight: 400;
         }
@@ -63,11 +63,11 @@
 
         .current-page-btn {
             width: 100%;
-            background: #3b82f6;
+            background: black;
             color: white;
             border: none;
             padding: 12px 16px;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
@@ -79,7 +79,7 @@
         }
 
         .current-page-btn:hover {
-            background: #2563eb;
+            background:rgb(90, 89, 89);
             transform: translateY(-1px);
         }
 
@@ -87,7 +87,7 @@
             width: 100%;
             padding: 12px 16px;
             border: 2px solid #e2e8f0;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 14px;
             transition: border-color 0.2s ease;
             background: white;
@@ -101,11 +101,11 @@
 
         .analyze-btn {
             width: 100%;
-            background: #10b981;
+            background: black;
             color: white;
             border: none;
             padding: 12px 16px;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
@@ -114,7 +114,7 @@
         }
 
         .analyze-btn:hover {
-            background: #059669;
+            background: rgb(90, 89, 89);
             transform: translateY(-1px);
         }
 
@@ -128,7 +128,7 @@
             text-align: center;
             padding: 32px 20px;
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid #e2e8f0;
         }
 
@@ -156,7 +156,7 @@
         .error {
             background: #fef2f2;
             border: 1px solid #fca5a5;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 16px;
             margin-bottom: 20px;
             color: #dc2626;
@@ -166,7 +166,7 @@
 
         .results {
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid #e2e8f0;
             overflow: hidden;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -210,7 +210,7 @@
         .bias-meter {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 16px;
             margin-bottom: 16px;
         }
@@ -258,7 +258,7 @@
         .meter-segment {
             height: 24px;
             flex: 1;
-            border-radius: 2px;
+            border-radius: 4px;
             background: #e2e8f0;
         }
 
@@ -289,7 +289,7 @@
         .legend-color {
             width: 12px;
             height: 12px;
-            border-radius: 2px;
+            border-radius: 3px;
         }
 
         .bias-analysis {
@@ -317,7 +317,7 @@
             padding: 12px;
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            border-radius: 6px;
+            border-radius: 8px;
             transition: all 0.2s ease;
             line-height: 1.4;
         }
@@ -335,7 +335,7 @@
         .disclaimer {
             background: #fef3c7;
             border: 1px solid #fbbf24;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 12px;
             margin-bottom: 16px;
             font-size: 12px;
@@ -345,7 +345,7 @@
         .structured-content {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 16px;
             margin-top: 12px;
         }
@@ -367,7 +367,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>🛡️ News Bias Analyzer</h1>
+        <h1>Tea Time</h1>
         <p>AI-powered analysis for media literacy</p>
     </div>
 
@@ -375,7 +375,7 @@
         <div class="input-section">
             <div class="button-group">
                 <button id="analyzeCurrentPage" class="current-page-btn">
-                    🔍 Analyze Current Page
+                    Analyze Current Page
                 </button>
             </div>
             

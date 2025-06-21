@@ -64,7 +64,7 @@ export default function CommentsSection({ article, onAddComment }) {
     setCommentAnalysis(null);
     
     try {
-      // Extract meaningful comment content for analysis
+      // Extract comment content for analysis
       const commentContents = comments.map(comment => comment.content);
       
       const response = await fetch('/api/analyzeComments', {
@@ -119,46 +119,47 @@ export default function CommentsSection({ article, onAddComment }) {
 
   // Get tendency color and styling based on score
   const getTendencyInfo = (score) => {
-    // Convert 0-100 scale to 0-10 scale for consistency with bias meter
-    const scaledScore = Math.round(score / 10);
-    
-    if (scaledScore <= 3) {
+    if (score >= 81) {
       return {
-        label: 'Very Negative',
-        color: 'text-red-600',
-        bgColor: 'bg-red-50',
-        borderColor: 'border-red-200',
-        progressColor: 'bg-red-500',
-        scaledScore: scaledScore
+        label: 'Very Positive',
+        color: 'text-green-700',
+        bgColor: 'bg-green-50',
+        borderColor: 'border-green-200',
+        progressColor: 'bg-green-500'
       };
-    } else if (scaledScore <= 6) {
+    } else if (score >= 61) {
+      return {
+        label: 'Positive',
+        color: 'text-green-600',
+        bgColor: 'bg-green-50',
+        borderColor: 'border-green-200',
+        progressColor: 'bg-green-400'
+      };
+    } else if (score >= 41) {
       return {
         label: 'Neutral/Mixed',
         color: 'text-yellow-600',
         bgColor: 'bg-yellow-50',
         borderColor: 'border-yellow-200',
-        progressColor: 'bg-yellow-500',
-        scaledScore: scaledScore
+        progressColor: 'bg-yellow-400'
+      };
+    } else if (score >= 21) {
+      return {
+        label: 'Negative',
+        color: 'text-red-600',
+        bgColor: 'bg-red-50',
+        borderColor: 'border-red-200',
+        progressColor: 'bg-red-400'
       };
     } else {
       return {
-        label: 'Very Positive',
-        color: 'text-green-600',
-        bgColor: 'bg-green-50',
-        borderColor: 'border-green-200',
-        progressColor: 'bg-green-500',
-        scaledScore: scaledScore
+        label: 'Very Negative',
+        color: 'text-red-700',
+        bgColor: 'bg-red-50',
+        borderColor: 'border-red-200',
+        progressColor: 'bg-red-500'
       };
     }
-  };
-
-  const getMeterColor = (position, scaledScore) => {
-    if (position <= scaledScore) {
-      if (scaledScore <= 3) return 'bg-red-500';
-      if (scaledScore <= 6) return 'bg-yellow-500';
-      return 'bg-green-500';
-    }
-    return 'bg-gray-200';
   };
 
   return (
@@ -267,22 +268,13 @@ export default function CommentsSection({ article, onAddComment }) {
                 <div className="flex items-center gap-2 mb-4">
                   <ChartBarIcon className="w-5 h-5 text-blue-600" />
                   <h3 className="text-lg font-semibold text-gray-900">Comment Analysis</h3>
+                  {isAnalyzing && <Spinner size="sm" color="primary" />}
                 </div>
 
                 {isAnalyzing ? (
                   <div className="text-center py-6">
                     <Spinner size="md" color="primary" className="mb-3" />
                     <p className="text-sm text-gray-600">Analyzing {comments.length} comments...</p>
-                  </div>
-                ) : commentAnalysis?.hasNoValue ? (
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <div className="text-center py-4">
-                      <div className="text-4xl mb-3">🤷‍♂️</div>
-                      <p className="text-sm text-gray-600 font-medium">{commentAnalysis.message}</p>
-                      <p className="text-xs text-gray-500 mt-2">
-                        All {commentAnalysis.totalComments} comments were filtered out as gibberish or meaningless.
-                      </p>
-                    </div>
                   </div>
                 ) : commentAnalysis?.error ? (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -299,16 +291,6 @@ export default function CommentsSection({ article, onAddComment }) {
                   </div>
                 ) : commentAnalysis ? (
                   <div className="space-y-4">
-                    {/* Analysis Info */}
-                    {commentAnalysis.filteredComments > 0 && (
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                        <p className="text-xs text-blue-800">
-                          Analyzed {commentAnalysis.meaningfulComments} of {commentAnalysis.totalComments} comments 
-                          ({commentAnalysis.filteredComments} filtered out as gibberish by AI)
-                        </p>
-                      </div>
-                    )}
-
                     {/* Overall Sentiment */}
                     <div className="bg-white rounded-lg p-4 border">
                       <h4 className="font-medium text-gray-900 mb-3">Overall Sentiment</h4>
@@ -318,52 +300,19 @@ export default function CommentsSection({ article, onAddComment }) {
                           <div className="space-y-3">
                             <div className="flex items-center justify-between">
                               <span className="text-2xl font-bold text-gray-900">
-                                {tendencyInfo.scaledScore}/10
+                                {commentAnalysis.tendencyScore}%
                               </span>
                               <span className={`px-2 py-1 rounded-full text-xs font-medium border ${tendencyInfo.color} ${tendencyInfo.bgColor} ${tendencyInfo.borderColor}`}>
                                 {tendencyInfo.label}
                               </span>
                             </div>
                             
-                            {/* 10-Segment Meter Bar */}
-                            <div className="mb-4">
-                              <div className="flex justify-between items-center mb-2">
-                                <span className="text-sm text-red-600 font-medium">Negative</span>
-                                <span className="text-sm text-green-600 font-medium">Positive</span>
-                              </div>
-                              
-                              {/* Meter Bar */}
-                              <div className="flex gap-1 mb-2">
-                                {[...Array(10)].map((_, index) => (
-                                  <div
-                                    key={index}
-                                    className={`h-6 flex-1 rounded-sm ${getMeterColor(index + 1, tendencyInfo.scaledScore)}`}
-                                  />
-                                ))}
-                              </div>
-                              
-                              {/* Scale Numbers */}
-                              <div className="flex justify-between text-xs text-gray-500">
-                                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                                  <span key={num}>{num}</span>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Color Legend */}
-                            <div className="flex items-center gap-4 text-sm">
-                              <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-red-500 rounded"></div>
-                                <span className="text-gray-600">Negative (0-3)</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-yellow-500 rounded"></div>
-                                <span className="text-gray-600">Neutral (4-6)</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-green-500 rounded"></div>
-                                <span className="text-gray-600">Positive (7-10)</span>
-                              </div>
+                            {/* Progress Bar */}
+                            <div className="relative w-full h-2 bg-gray-200 rounded-full">
+                              <div 
+                                className={`absolute left-0 top-0 h-full rounded-full transition-all duration-500 ${tendencyInfo.progressColor}`}
+                                style={{ width: `${commentAnalysis.tendencyScore}%` }}
+                              />
                             </div>
                             
                             {commentAnalysis.tendencyExplanation && (
