@@ -126,7 +126,7 @@ export default function SignIn() {
   };
 
   return (
-    <div className={`${inter.variable} min-h-screen flex items-center justify-center bg-gray-50 p-4 font-[family-name:var(--font-inter)]`}>
+    <div className={`${inter.variable} min-h-screen flex items-center justify-center bg-gray-50 p-4 pt-20 font-[family-name:var(--font-inter)]`}>
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>

@@ -380,7 +380,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className={`${inter.variable} min-h-screen flex items-center justify-center bg-gray-50 p-4 font-[family-name:var(--font-inter)]`}>
+    <div className={`${inter.variable} min-h-screen flex items-center justify-center bg-gray-50 p-4 pt-20 font-[family-name:var(--font-inter)]`}>
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Create Account</CardTitle>
@@ -553,16 +553,9 @@ export default function SignUp() {
                           </div>
                           <div>
                             <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
-                              AI-Powered IC Processing
+                              Please wait 5 seconds for AI processing.
                             </h4>
-                            <p className="text-sm text-blue-700 dark:text-blue-300 mb-2">
-                              We will automatically extract your personal details from your IC.
-                            </p>
-                            <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
-                              <div>• Use a clear, well-lit image</div>
-                              <div>• Text must be sharp and readable</div>
-                              <div>• Processing takes 5–10 seconds</div>
-                            </div>
+
                           </div>
                         </div>
                       </div>
@@ -586,7 +579,7 @@ export default function SignUp() {
                       className="flex-1" 
                       disabled={!kycFile || isProcessingIC}
                     >
-                      {isProcessingIC ? "Analyzing IC..." : "Next"}
+                      {isProcessingIC ? "Processing IC..." : "Next"}
                     </Button>
                   </div>
                 </>
