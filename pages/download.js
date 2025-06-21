@@ -29,35 +29,73 @@ export default function Download() {
         <meta name="description" content="Download the News Bias Analyzer extension for Chrome" />
       </Head>
       
-      <div className="min-h-screen bg-white mt-[60px] sm:mt-[80px] lg:mt-[100px]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="min-h-screen bg-white pt-2">
+        <div className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
+          
+          {/* Download Header - matching NewsHeader and ProfileHeader style */}
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center border-b-4 border-gray-900 pb-6 mb-8 animate-in slide-in-from-top duration-700"
+          >
+            <h1 className="text-5xl md:text-6xl font-serif font-bold text-gray-900 mb-2">DOWNLOAD</h1>
+            <div className="flex justify-center items-center gap-4 text-sm text-gray-600 font-mono">
+              <span>EXTENSION</span>
+              <span>•</span>
+              <span>CHROME BROWSER</span>
+              <span>•</span>
+              <span>FREE INSTALLATION</span>
+            </div>
+          </motion.div>
+
+          {/* Subtitle */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900 mb-4">
+              Install Tea Time extension for your browser
+            </h2>
+            <div className="w-24 h-1 bg-gray-300 mx-auto"></div>
+          </motion.div>
+
           <div className="flex justify-center">
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center max-w-6xl w-full">
               
-              {/* Left Side - Installation Content */}
+              {/* Image Section */}
+              <motion.div 
+                className="w-full lg:w-[40%] order-1 lg:order-2"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                <div className="rounded-2xl p-4 sm:p-6">
+                  <div className="aspect-[16/9] rounded-xl overflow-hidden min-h-[250px] sm:min-h-[300px] lg:min-h-[400px] lg:ml-[-100px]">
+                    <img 
+                      src="/1.png" 
+                      alt="News Bias Analyzer Extension Screenshot"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Installation Content */}
               <motion.div 
                 className="w-full lg:w-[60%] space-y-8 sm:space-y-10 lg:space-y-12 order-2 lg:order-1"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
               >
-                {/* Title */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                >
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight text-center lg:text-left">
-                    Install News Bias Analyzer extension for your browser
-                  </h1>
-                </motion.div>
-
                 {/* Chrome Section */}
                 <motion.div 
                   className="space-y-6 sm:space-y-8"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
                 >
                   {/* Chrome Logo and Info */}
                   <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 p-6 sm:p-8 border border-gray-200 rounded-2xl">
@@ -82,29 +120,11 @@ export default function Download() {
                     whileTap={{ scale: 0.98 }}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
+                    transition={{ duration: 0.6, delay: 1.0 }}
                   >
                     Download for Chrome
                   </motion.button>
                 </motion.div>
-              </motion.div>
-
-              {/* Right Side - Screenshot Area */}
-              <motion.div 
-                className="w-full lg:w-[40%] order-1 lg:order-2"
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-              >
-                <div className="rounded-2xl p-4 sm:p-6">
-                  <div className="aspect-[16/9] rounded-xl overflow-hidden min-h-[250px] sm:min-h-[300px] lg:min-h-[400px] lg:ml-[-100px]">
-                    <img 
-                      src="/1.png" 
-                      alt="News Bias Analyzer Extension Screenshot"
-                      className="w-full h-full object-cover rounded-xl"
-                    />
-                  </div>
-                </div>
               </motion.div>
 
             </div>
