@@ -92,7 +92,7 @@ export default function Subscribe() {
       try {
         // Redirect directly to Stripe payment link
         // The success URL is already configured in Stripe Dashboard to redirect to /profile
-        window.location.href = 'https://buy.stripe.com/test_fZu3cx1KI1HJ3lD4TSdby01';
+        window.location.href = 'https://buy.stripe.com/test_8x228t7529ab5tL5XWdby00';
       } catch (error) {
         console.error('Error:', error);
         alert('Something went wrong. Please try again.');
