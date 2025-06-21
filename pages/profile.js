@@ -7,8 +7,8 @@ const ProfilePage = () => {
   const user = userData[0];
 
   return (
-    <div className="min-h-screen bg-white mt-[100px]">
-      <div className="max-w-7xl mx-auto px-4 py-8 relative">
+    <div className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-4 pt-4 pb-8 relative">
         {/* Edit Profile Icon */}
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
