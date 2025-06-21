@@ -1,0 +1,26 @@
+[
+  {
+    "userId": "USER_1750478021808",
+    "accountNumber": "ACC000001",
+    "id": "1750478021808",
+    "timestamp": "2025-06-21T03:53:41.808Z",
+    "registrationDate": "6/21/2025",
+    "status": "active",
+    "username": "marcusy34",
+    "email": "MARCUS.TANCHIYAU@GMAIL.COM",
+    "password": "123",
+    "confirmPassword": "123",
+    "icNumber": "123456-78-9012",
+    "fullName": "Ahmad Bin Abdullah",
+    "address": "No. 123, Jalan Bukit Bintang",
+    "postCode": "55100",
+    "city": "Kuala Lumpur",
+    "state": "Wilayah Persekutuan",
+    "country": "Malaysia",
+    "citizenship": "Malaysian",
+    "gender": "Male",
+    "kycFileName": "Untitled 1.png",
+    "kycFileSize": 70200,
+    "kycFileType": "image/png"
+  }
+]

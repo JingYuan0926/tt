@@ -41,4 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 # user data (optional - remove this line if you want to commit user data)
-/data/users.json
+#/data/users.json
