@@ -604,7 +604,7 @@ const ProfilePage = () => {
         >
           {/* Profile Picture and Basic Info */}
           <div className="bg-white mb-8">
-            <div className="bg-gradient-to-r from-blue-600 to-blue-800 h-32"></div>
+            <div className="bg-white h-32"></div>
             <div className="relative px-8 pb-8">
               <div className="flex flex-col md:flex-row items-center md:items-end -mt-16 mb-6">
                 <div className="w-32 h-32 bg-gray-300 rounded-full border-4 border-white shadow-lg flex items-center justify-center mb-4 md:mb-0 md:mr-6">
