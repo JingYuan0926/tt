@@ -34,7 +34,8 @@ export default function Header() {
     const menuItems = [
         { key: "News", title: "News", route: "/news" },
         { key: "Profile", title: "Profile", route: "/profile" },
-        { key: "Download", title: "Download", route: "/download" }
+        { key: "Download", title: "Download", route: "/download" },
+        { key: "Subscribe", title: "Subscribe", route: "/subscribe" }
     ];
 
     // Set selected nav based on current route
@@ -48,13 +49,16 @@ export default function Header() {
             setSelectedNav('Profile');
         } else if (currentPath === '/download') {
             setSelectedNav('Download');
+        } else if (currentPath === '/subscribe') {
+            setSelectedNav('Subscribe');
         } else {
             setSelectedNav('News'); // Default to News for any other route
         }
 
         console.log('Selected nav set to:', currentPath === '/news' || currentPath === '/details' ? 'News' :
             currentPath === '/profile' ? 'Profile' :
-                currentPath === '/download' ? 'Download' : 'News'); // Debug log
+                currentPath === '/download' ? 'Download' :
+                    currentPath === '/subscribe' ? 'Subscribe' : 'News'); // Debug log
     }, [router.pathname]);
 
     // Handle tab navigation click - navigate to respective pages
@@ -71,7 +75,8 @@ export default function Header() {
         const routeMapping = {
             "News": "/news",
             "Profile": "/profile",
-            "Download": "/download"
+            "Download": "/download",
+            "Subscribe": "/subscribe"
         };
 
         const targetRoute = routeMapping[key];
@@ -166,6 +171,7 @@ export default function Header() {
                                 <Tab key="News" title="News" />
                                 <Tab key="Profile" title="Profile" />
                                 <Tab key="Download" title="Download" />
+                                <Tab key="Subscribe" title="Subscribe" />
                             </Tabs>
                         </div>
                     </NavbarContent>
