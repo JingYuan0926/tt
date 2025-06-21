@@ -92,13 +92,13 @@ export default function Download() {
               >
                 {/* Chrome Section */}
                 <motion.div 
-                  className="space-y-6 sm:space-y-8"
+                  className="space-y-2 sm:space-y-8"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.8 }}
                 >
                   {/* Chrome Logo and Info */}
-                  <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 p-6 sm:p-8 border border-gray-200 rounded-2xl">
+                  <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 p-6 sm:p-8 border border-gray-200 rounded-2xl mt-[-160]">
                     <div className="flex-shrink-0">
                       <img 
                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Google_Chrome_icon_%28February_2022%29.svg/2048px-Google_Chrome_icon_%28February_2022%29.svg.png"
