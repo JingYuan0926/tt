@@ -378,6 +378,7 @@ const ProfilePage = () => {
               showErrorModal={showErrorModal}
               showSuccessModal={showSuccessModal}
               userData={user}
+              isTransitioning={isTransitioning}
             />
           )}
           
