@@ -72,41 +72,11 @@ export default function Header() {
             </Head>
             {/* Static header container - stays at top of content, scrolls naturally */}
             <div className="relative top-0 w-full bg-white border-b border-gray-100">
-                {/* Navigation tabs container */}
-                <div className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none" style={{ zIndex: 10 }}>
-                    <div className="w-full max-w-screen-xl mx-auto px-6 flex justify-center">
-                        {/* Navigation tabs */}
-                        <div className="pointer-events-auto pt-4 ml-8">
-                            <Tabs
-                                aria-label="Navigation"
-                                radius="full"
-                                selectedKey={selectedNav}
-                                onSelectionChange={handleNavClick}
-                                classNames={{
-                                    base: "bg-transparent mt-2",
-                                    tabList: "gap-6 bg-transparent",
-                                    tab: "px-5 py-2 text-gray-600 data-[hover=true]:text-black data-[selected=true]:font-bold transition-colors",
-                                    cursor: "bg-white shadow-sm border border-gray-200",
-                                    panel: "bg-transparent"
-                                }}
-                                variant="light"
-                                disableAnimation={false}
-                            >
-                                <Tab key="News" title="News" />
-                                <Tab key="Verify" title="Verify" />
-                                <Tab key="Challenge" title="Challenge" />
-                                <Tab key="Profile" title="Profile" />
-                            </Tabs>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Main navbar */}
+                {/* Main navbar with aligned logo and navigation */}
                 <Navbar
                     position="relative"
                     maxWidth="full"
-                    height="5rem"
-                    className="py-4 px-6 bg-transparent"
+                    className="py-1 px-6 bg-transparent"
                     style={{
                         width: "100%",
                         backgroundColor: "transparent"
@@ -114,7 +84,7 @@ export default function Header() {
                     isBordered={false}
                 >
                     {/* Left side - Tea Time logo */}
-                    <NavbarBrand className="w-[200px]">
+                    <NavbarBrand className="flex-shrink-0">
                         <Link href="/news" className="flex items-center">
                             {/* Logo Text with UnifrakturCook Font */}
                             <span
@@ -128,13 +98,34 @@ export default function Header() {
                         </Link>
                     </NavbarBrand>
 
-                    {/* Middle - Invisible placeholder for navigation */}
-                    <NavbarContent className="flex justify-center invisible" justify="center">
-                        <div style={{ width: "470px", height: "40px" }}></div>
+                    {/* Center/Right side - Navigation tabs aligned with logo */}
+                    <NavbarContent className="flex items-center ml-12" justify="center">
+                        <div className="flex items-center">
+                            <Tabs
+                                aria-label="Navigation"
+                                radius="full"
+                                selectedKey={selectedNav}
+                                onSelectionChange={handleNavClick}
+                                classNames={{
+                                    base: "bg-transparent",
+                                    tabList: "gap-8 bg-transparent",
+                                    tab: "px-8 py-3 text-lg font-medium text-gray-600 data-[hover=true]:text-black data-[selected=true]:font-bold transition-colors min-h-[48px]",
+                                    cursor: "bg-white shadow-sm border border-gray-200",
+                                    panel: "bg-transparent"
+                                }}
+                                variant="light"
+                                disableAnimation={false}
+                            >
+                                <Tab key="News" title="News" />
+                                <Tab key="Verify" title="Verify" />
+                                <Tab key="Challenge" title="Challenge" />
+                                <Tab key="Profile" title="Profile" />
+                            </Tabs>
+                        </div>
                     </NavbarContent>
 
-                    {/* Right side - Empty */}
-                    <NavbarContent justify="end" className="w-[130px]">
+                    {/* Right side - Empty space for balance */}
+                    <NavbarContent justify="end" className="flex-shrink-0">
                     </NavbarContent>
                 </Navbar>
             </div>

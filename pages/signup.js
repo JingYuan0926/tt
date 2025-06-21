@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -64,6 +65,7 @@ const signupSchema = z.object({
 
 
 export default function SignUp() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [kycFile, setKycFile] = useState(null);
@@ -106,6 +108,8 @@ export default function SignUp() {
     setIsSuccessModalVisible(false);
     setTimeout(() => {
       setSuccessModal(false);
+      // Redirect to signin page after successful signup
+      router.push('/signin');
     }, 150); // Match the animation duration
   };
 
@@ -390,7 +394,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className={`${inter.variable} min-h-screen flex items-center justify-center bg-gray-50 p-4 pt-20 font-[family-name:var(--font-inter)]`}>
+    <div className={`${inter.variable} min-h-screen flex items-start justify-center bg-gray-50 p-4 pt-8 font-[family-name:var(--font-inter)]`}>
       <Card 
         className={`w-full max-w-md mx-auto transform transition-all duration-700 ease-out ${
           isPageLoaded ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'
@@ -812,13 +816,16 @@ export default function SignUp() {
           >
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl font-bold text-center">Account Created Successfully</CardTitle>
+              <CardDescription className="text-center">
+                You will be redirected to the sign in page.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Button 
                 onClick={closeSuccessModal}
                 className="w-full"
               >
-                OK
+                Continue to Sign In
               </Button>
             </CardContent>
           </Card>

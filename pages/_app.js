@@ -112,7 +112,7 @@ export default function App({ Component, pageProps }) {
       <div className={`transition-opacity duration-1000 ${showMainContent ? 'opacity-100' : 'opacity-0'}`}>
         <Header />
         {/* Main content wrapper - header now scrolls naturally with content */}
-        <main className="min-h-screen">
+        <main className="min-h-screen pt-0">
           <Component {...pageProps} />
         </main>
       </div>
