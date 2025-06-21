@@ -42,10 +42,10 @@ export default async function handler(req, res) {
       {
         "icNumber": "IC number (format: 123456-78-9012)",
         "fullName": "Full name as shown on the IC",
-        "address": "Address from the IC",
-        "postCode": "Postal code",
-        "city": "City name",
-        "state": "State name",
+        "address": "Street address only (exclude postal code, city, state)",
+        "postCode": "Postal code only (5 digits)",
+        "city": "City name only",
+        "state": "State name only",
         "country": "Country (usually Malaysia)",
         "citizenship": "Citizenship (usually Malaysian)",
         "gender": "Gender (Male/Female)"
@@ -55,8 +55,13 @@ export default async function handler(req, res) {
       1. Extract exact text as shown on the document
       2. For missing information, use empty string ""
       3. For gender, determine from the IC number's last digit (odd=Male, even=Female)
-      4. Return only valid JSON format
-      5. If this is not a Malaysian IC document, return an error message
+      4. IMPORTANT: Separate the address components properly:
+         - "address" should contain ONLY the street address (house number, street name, area)
+         - "postCode" should contain ONLY the 5-digit postal code
+         - "city" should contain ONLY the city name
+         - "state" should contain ONLY the state name
+      5. Return only valid JSON format
+      6. If this is not a Malaysian IC document, return an error message
     `;
 
     // Prepare the image data for Gemini
@@ -82,6 +87,35 @@ export default async function handler(req, res) {
       // Validate that we have the expected structure
       if (!parsedData.icNumber && !parsedData.fullName) {
         throw new Error('Invalid IC document or unable to extract data');
+      }
+
+      // Post-process address data to ensure proper separation
+      if (parsedData.address) {
+        // Clean up address field - remove postal code, city, state if they're included
+        let cleanAddress = parsedData.address;
+        
+        // Remove postal code pattern (5 digits) from address
+        cleanAddress = cleanAddress.replace(/\b\d{5}\b/g, '').trim();
+        
+        // Remove common Malaysian states from address field
+        const malaysianStates = [
+          'JOHOR', 'KEDAH', 'KELANTAN', 'MELAKA', 'NEGERI SEMBILAN', 'PAHANG', 
+          'PERAK', 'PERLIS', 'PULAU PINANG', 'SABAH', 'SARAWAK', 'SELANGOR', 
+          'TERENGGANU', 'WILAYAH PERSEKUTUAN', 'KUALA LUMPUR', 'LABUAN', 'PUTRAJAYA'
+        ];
+        
+        malaysianStates.forEach(state => {
+          const regex = new RegExp(`\\b${state}\\b`, 'gi');
+          cleanAddress = cleanAddress.replace(regex, '').trim();
+        });
+        
+        // Clean up extra whitespace and newlines
+        cleanAddress = cleanAddress.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
+        
+        // Remove trailing commas or periods
+        cleanAddress = cleanAddress.replace(/[,.\s]+$/, '');
+        
+        parsedData.address = cleanAddress;
       }
       
     } catch (parseError) {

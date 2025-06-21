@@ -656,15 +656,15 @@ export default function SignUp() {
                         </div>
                         <div>
                           <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
-                            AI-Powered Document Processing
+                            AI-Powered IC Processing
                           </h4>
                           <p className="text-sm text-blue-700 dark:text-blue-300 mb-2">
-                            Our AI will automatically extract your personal details from the IC document.
+                            We will automatically extract your personal details from your IC.
                           </p>
                           <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
-                            <div>• Ensure the document is well-lit and clearly visible</div>
-                            <div>• All text should be readable and not blurred</div>
-                            <div>• Processing takes 10-30 seconds</div>
+                            <div>• Use a clear, well-lit image</div>
+                            <div>• Text must be sharp and readable</div>
+                            <div>• Processing takes 10–30 seconds</div>
                           </div>
                         </div>
                       </div>
