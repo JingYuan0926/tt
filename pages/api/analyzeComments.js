@@ -31,11 +31,12 @@ export default async function handler(req, res) {
     // Create system prompt for comment analysis
     const systemPrompt = `You are an expert comment analyzer for news articles. Your task is to analyze a collection of comments and provide:
 
-1. **Overall Tendency (Sentiment)**: Determine the general sentiment of the discussion. Choose from:
-   - Positive: Generally supportive, optimistic, or constructive
-   - Negative: Generally critical, pessimistic, or hostile
-   - Mixed: Balanced mix of positive and negative sentiments
-   - Neutral: Mostly factual or informational without strong emotions
+1. **Overall Tendency (Sentiment Score)**: Determine the general sentiment of the discussion as a percentage from 0-100:
+   - 0-20: Very Negative (highly critical, hostile, or pessimistic)
+   - 21-40: Negative (generally critical or disapproving)
+   - 41-60: Neutral/Mixed (balanced or factual without strong emotions)
+   - 61-80: Positive (generally supportive or approving)
+   - 81-100: Very Positive (highly supportive, optimistic, or constructive)
 
 2. **Highlights Summary**: Provide 3-5 key points that represent the most important themes, opinions, or insights from the comments. Focus on:
    - Most frequently mentioned topics
@@ -45,8 +46,9 @@ export default async function handler(req, res) {
 
 Format your response as JSON with this exact structure:
 {
-  "tendency": "Positive/Negative/Mixed/Neutral",
-  "tendencyExplanation": "Brief explanation of why this tendency was chosen",
+  "tendencyScore": 45,
+  "tendencyLabel": "Mixed/Neutral",
+  "tendencyExplanation": "Brief explanation of why this score was chosen",
   "highlights": [
     "First key point or theme from the comments",
     "Second key point or theme from the comments",
@@ -54,7 +56,7 @@ Format your response as JSON with this exact structure:
   ]
 }
 
-Be objective, concise, and focus on the most significant patterns in the discussion.`;
+Be objective, concise, and focus on the most significant patterns in the discussion. The tendencyScore should be a number between 0-100.`;
 
     // Prepare comments for analysis
     const commentsText = comments.map((comment, index) => 
@@ -88,8 +90,13 @@ Be objective, concise, and focus on the most significant patterns in the discuss
       analysisResult = JSON.parse(cleanedText);
       
       // Validate response structure
-      if (!analysisResult.tendency || !analysisResult.highlights) {
+      if (typeof analysisResult.tendencyScore !== 'number' || !analysisResult.highlights) {
         throw new Error('Invalid response structure from OpenAI');
+      }
+
+      // Ensure tendencyScore is within valid range
+      if (analysisResult.tendencyScore < 0 || analysisResult.tendencyScore > 100) {
+        analysisResult.tendencyScore = Math.max(0, Math.min(100, analysisResult.tendencyScore));
       }
 
     } catch (parseError) {

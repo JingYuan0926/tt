@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Slider } from "@/components/ui/slider";
 import { ErrorModal } from "@/components/ui/modal";
 
 // Configure Inter font
@@ -19,17 +20,19 @@ const inter = Inter({
 
 // Hardcoded sample comments for testing
 const SAMPLE_COMMENTS = [
-  "This is a really interesting article! I learned a lot about the topic and appreciate the thorough research.",
-  "I disagree with the main points here. The author seems to have missed some key facts that would change the conclusion.",
-  "Great piece of journalism. Finally someone is covering this important issue that affects so many people.",
-  "The data presented doesn't seem accurate. I've seen conflicting numbers from other reliable sources.",
-  "This article is biased and one-sided. Where are the opposing viewpoints?",
-  "Thank you for bringing attention to this matter. It's about time someone spoke up about these problems.",
-  "I'm not sure I understand the implications of this. Could someone explain how this affects the average person?",
-  "Excellent analysis! The author clearly knows what they're talking about and presents the information well.",
-  "This is just fear-mongering. The situation isn't as bad as the article makes it seem.",
-  "I hope this leads to some positive changes. We really need action on this issue, not just more talk."
-];
+    "This is a really well-written article. The author explained everything clearly and concisely.",
+    "Finally, some journalism that actually does the research. Kudos to the team!",
+    "Great job highlighting this issue. More people need to be aware of it.",
+    "I really appreciate the balanced tone of this article. It's informative without being sensational.",
+    "Excellent reporting! This gives me hope that the media can still get things right.",
+    "This piece gave me a new perspective on the topic. Very enlightening.",
+    "I shared this with my friends—it’s that good. Thank you for writing it!",
+    "What a refreshing read. It's nice to see facts presented without drama or spin.",
+    "I'm not sure I agree with the conclusion, but at least the article lays out the reasoning clearly.", // Neutral-leaning negative
+    "Some parts feel a bit biased, especially in how opposing views were framed." // Mildly critical
+  ];
+  
+  
 
 export default function CommentAnalysisTest() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -112,19 +115,48 @@ export default function CommentAnalysisTest() {
     }
   };
 
-  // Get tendency color based on sentiment
-  const getTendencyColor = (tendency) => {
-    switch (tendency?.toLowerCase()) {
-      case 'positive':
-        return 'text-green-600 bg-green-50 border-green-200';
-      case 'negative':
-        return 'text-red-600 bg-red-50 border-red-200';
-      case 'mixed':
-        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      case 'neutral':
-        return 'text-gray-600 bg-gray-50 border-gray-200';
-      default:
-        return 'text-gray-600 bg-gray-50 border-gray-200';
+  // Get tendency color and label based on score
+  const getTendencyInfo = (score) => {
+    if (score >= 81) {
+      return {
+        label: 'Very Positive',
+        color: 'text-green-700',
+        bgColor: 'bg-green-50',
+        borderColor: 'border-green-200',
+        sliderColor: 'bg-green-500'
+      };
+    } else if (score >= 61) {
+      return {
+        label: 'Positive',
+        color: 'text-green-600',
+        bgColor: 'bg-green-50',
+        borderColor: 'border-green-200',
+        sliderColor: 'bg-green-400'
+      };
+    } else if (score >= 41) {
+      return {
+        label: 'Neutral/Mixed',
+        color: 'text-yellow-600',
+        bgColor: 'bg-yellow-50',
+        borderColor: 'border-yellow-200',
+        sliderColor: 'bg-yellow-400'
+      };
+    } else if (score >= 21) {
+      return {
+        label: 'Negative',
+        color: 'text-red-600',
+        bgColor: 'bg-red-50',
+        borderColor: 'border-red-200',
+        sliderColor: 'bg-red-400'
+      };
+    } else {
+      return {
+        label: 'Very Negative',
+        color: 'text-red-700',
+        bgColor: 'bg-red-50',
+        borderColor: 'border-red-200',
+        sliderColor: 'bg-red-500'
+      };
     }
   };
 
@@ -206,13 +238,53 @@ export default function CommentAnalysisTest() {
                 </CardDescription>
               </CardHeader>
               
-              <CardContent>
-                <div className={`inline-flex items-center px-4 py-2 rounded-lg border font-semibold text-lg ${getTendencyColor(analysis.tendency)}`}>
-                  {analysis.tendency}
+              <CardContent className="space-y-6">
+                {/* Score Display */}
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-gray-900 mb-2">
+                    {analysis.tendencyScore}%
+                  </div>
+                  {(() => {
+                    const tendencyInfo = getTendencyInfo(analysis.tendencyScore);
+                    return (
+                      <div className={`inline-flex items-center px-3 py-1 rounded-full border font-medium ${tendencyInfo.color} ${tendencyInfo.bgColor} ${tendencyInfo.borderColor}`}>
+                        {tendencyInfo.label}
+                      </div>
+                    );
+                  })()}
+                </div>
+
+                {/* Sentiment Progress Bar */}
+                <div className="space-y-3">
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Very Negative</span>
+                    <span>Neutral</span>
+                    <span>Very Positive</span>
+                  </div>
+                  
+                  {/* Custom Progress Bar */}
+                  <div className="relative w-full h-2 bg-gray-200 rounded-full">
+                    {/* Progress Fill */}
+                    <div 
+                      className="absolute left-0 top-0 h-full bg-primary rounded-full transition-all duration-500"
+                      style={{ width: `${analysis.tendencyScore}%` }}
+                    />
+                    {/* Thumb/Indicator */}
+                    <div 
+                      className="absolute top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-4 h-4 bg-primary border-2 border-white rounded-full shadow-md transition-all duration-500"
+                      style={{ left: `${analysis.tendencyScore}%` }}
+                    />
+                  </div>
+                  
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>0%</span>
+                    <span>50%</span>
+                    <span>100%</span>
+                  </div>
                 </div>
                 
                 {analysis.tendencyExplanation && (
-                  <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     {analysis.tendencyExplanation}
                   </p>
                 )}
