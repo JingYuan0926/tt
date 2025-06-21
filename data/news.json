@@ -1,7 +1,26 @@
 [
   {
+    "id": "news_aljazeera_001",
+    "title": "LIVE: Iran says still open to diplomacy, Israel vows continued attacks",
+    "date": "2025-06-21T07:25:00Z",
+    "description": "BREAKING: Iran launched an early morning missile attack on central Israel on Saturday, resulting in a fire in Holon and multiple casualties, as the conflict between the two nations enters its second week with no signs of de-escalation. The Iranian assault targeted several Israeli cities while Israeli forces simultaneously conducted strikes on Iran's Isfahan province, home to a key nuclear research centre, marking a dangerous escalation in the ongoing regional crisis.\n\nCASUALTIES AND IMMEDIATE IMPACT: Three people wounded in Friday's Iranian missile attack in Haifa remain hospitalized at Rambam Hospital, with one person reported in serious condition according to hospital spokesperson statements to Israeli media. The attack has caused significant damage to infrastructure, with emergency personnel working around burnt cars and damaged buildings at impact sites in Be'er Sheva and other affected areas.\n\nDIPLOMATIC EFFORTS AMID VIOLENCE: Despite the ongoing attacks, Iran's Foreign Minister Abbas Araghchi maintains that Iran's nuclear programme is peaceful and the country remains open to diplomacy. However, Iranian officials insist that Israel's attacks must stop first before any meaningful negotiations can begin. Iranian government spokesperson Fatemeh Mohajerani emphasized that Iran has 'no intention of pursuing nuclear weapons' and criticized the international community for not acknowledging Israel as the aggressor, comparing the situation to the false pretexts used for the US invasion of Iraq.\n\nNUCLEAR CONCERNS ESCALATE: Israeli Foreign Minister Gideon Saar claimed that the recent attacks have set back Iran's nuclear weapons capabilities by 2-3 years, though Iran has repeatedly denied seeking to build nuclear weapons. In response to Israeli targeting of nuclear facilities, Iran has reportedly moved nuclear material to secure locations to prevent destruction. The International Atomic Energy Agency (IAEA) chief Rafael Grossi expressed particular concern about potential attacks on Iran's Bushehr nuclear power plant during an emergency UN Security Council meeting.\n\nREGIONAL SPILLOVER: The conflict continues to affect neighboring countries, with Israeli forces targeting a Hezbollah military structure in southern Lebanon's Naqoura area, despite a ceasefire agreement reached in November. The Israeli military claimed the site was used to 'promote terrorist plots against Israeli citizens.' Meanwhile, Iranian drones have been detected and shot down in the occupied Golan Heights and northern West Bank, with sirens sounding across multiple Israeli communities.\n\nECONOMIC AND HUMANITARIAN CRISIS: The prolonged conflict is taking a severe economic toll on both nations. In Iran, those who could afford to leave Tehran have fled to neighboring provinces, creating population pressure and leaving low-income residents under increasing economic stress. Israel's economy faces unprecedented disruption as economic activity has been interrupted in ways not seen in previous conflicts. International evacuations have begun, with India starting the evacuation of over 10,700 citizens from Iran, also facilitating evacuations for Nepalese and Sri Lankan nationals.\n\nINTERNATIONAL RESPONSE: At an emergency UN Security Council meeting, Secretary-General António Guterres appealed for an end to the fighting and return to negotiations. In a notable diplomatic gaffe, US Ambassador Dorothy Shea accidentally said Israel had 'spread chaos, terror and suffering' across the Middle East before correcting herself to blame Iran instead. Russia's President Vladimir Putin has repeatedly assured Israel that Iran does not intend to acquire nuclear weapons, while China and Russia continue to condemn Israel's attacks on Iran.\n\nSECURITY CRACKDOWN: Iranian authorities have arrested 22 people in Qom province on charges of being connected to Israeli intelligence services and 'disturbing public opinion.' The arrests come as Iran faces increasing internal pressure amid the conflict. Israeli forces have also claimed to have assassinated senior Iranian military commanders, including Saeed Izadi, commander of the Palestinian Corps in Iran's Quds Force, and Amin Pour Jodkhi, described as the new commander of Iran's Revolutionary Guards drone brigade.\n\nGLOBAL ECONOMIC IMPLICATIONS: While the conflict has not yet severely impacted global markets, economists warn that any spread to the Persian Gulf or Strait of Hormuz could disrupt global oil supplies, as approximately 20% of world oil supply travels through the strategic waterway. Both Iran and Israel have so far avoided targeting major economic infrastructure, but the potential for escalation remains high.\n\nLOOKING AHEAD: As diplomatic representatives arrive in Geneva for talks, Iran warns of 'proportional response' to any escalation while maintaining openness to dialogue. The international community watches nervously as two of the Middle East's most powerful militaries continue their dangerous confrontation, with the specter of wider regional war looming over an already unstable region. The coming days will be crucial in determining whether diplomatic efforts can prevail over military escalation in this critical moment for regional and global security.",
+    "category": "World News",
+    "imageurl": [
+      "https://www.aljazeera.com/wp-content/uploads/2025/06/iran-israel-conflict-tel-aviv.jpg"
+    ],
+    "link": [
+      "https://www.aljazeera.com/news/liveblog/2025/6/21/live-iran-says-still-open-to-diplomacy-israel-vows-continued-attacks"
+    ],
+    "comments": [],
+    "verification_status": true,
+    "size": "l",
+    "ai_score": 0.95,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
     "id": "gnews_1o6ufr5no_1750490242398",
-    "title": "Israel’s aid death traps for starving Gazans",
+    "title": "Israel's aid death traps for starving Gazans",
     "date": "2025-06-21T04:52:30Z",
     "description": "Near-daily Israeli massacres at food distribution sites have killed over 400 Palestinians in the past month alone.",
     "category": "General",
@@ -22,7 +41,7 @@
     "id": "gnews_xb9hfs3nx_1750490242398",
     "title": "Diablo II: Resurrected Ladder Season 11 Now Live",
     "date": "2025-06-21T03:47:24Z",
-    "description": "Ladder Season 11 begins on June 20! Muster the might to liberate Sanctuary’s denizens from sinister influences as you race to Level 99.",
+    "description": "Ladder Season 11 begins on June 20! Muster the might to liberate Sanctuary's denizens from sinister influences as you race to Level 99.",
     "category": "General",
     "imageurl": [
       "https://bnetcmsus-a.akamaihd.net/cms/blog_header/n4/N4TWKH95498Y1748883506472.png"
