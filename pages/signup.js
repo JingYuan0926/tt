@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -139,6 +140,7 @@ export default function SignUp() {
   const [currentStep, setCurrentStep] = useState(1);
   const [kycFile, setKycFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isProcessingIC, setIsProcessingIC] = useState(false);
   
   // Modal states
   const [errorModal, setErrorModal] = useState({
@@ -153,6 +155,7 @@ export default function SignUp() {
     message: '',
     details: null
   });
+  const [checkDetailsModal, setCheckDetailsModal] = useState(false);
 
   // Helper functions for modals
   const showErrorModal = (title, message, details = null) => {
@@ -179,6 +182,10 @@ export default function SignUp() {
 
   const closeSuccessModal = () => {
     setSuccessModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  const closeCheckDetailsModal = () => {
+    setCheckDetailsModal(false);
   };
 
   // Initialize form with react-hook-form and Zod validation
@@ -242,47 +249,9 @@ export default function SignUp() {
       return;
     }
 
+    setIsProcessingIC(true);
+
     try {
-      // Show loading state with better styling
-      const loadingMessage = document.createElement('div');
-      loadingMessage.id = 'parsing-loading';
-      loadingMessage.innerHTML = `
-        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-                    background: rgba(0,0,0,0.5); z-index: 1000; display: flex; 
-                    align-items: center; justify-content: center;">
-          <div style="background: white; padding: 30px; border-radius: 12px; 
-                      box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; 
-                      max-width: 300px; animation: pulse 2s infinite;">
-                         <div style="margin-bottom: 15px; display: flex; justify-content: center;">
-               <svg style="width: 32px; height: 32px; color: #4f46e5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-               </svg>
-             </div>
-             <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px; color: #333;">
-               Analyzing IC Document
-             </div>
-            <div style="font-size: 14px; color: #666; line-height: 1.4;">
-              Please wait while our AI processes your document...<br>
-              This may take 10-30 seconds
-            </div>
-            <div style="margin-top: 15px; height: 4px; background: #f0f0f0; border-radius: 2px; overflow: hidden;">
-              <div style="height: 100%; background: linear-gradient(90deg, #4f46e5, #7c3aed); 
-                          animation: loading 2s infinite; border-radius: 2px;"></div>
-            </div>
-          </div>
-        </div>
-        <style>
-          @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-          }
-          @keyframes loading {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-          }
-        </style>
-      `;
-      document.body.appendChild(loadingMessage);
 
       // Convert file to base64
       const fileToBase64 = (file) => {
@@ -310,9 +279,6 @@ export default function SignUp() {
 
       const result = await response.json();
 
-      // Remove loading message
-      document.getElementById('parsing-loading')?.remove();
-
       if (!response.ok) {
         throw new Error(result.message || 'Failed to parse IC document');
       }
@@ -325,20 +291,13 @@ export default function SignUp() {
           }
         });
 
-        // Show success message
-        showSuccessModal(
-          'Document Parsed Successfully',
-          'Your IC document has been analyzed and personal details have been auto-filled.',
-          ['Please review all extracted information', 'Make any necessary corrections before submitting', 'All fields can be edited manually if needed']
-        );
+        // Document parsed successfully - show check details modal
+        setCheckDetailsModal(true);
       } else {
         throw new Error('No data extracted from the document');
       }
 
     } catch (error) {
-      // Remove loading message if it exists
-      document.getElementById('parsing-loading')?.remove();
-      
       console.error('Error parsing IC document:', error);
       showErrorModal(
         'Document Parsing Failed',
@@ -350,6 +309,8 @@ export default function SignUp() {
           'Try taking a new photo with better lighting'
         ]
       );
+    } finally {
+      setIsProcessingIC(false);
     }
   };
 
@@ -646,29 +607,31 @@ export default function SignUp() {
                       )}
                     </div>
 
-                    {/* AI Processing Info */}
-                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <div className="text-blue-500">
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
-                            AI-Powered IC Processing
-                          </h4>
-                          <p className="text-sm text-blue-700 dark:text-blue-300 mb-2">
-                            We will automatically extract your personal details from your IC.
-                          </p>
-                          <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
-                            <div>• Use a clear, well-lit image</div>
-                            <div>• Text must be sharp and readable</div>
-                            <div>• Processing takes 10–30 seconds</div>
+                    {/* AI Processing Info - Only show when file is uploaded */}
+                    {kycFile && (
+                      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                        <div className="flex items-start space-x-3">
+                          <div className="text-blue-500">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
+                              AI-Powered IC Processing
+                            </h4>
+                            <p className="text-sm text-blue-700 dark:text-blue-300 mb-2">
+                              We will automatically extract your personal details from your IC.
+                            </p>
+                            <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
+                              <div>• Use a clear, well-lit image</div>
+                              <div>• Text must be sharp and readable</div>
+                              <div>• Processing takes 5–10 seconds</div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
 
                   {/* Navigation Buttons */}
@@ -686,9 +649,9 @@ export default function SignUp() {
                       type="button"
                       onClick={nextStep}
                       className="flex-1" 
-                      disabled={!kycFile}
+                      disabled={!kycFile || isProcessingIC}
                     >
-                      Next
+                      {isProcessingIC ? "Analyzing IC..." : "Next"}
                     </Button>
                   </div>
                 </>
@@ -825,11 +788,11 @@ export default function SignUp() {
                           <FormControl>
                             <select 
                               {...field} 
-                              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                              className="flex h-9 w-full rounded-md border border-input bg-background text-foreground px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring dark:bg-background dark:text-foreground"
                             >
-                              <option value="">Select gender</option>
-                              <option value="Male">Male</option>
-                              <option value="Female">Female</option>
+                              <option value="" className="bg-background text-foreground">Select gender</option>
+                              <option value="Male" className="bg-background text-foreground">Male</option>
+                              <option value="Female" className="bg-background text-foreground">Female</option>
                             </select>
                           </FormControl>
                           <FormMessage />
@@ -866,12 +829,12 @@ export default function SignUp() {
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
               Already have an account?{" "}
-              <a 
+              <Link 
                 href="/signin" 
                 className="font-medium text-primary hover:underline"
               >
                 Sign in
-              </a>
+              </Link>
             </p>
           </div>
         </CardContent>
@@ -893,6 +856,28 @@ export default function SignUp() {
         message={successModal.message}
         details={successModal.details}
       />
+
+      {/* Check Details Modal */}
+      {checkDetailsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <Card className="w-full max-w-md mx-auto">
+            <CardHeader className="space-y-1">
+              <CardTitle className="text-2xl font-bold text-center">Verify Information</CardTitle>
+              <CardDescription className="text-center">
+                Please check your details before proceeding.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button 
+                onClick={closeCheckDetailsModal}
+                className="w-full"
+              >
+                OK
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 } 
