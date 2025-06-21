@@ -31,32 +31,51 @@ export default async function handler(req, res) {
     // Create system prompt for comment analysis
     const systemPrompt = `You are an expert comment analyzer for news articles. Your task is to analyze a collection of comments and provide:
 
-1. **Overall Tendency (Sentiment Score)**: Determine the general sentiment of the discussion as a percentage from 0-100:
+**FIRST**: Filter out gibberish comments that don't provide meaningful value:
+- Remove comments that are random character sequences (e.g., "asdfgh", "qwerty123")
+- Remove comments with only repeated characters (e.g., "aaaaa", "hahahaha")
+- Remove very short comments with no meaningful content (e.g., "lol", "k", "!!!")
+- Remove comments that are just emoji spam or symbols
+- Remove comments that appear to be keyboard mashing or accidental input
+- Keep comments that express genuine opinions, thoughts, or reactions, even if brief
+
+**THEN**: Analyze only the meaningful comments to provide:
+
+1. **Overall Tendency (Sentiment Score)**: Determine the general sentiment of the meaningful discussion as a percentage from 0-100:
    - 0-20: Very Negative (highly critical, hostile, or pessimistic)
    - 21-40: Negative (generally critical or disapproving)
    - 41-60: Neutral/Mixed (balanced or factual without strong emotions)
    - 61-80: Positive (generally supportive or approving)
    - 81-100: Very Positive (highly supportive, optimistic, or constructive)
 
-2. **Highlights Summary**: Provide 3-5 key points that represent the most important themes, opinions, or insights from the comments. Focus on:
-   - Most frequently mentioned topics
-   - Representative viewpoints from different perspectives
-   - Notable insights or unique perspectives
-   - Key concerns or praise mentioned
+2. **Highlights Summary**: Provide 3-5 key points that represent the most important themes, opinions, or insights from the meaningful comments.
 
 Format your response as JSON with this exact structure:
 {
+  "totalComments": 10,
+  "meaningfulComments": 7,
+  "filteredComments": 3,
+  "hasNoValue": false,
   "tendencyScore": 45,
   "tendencyLabel": "Mixed/Neutral",
   "tendencyExplanation": "Brief explanation of why this score was chosen",
   "highlights": [
-    "First key point or theme from the comments",
-    "Second key point or theme from the comments",
-    "Third key point or theme from the comments"
+    "First key point or theme from the meaningful comments",
+    "Second key point or theme from the meaningful comments",
+    "Third key point or theme from the meaningful comments"
   ]
 }
 
-Be objective, concise, and focus on the most significant patterns in the discussion. The tendencyScore should be a number between 0-100.`;
+**SPECIAL CASE**: If ALL comments are gibberish or meaningless, return:
+{
+  "totalComments": 5,
+  "meaningfulComments": 0,
+  "filteredComments": 5,
+  "hasNoValue": true,
+  "message": "All comments appear to be gibberish or don't provide meaningful value for analysis."
+}
+
+Be strict about filtering gibberish but preserve genuine human expression, even if brief or poorly written.`;
 
     // Prepare comments for analysis
     const commentsText = comments.map((comment, index) => 
@@ -90,13 +109,22 @@ Be objective, concise, and focus on the most significant patterns in the discuss
       analysisResult = JSON.parse(cleanedText);
       
       // Validate response structure
-      if (typeof analysisResult.tendencyScore !== 'number' || !analysisResult.highlights) {
-        throw new Error('Invalid response structure from OpenAI');
+      if (typeof analysisResult.totalComments !== 'number' || 
+          typeof analysisResult.meaningfulComments !== 'number' ||
+          typeof analysisResult.filteredComments !== 'number') {
+        throw new Error('Invalid response structure from OpenAI - missing comment counts');
       }
 
-      // Ensure tendencyScore is within valid range
-      if (analysisResult.tendencyScore < 0 || analysisResult.tendencyScore > 100) {
-        analysisResult.tendencyScore = Math.max(0, Math.min(100, analysisResult.tendencyScore));
+      // For meaningful analysis (hasNoValue is false)
+      if (!analysisResult.hasNoValue) {
+        if (typeof analysisResult.tendencyScore !== 'number' || !analysisResult.highlights) {
+          throw new Error('Invalid response structure from OpenAI - missing analysis data');
+        }
+
+        // Ensure tendencyScore is within valid range
+        if (analysisResult.tendencyScore < 0 || analysisResult.tendencyScore > 100) {
+          analysisResult.tendencyScore = Math.max(0, Math.min(100, analysisResult.tendencyScore));
+        }
       }
 
     } catch (parseError) {

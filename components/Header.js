@@ -30,20 +30,17 @@ export default function Header() {
 
         if (currentPath === '/news' || currentPath === '/details') {
             setSelectedNav('News');
-        } else if (currentPath === '/verify') {
-            setSelectedNav('Verify');
-        } else if (currentPath === '/challenge') {
-            setSelectedNav('Challenge');
         } else if (currentPath === '/profile') {
             setSelectedNav('Profile');
+        } else if (currentPath === '/download') {
+            setSelectedNav('Download');
         } else {
             setSelectedNav('News'); // Default to News for any other route
         }
 
         console.log('Selected nav set to:', currentPath === '/news' || currentPath === '/details' ? 'News' :
-            currentPath === '/verify' ? 'Verify' :
-                currentPath === '/challenge' ? 'Challenge' :
-                    currentPath === '/profile' ? 'Profile' : 'News'); // Debug log
+            currentPath === '/profile' ? 'Profile' :
+                currentPath === '/download' ? 'Download' : 'News'); // Debug log
     }, [router.pathname]);
 
     // Handle scroll events with smoother transition
@@ -90,9 +87,8 @@ export default function Header() {
         // Navigate to the respective page
         const routeMapping = {
             "News": "/news",
-            "Verify": "/verify",
-            "Challenge": "/challenge",
-            "Profile": "/profile"
+            "Profile": "/profile",
+            "Download": "/download"
         };
 
         const targetRoute = routeMapping[key];
@@ -135,9 +131,8 @@ export default function Header() {
                                 disableAnimation={false}
                             >
                                 <Tab key="News" title="News" />
-                                <Tab key="Verify" title="Verify" />
-                                <Tab key="Challenge" title="Challenge" />
                                 <Tab key="Profile" title="Profile" />
+                                <Tab key="Download" title="Download" />
                             </Tabs>
                         </div>
                     </div>
