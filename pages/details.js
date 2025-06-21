@@ -17,6 +17,31 @@ export default function Details() {
   // Find the article by ID
   const article = newsData.find(item => item.id === id);
   
+  // Function to save comment to the JSON file
+  const handleAddComment = async (articleId, comment) => {
+    try {
+      const response = await fetch('/api/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          articleId,
+          comment
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save comment');
+      }
+
+      console.log('Comment saved successfully');
+    } catch (error) {
+      console.error('Error saving comment:', error);
+      throw error;
+    }
+  };
+  
   // If article not found, show loading or error
   if (!article && id) {
     return (
@@ -56,7 +81,7 @@ export default function Details() {
         <BiasAnalysis article={article} />
 
         {/* Comments Section Component */}
-        <CommentsSection article={article} />
+        <CommentsSection article={article} onAddComment={handleAddComment} />
 
         {/* Article Header */}
         <motion.article 

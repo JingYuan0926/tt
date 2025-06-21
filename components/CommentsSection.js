@@ -1,34 +1,50 @@
 import React from 'react';
-import { Button, Chip, Avatar, Textarea } from "@heroui/react";
-import { ChatBubbleLeftIcon, XMarkIcon, HeartIcon } from '@heroicons/react/24/outline';
+import { Button, Avatar, Textarea } from "@heroui/react";
+import { ChatBubbleLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 
-export default function CommentsSection({ article }) {
+export default function CommentsSection({ article, onAddComment }) {
   const [isCommentsSidebarOpen, setIsCommentsSidebarOpen] = React.useState(false);
   const [newComment, setNewComment] = React.useState('');
 
-  // Use comments from the article data
+  // Use comments from the article data - simplified structure without likes
   const [comments, setComments] = React.useState(article?.comments?.map(comment => ({
     id: comment.id,
     author: comment.user,
     avatar: `https://images.unsplash.com/photo-150${Math.floor(Math.random() * 9) + 1}003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=150&q=80`,
     time: new Date(comment.timestamp).toLocaleDateString(),
-    content: comment.content,
-    likes: comment.vote?.upvotes || 0
+    content: comment.content
   })) || []);
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (newComment.trim()) {
       const comment = {
-        id: comments.length + 1,
-        author: "You",
+        id: Date.now(), // Use timestamp as unique ID
+        user: "You",
+        content: newComment,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Add to local state immediately for UI responsiveness
+      const newCommentForDisplay = {
+        id: comment.id,
+        author: comment.user,
         avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&w=150&q=80",
         time: "Just now",
-        content: newComment,
-        likes: 0
+        content: comment.content
       };
-      setComments([comment, ...comments]);
+      
+      setComments([newCommentForDisplay, ...comments]);
       setNewComment('');
+      
+      // Call the parent function to save to JSON file
+      if (onAddComment) {
+        try {
+          await onAddComment(article.id, comment);
+        } catch (error) {
+          console.error('Failed to save comment:', error);
+        }
+      }
     }
   };
 
@@ -94,38 +110,36 @@ export default function CommentsSection({ article }) {
 
           {/* Comments List */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            {comments.map((comment, index) => (
-              <motion.div 
-                key={comment.id} 
-                className="flex gap-3"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.3 + (index * 0.1) }}
-              >
-                <Avatar
-                  src={comment.avatar}
-                  alt={comment.author}
-                  size="sm"
-                  className="flex-shrink-0"
-                />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-semibold text-sm text-gray-900">{comment.author}</span>
-                    <span className="text-xs text-gray-500">{comment.time}</span>
+            {comments.length > 0 ? (
+              comments.map((comment, index) => (
+                <motion.div 
+                  key={comment.id} 
+                  className="flex gap-3"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: 0.3 + (index * 0.1) }}
+                >
+                  <Avatar
+                    src={comment.avatar}
+                    alt={comment.author}
+                    size="sm"
+                    className="flex-shrink-0"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-semibold text-sm text-gray-900">{comment.author}</span>
+                      <span className="text-xs text-gray-500">{comment.time}</span>
+                    </div>
+                    <p className="text-sm text-gray-700 leading-relaxed">{comment.content}</p>
                   </div>
-                  <p className="text-sm text-gray-700 leading-relaxed mb-2">{comment.content}</p>
-                  <div className="flex items-center gap-4">
-                    <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-500 transition-colors">
-                      <HeartIcon className="w-4 h-4" />
-                      {comment.likes}
-                    </button>
-                    <button className="text-xs text-gray-500 hover:text-blue-500 transition-colors">
-                      Reply
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))
+            ) : (
+              <div className="text-center text-gray-500 py-8">
+                <ChatBubbleLeftIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                <p>No comments yet. Be the first to share your thoughts!</p>
+              </div>
+            )}
           </div>
         </div>
       </motion.div>
@@ -154,9 +168,9 @@ export default function CommentsSection({ article }) {
         >
           <ChatBubbleLeftIcon className="w-5 h-5" />
           <span className="hidden sm:inline">Comments</span>
-          <Chip size="sm" color="primary" variant="solid" className="text-white bg-white bg-opacity-20">
+          <span className="bg-white bg-opacity-20 text-white text-xs px-2 py-1 rounded-full">
             {comments.length}
-          </Chip>
+          </span>
         </Button>
       </motion.div>
     </>
