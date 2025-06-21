@@ -105,7 +105,7 @@ export default function Header() {
                 />
             </Head>
             {/* Static header container - stays at top of content, scrolls naturally */}
-            <div className="relative top-0 w-full bg-white border-b border-gray-100">
+            <div className="relative top-0 w-full bg-white border-b border-gray-250">
                 {/* Main navbar with aligned logo and navigation */}
                 <Navbar
                     position="relative"

@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import { useEffect } from "react";
 import {HeroUIProvider} from "@heroui/react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { useRouter } from "next/router";
 
 // Stagewise toolbar integration
@@ -44,10 +45,15 @@ function setupStagewise() {
 }
 
 export default function App({ Component, pageProps }) {
+  const router = useRouter();
+  
   // Initialize Stagewise toolbar when app mounts
   useEffect(() => {
     setupStagewise();
   }, []);
+
+  // Check if current page is index page
+  const isIndexPage = router.pathname === '/';
 
   return (
     <HeroUIProvider>
@@ -57,6 +63,8 @@ export default function App({ Component, pageProps }) {
         <main className="min-h-screen pt-0">
           <Component {...pageProps} />
         </main>
+        {/* Show Footer on all pages except index */}
+        {!isIndexPage && <Footer />}
       </div>
     </HeroUIProvider>
   );
