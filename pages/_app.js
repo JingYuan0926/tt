@@ -1,13 +1,8 @@
 import "@/styles/globals.css";
 import { useEffect } from "react";
-import { Inter } from "next/font/google";
+import {HeroUIProvider} from "@heroui/react";
+import Header from "@/components/Header";
 
-// Configure Inter font globally
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 // Stagewise toolbar integration
 function setupStagewise() {
@@ -55,8 +50,9 @@ export default function App({ Component, pageProps }) {
   }, []);
 
   return (
-    <div className={`${inter.variable} font-sans`}>
+    <HeroUIProvider>
+      <Header />
       <Component {...pageProps} />
-    </div>
+    </HeroUIProvider>
   );
 }

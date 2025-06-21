@@ -9,6 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+// HeroUI components
+import { Button as HeroButton, Card as HeroCard, CardBody, CardHeader as HeroCardHeader, Input as HeroInput } from "@heroui/react";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -30,6 +32,27 @@ export default function Home() {
           height={38}
           priority
         />
+
+        {/* HeroUI Demo Section */}
+        <HeroCard className="w-full max-w-md">
+          <HeroCardHeader className="pb-3">
+            <h4 className="font-bold text-large">HeroUI Demo</h4>
+            <p className="text-tiny uppercase font-bold">Beautiful components built with React & Tailwind CSS</p>
+          </HeroCardHeader>
+          <CardBody className="space-y-4">
+            <HeroInput 
+              type="email" 
+              label="Email" 
+              placeholder="Enter your email..."
+              variant="bordered"
+            />
+            <div className="flex gap-2">
+              <HeroButton color="primary">Primary Button</HeroButton>
+              <HeroButton variant="bordered">Bordered Button</HeroButton>
+              <HeroButton color="secondary" variant="flat">Flat Button</HeroButton>
+            </div>
+          </CardBody>
+        </HeroCard>
 
         {/* shadcn/ui Demo Section */}
         <Card className="w-full max-w-md">
@@ -58,8 +81,8 @@ export default function Home() {
           </li>
           <li>Save and see your changes instantly.</li>
           <li className="mb-2">
-            <strong>shadcn/ui components are now available!</strong> Check out
-            the demo above.
+            <strong>Both HeroUI and shadcn/ui components are now available!</strong> Check out
+            the demos above.
           </li>
         </ol>
 
