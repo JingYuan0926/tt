@@ -41,25 +41,43 @@ export default function Header() {
     // Set selected nav based on current route
     useEffect(() => {
         const currentPath = router.pathname;
-        console.log('Current path:', currentPath); // Debug log
+        console.log('🔍 Header - Current path:', currentPath); // Enhanced debug log
+        console.log('🔍 Header - Router ready:', router.isReady); // Check if router is ready
+
+        let newSelectedNav = "News"; // Default
 
         if (currentPath === '/news' || currentPath === '/details') {
-            setSelectedNav('News');
+            newSelectedNav = 'News';
         } else if (currentPath === '/profile') {
-            setSelectedNav('Profile');
+            newSelectedNav = 'Profile';
         } else if (currentPath === '/download') {
-            setSelectedNav('Download');
-        } else if (currentPath === '/subscribe') {
-            setSelectedNav('Subscribe');
-        } else {
-            setSelectedNav('News'); // Default to News for any other route
+            newSelectedNav = 'Download';
+        } else if (currentPath === '/subscribe' || currentPath === '/success') {
+            newSelectedNav = 'Subscribe';
         }
 
-        console.log('Selected nav set to:', currentPath === '/news' || currentPath === '/details' ? 'News' :
-            currentPath === '/profile' ? 'Profile' :
-                currentPath === '/download' ? 'Download' :
-                    currentPath === '/subscribe' ? 'Subscribe' : 'News'); // Debug log
-    }, [router.pathname]);
+        console.log('🎯 Header - Setting selectedNav to:', newSelectedNav);
+        setSelectedNav(newSelectedNav);
+    }, [router.pathname, router.isReady]);
+
+    // Additional useEffect to handle client-side routing
+    useEffect(() => {
+        const handleRouteChange = (url) => {
+            console.log('🚀 Header - Route change detected:', url);
+            const path = url.split('?')[0]; // Remove query parameters
+            
+            if (path === '/success') {
+                console.log('✅ Header - Success page detected, setting Subscribe');
+                setSelectedNav('Subscribe');
+            }
+        };
+
+        router.events.on('routeChangeComplete', handleRouteChange);
+        
+        return () => {
+            router.events.off('routeChangeComplete', handleRouteChange);
+        };
+    }, [router.events]);
 
     // Handle tab navigation click - navigate to respective pages
     const handleNavClick = (key) => {
@@ -153,6 +171,8 @@ export default function Header() {
                     {/* Desktop Navigation - Hidden on small screens */}
                     <NavbarContent className="hidden sm:flex items-center ml-12" justify="center">
                         <div className="flex items-center">
+                            {/* Debug: Log current selectedNav */}
+                            {console.log('🎨 Header - Rendering with selectedNav:', selectedNav)}
                             <Tabs
                                 aria-label="Navigation"
                                 radius="full"
