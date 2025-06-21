@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Inter } from "next/font/google";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -73,6 +73,14 @@ export default function SignUp() {
   const [isProcessingIC, setIsProcessingIC] = useState(false);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   
+  // Camera-related states
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [cameraStream, setCameraStream] = useState(null);
+  const [isCameraLoading, setIsCameraLoading] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  
   // Modal states
   const [errorModal, setErrorModal] = useState({
     isOpen: false,
@@ -119,6 +127,141 @@ export default function SignUp() {
       setCheckDetailsModal(false);
     }, 150); // Match the animation duration
   };
+
+  // Camera functions
+  const openCamera = async () => {
+    setIsCameraLoading(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { 
+          facingMode: 'environment', // Use back camera if available
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      });
+      
+      setCameraStream(stream);
+      setIsCameraOpen(true);
+      
+      // Set video stream after state update
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      }, 100);
+      
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      handleCameraError(error);
+    } finally {
+      setIsCameraLoading(false);
+    }
+  };
+
+  const handleCameraError = (error) => {
+    let title = 'Camera Access Error';
+    let message = 'Unable to access your camera.';
+    let details = [];
+
+    if (error.name === 'NotAllowedError') {
+      message = 'Camera permission was denied.';
+      details = [
+        'Please allow camera access in your browser settings',
+        'Try refreshing the page and allowing camera access',
+        'Alternatively, use the file upload option below'
+      ];
+    } else if (error.name === 'NotFoundError') {
+      message = 'No camera was found on your device.';
+      details = [
+        'Make sure your device has a camera',
+        'Try connecting an external camera',
+        'Use the file upload option instead'
+      ];
+    } else {
+      details = [
+        'Check if another application is using the camera',
+        'Try refreshing the page',
+        'Use the file upload option as an alternative'
+      ];
+    }
+
+    showErrorModal(title, message, details);
+  };
+
+  const capturePhoto = () => {
+    if (!videoRef.current || !canvasRef.current) return;
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+
+    // Set canvas dimensions to video dimensions
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    // Draw the video frame to canvas
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Convert canvas to blob and then to file
+    canvas.toBlob((blob) => {
+      if (blob) {
+        // Create a file object from the blob
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const capturedFile = new File([blob], `ic-capture-${timestamp}.jpg`, {
+          type: 'image/jpeg',
+          lastModified: Date.now()
+        });
+
+        // Set the captured file as the KYC file
+        setKycFile(capturedFile);
+        setCapturedImage(canvas.toDataURL('image/jpeg', 0.8));
+        
+        // Close camera after successful capture
+        closeCamera();
+      }
+    }, 'image/jpeg', 0.8);
+  };
+
+  const closeCamera = () => {
+    // Stop all video tracks
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => {
+        track.stop();
+      });
+      setCameraStream(null);
+    }
+    
+    // Clear video source
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+    
+    setIsCameraOpen(false);
+  };
+
+  const retakePhoto = () => {
+    setCapturedImage(null);
+    setKycFile(null);
+    openCamera();
+  };
+
+  // Cleanup camera when component unmounts or step changes
+  useEffect(() => {
+    return () => {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => {
+          track.stop();
+        });
+      }
+    };
+  }, [cameraStream]);
+
+  // Close camera when leaving step 2
+  useEffect(() => {
+    if (currentStep !== 2 && isCameraOpen) {
+      closeCamera();
+    }
+  }, [currentStep]);
 
   // Initialize form with react-hook-form and Zod validation
   const form = useForm({
@@ -176,6 +319,7 @@ export default function SignUp() {
       }
       
       setKycFile(file);
+      setCapturedImage(null); // Clear any captured image
     }
   };
 
@@ -538,27 +682,131 @@ export default function SignUp() {
               {/* Step 2: KYC Document Upload */}
               {currentStep === 2 && (
                 <>
-                  {/* KYC Document Upload */}
+                  {/* KYC Document Upload Options */}
                   <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="kyc-upload">KYC Document Upload</Label>
-                      <Input
-                        id="kyc-upload"
-                        type="file"
-                        accept=".jpg,.jpeg,.png,.pdf"
-                        onChange={handleFileUpload}
-                        disabled={isSubmitting}
-                        className="cursor-pointer mt-2"
-                      />
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Upload your Malaysian IC (JPEG, PNG, or PDF - Max 10MB)
-                      </p>
-                      {kycFile && (
-                        <p className="text-sm text-green-600 dark:text-green-400 mt-2">
+                    {!isCameraOpen && !capturedImage && (
+                      <>
+                                                 {/* Upload Options */}
+                         <div className="grid grid-cols-2 gap-3">
+                           <Button
+                             type="button"
+                             variant="outline"
+                             onClick={openCamera}
+                             disabled={isCameraLoading || isSubmitting}
+                             className="h-20 flex flex-col items-center justify-center space-y-2"
+                           >
+                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                             </svg>
+                             <span className="text-sm">
+                               {isCameraLoading ? "Starting Camera..." : "Use Camera"}
+                             </span>
+                           </Button>
+
+                           <Label htmlFor="kyc-upload" className="cursor-pointer h-20">
+                             <div className="border-2 border-dashed border-gray-300 rounded-lg h-full flex flex-col items-center justify-center space-y-2 hover:border-gray-400 transition-colors">
+                               <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                               </svg>
+                               <span className="text-sm text-gray-600">Upload File</span>
+                             </div>
+                             <Input
+                               id="kyc-upload"
+                               type="file"
+                               accept=".jpg,.jpeg,.png,.pdf"
+                               onChange={handleFileUpload}
+                               disabled={isSubmitting}
+                               className="hidden"
+                             />
+                           </Label>
+                         </div>
+
+                        <p className="text-sm text-muted-foreground text-center">
+                          Capture your Malaysian IC with camera or upload from device (JPEG, PNG, PDF - Max 5MB)
+                        </p>
+                      </>
+                    )}
+
+                    {/* Camera Interface */}
+                    {isCameraOpen && (
+                      <div className="space-y-4">
+                        <div className="relative bg-black rounded-lg overflow-hidden">
+                          <video
+                            ref={videoRef}
+                            autoPlay
+                            playsInline
+                            muted
+                            className="w-full h-64 object-cover"
+                          />
+                          
+                          {/* Camera overlay guidelines */}
+                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div className="border-2 border-white/70 rounded-lg w-4/5 h-3/5 flex items-center justify-center">
+                              <span className="text-white/90 text-sm bg-black/50 px-3 py-1 rounded">
+                                Align your IC within this frame
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={closeCamera}
+                            className="flex-1"
+                            disabled={isSubmitting}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={capturePhoto}
+                            className="flex-1"
+                            disabled={isSubmitting}
+                          >
+                            📷 Capture Photo
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Captured Image Preview */}
+                    {capturedImage && (
+                      <div className="space-y-4">
+                        <div>
+                          <Label>Captured IC Image</Label>
+                          <div className="mt-2 relative">
+                            <img
+                              src={capturedImage}
+                              alt="Captured IC"
+                              className="w-full h-48 object-cover rounded-lg border"
+                            />
+                          </div>
+                          <div className="flex gap-2 mt-3">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={retakePhoto}
+                              className="flex-1"
+                              disabled={isSubmitting}
+                            >
+                              📷 Retake Photo
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* File Upload Success */}
+                    {kycFile && !capturedImage && (
+                      <div className="text-center">
+                        <p className="text-sm text-green-600 dark:text-green-400">
                           ✓ File selected: {kycFile.name}
                         </p>
-                      )}
-                    </div>
+                      </div>
+                    )}
 
                     {/* AI Processing Info - Only show when file is uploaded */}
                     {kycFile && (
@@ -573,12 +821,14 @@ export default function SignUp() {
                             <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
                               Please wait 5 seconds for AI processing.
                             </h4>
-
                           </div>
                         </div>
                       </div>
                     )}
                   </div>
+
+                  {/* Hidden canvas for photo capture */}
+                  <canvas ref={canvasRef} className="hidden" />
 
                   {/* Navigation Buttons */}
                   <div className="flex gap-2">
@@ -587,7 +837,7 @@ export default function SignUp() {
                       variant="outline" 
                       onClick={prevStep}
                       className="flex-1"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || isCameraOpen}
                     >
                       Previous
                     </Button>
@@ -595,7 +845,7 @@ export default function SignUp() {
                       type="button"
                       onClick={nextStep}
                       className="flex-1" 
-                      disabled={!kycFile || isProcessingIC}
+                      disabled={!kycFile || isProcessingIC || isCameraOpen}
                     >
                       {isProcessingIC ? "Processing IC..." : "Next"}
                     </Button>
