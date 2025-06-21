@@ -25,7 +25,6 @@ import { ErrorModal } from "@/components/ui/modal";
 
 // Configure Inter font
 const inter = Inter({
-  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
@@ -202,8 +201,22 @@ export default function SignIn() {
     setIsSubmitting(true);
     
     try {
-      // TODO: Replace with actual API call to send OTP
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Call the real API to send OTP
+      const response = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          gmail: values.gmail
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Failed to send OTP');
+      }
       
       // Store gmail and move to OTP verification step with transition
       setUserGmail(values.gmail);
@@ -213,7 +226,7 @@ export default function SignIn() {
         setIsTransitioning(false);
       }, 150);
       
-      showSuccessModal('OTP Sent Successfully');
+      showSuccessModal('OTP Sent Successfully!');
       
     } catch (error) {
       console.error('Send OTP error:', error);
@@ -224,6 +237,7 @@ export default function SignIn() {
         [
           'Check your internet connection',
           'Verify your Gmail address is correct',
+          'Make sure you have a valid Resend API key configured',
           'Try again in a few moments'
         ]
       );
@@ -237,11 +251,27 @@ export default function SignIn() {
     setIsSubmitting(true);
     
     try {
-      // TODO: Replace with actual API call to verify OTP
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Call the real API to verify OTP
+      const response = await fetch('/api/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          gmail: userGmail,
+          otp: values.otp
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'OTP verification failed');
+      }
       
-      // TODO: Handle successful OTP verification
-      showSuccessModal();
+      // Success! Handle successful OTP verification
+      console.log('OTP verification successful:', result.user);
+      showSuccessModal('Sign In Successful!');
       
       // Reset everything with transition back to regular
       setIsTransitioning(true);
@@ -251,18 +281,23 @@ export default function SignIn() {
         setUserGmail('');
         setSigninMode('regular');
         setIsTransitioning(false);
+        
+        // TODO: Redirect to dashboard or set authentication state
+        // window.location.href = '/dashboard';
+        
       }, 150);
       
     } catch (error) {
       console.error('OTP verification error:', error);
       
       showErrorModal(
-        'Invalid OTP',
+        'OTP Verification Failed',
         error.message || 'The OTP you entered is incorrect. Please try again.',
         [
           'Double-check the 6-digit code',
           'Make sure you\'re entering the latest OTP',
-          'Request a new OTP if this one has expired'
+          'Request a new OTP if this one has expired',
+          'Check your email for the most recent code'
         ]
       );
     } finally {
@@ -526,7 +561,7 @@ export default function SignIn() {
   );
 
   return (
-    <div className={`${inter.variable} min-h-screen flex items-center justify-center bg-gray-50 p-4 pt-20 font-[family-name:var(--font-inter)]`}>
+    <div className={`${inter.className} min-h-screen flex items-center justify-center bg-gray-50 p-4 pt-20`}>
       <Card 
         className={`w-full max-w-md mx-auto transform transition-all duration-700 ease-out ${
           isPageLoaded ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'

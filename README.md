@@ -112,3 +112,93 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+
+# Project Documentation
+
+This project includes OTP (One-Time Password) authentication using Resend API for email delivery.
+
+## 🔧 Environment Setup
+
+### Resend API Configuration
+
+To enable OTP email functionality, you need to configure the Resend API:
+
+1. **Get a Resend API Key:**
+   - Visit [https://resend.com/api-keys](https://resend.com/api-keys)
+   - Create an account if you don't have one
+   - Generate a new API key
+
+2. **Create Environment File:**
+   ```bash
+   # Create .env.local file in the project root
+   cp .env.example .env.local  # If .env.example exists
+   # OR create .env.local manually
+   ```
+
+3. **Add your API key to `.env.local`:**
+   ```bash
+   # Resend API Configuration
+   RESEND_API_KEY=re_your_actual_api_key_here
+   ```
+
+4. **Verify Your Domain (Optional for Production):**
+   - Go to [https://resend.com/domains](https://resend.com/domains)
+   - Add and verify your domain
+   - Update the `from` email in `pages/api/send-otp.js` to use your verified domain
+
+5. **For Development Testing:**
+   - You can use the sandbox domain: `onboarding@resend.dev`
+   - This is already configured in the code for testing
+
+## 🚀 OTP Features
+
+### Available API Endpoints:
+
+- **POST `/api/send-otp`** - Send OTP to Gmail address
+- **POST `/api/verify-otp`** - Verify the OTP code
+
+### Frontend Features:
+
+- **Regular signin** with username/password
+- **OTP signin** with Gmail verification
+- **Smooth transitions** between signin modes
+- **Form validation** and error handling
+- **Professional email templates** for OTP delivery
+
+### Security Features:
+
+- **6-digit OTP** generation
+- **10-minute expiration** for OTP codes
+- **One-time use** OTP validation
+- **Gmail address validation**
+- **Rate limiting** protection (via in-memory storage)
+
+## 📧 Email Template
+
+The OTP emails include:
+- Professional HTML design
+- Clear 6-digit code display
+- Security warnings and instructions
+- Expiration time notifications
+
+## 🔒 Production Considerations
+
+For production deployment:
+
+1. **Replace in-memory OTP storage** with Redis or database
+2. **Configure proper domain verification** in Resend
+3. **Add rate limiting** for API endpoints
+4. **Implement user authentication state** management
+5. **Add proper logging** and monitoring
+6. **Set up email delivery monitoring** in Resend dashboard
+
+## 🧪 Testing
+
+To test the OTP functionality:
+
+1. Start the development server: `npm run dev`
+2. Go to `/signin`
+3. Click "Sign in with OTP"
+4. Enter a Gmail address
+5. Check your email for the OTP code
+6. Enter the code to complete signin
