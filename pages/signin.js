@@ -217,12 +217,12 @@ export default function SignIn() {
         kycStatus: userData.profile?.kyc?.verificationStatus
       });
 
-      showSuccessModal(`Welcome back, ${userData.username}!`);
+      showSuccessModal(`Welcome back, ${userData.username}! Redirecting to news...`);
       regularForm.reset();
       
-      // Redirect to dashboard after showing success modal
+      // Redirect to news page after showing success modal
       setTimeout(() => {
-        window.location.href = '/dashboard'; // or use Next.js router
+        window.location.href = '/news';
       }, 1500);
       
     } catch (error) {
