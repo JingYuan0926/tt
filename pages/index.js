@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,20 +12,16 @@ import { Input } from "@/components/ui/input";
 // HeroUI components
 import { Button as HeroButton, Card as HeroCard, CardBody, CardHeader as HeroCardHeader, Input as HeroInput } from "@heroui/react";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 export default function Home() {
   return (
     <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
+      className={`${inter.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-inter)]`}
     >
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <Image
@@ -75,7 +71,7 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-inter)]">
           <li className="mb-2">
             Get started by editing{" "}
             <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
