@@ -217,7 +217,7 @@ export default function SignIn() {
         kycStatus: userData.profile?.kyc?.verificationStatus
       });
 
-      showSuccessModal(`Welcome back, ${userData.username}! Redirecting to news...`);
+      showSuccessModal(`Welcome back, ${userData.username}!`);
       regularForm.reset();
       
       // Redirect to news page after showing success modal
