@@ -10,7 +10,9 @@ const errorDiv = document.getElementById('error');
 const resultsDiv = document.getElementById('results');
 const articleTitle = document.getElementById('articleTitle');
 const articlePreview = document.getElementById('articlePreview');
+const biasMeter = document.getElementById('biasMeter');
 const biasAnalysis = document.getElementById('biasAnalysis');
+const structuredContent = document.getElementById('structuredContent');
 const sourcesList = document.getElementById('sourcesList');
 
 // Event listeners
@@ -114,14 +116,175 @@ async function analyzeUrl(url) {
     }
 }
 
+// Extract bias score from analysis text
+function extractBiasScore(analysisText) {
+    if (!analysisText) return null;
+    const match = analysisText.match(/BIAS SCORE:\s*(\d+)\/10/i);
+    return match ? parseInt(match[1]) : null;
+}
+
+// Extract bias direction from analysis text
+function extractBiasDirection(analysisText) {
+    if (!analysisText) return null;
+    const lowerText = analysisText.toLowerCase();
+    
+    if (lowerText.includes('biased towards') && lowerText.includes('government')) {
+        return 'Government Perspective';
+    }
+    if (lowerText.includes('biased towards') && lowerText.includes('opposition')) {
+        return 'Opposition Perspective';
+    }
+    if (lowerText.includes('biased towards') && lowerText.includes('left')) {
+        return 'Left-leaning';
+    }
+    if (lowerText.includes('biased towards') && lowerText.includes('right')) {
+        return 'Right-leaning';
+    }
+    if (lowerText.includes('biased towards') && lowerText.includes('conservative')) {
+        return 'Conservative';
+    }
+    if (lowerText.includes('biased towards') && lowerText.includes('liberal')) {
+        return 'Liberal';
+    }
+    return 'Detected Bias';
+}
+
+// Remove bias score line from analysis text for display
+function getDisplayAnalysis(analysisText) {
+    if (!analysisText) return '';
+    // Remove the bias score line (e.g., "**BIAS SCORE: 6/10** - ")
+    return analysisText.replace(/\*\*BIAS SCORE:\s*\d+\/10\*\*\s*-\s*/i, '').trim();
+}
+
+// Separate bias analysis from structured content
+function separateContent(analysisText) {
+    if (!analysisText) return { biasText: '', structuredContent: '' };
+    
+    const cleanText = getDisplayAnalysis(analysisText);
+    
+    // Find where structured content starts (looking for **MULTIPLE PERSPECTIVES:** or similar)
+    const structuredMatch = cleanText.match(/(\*\*MULTIPLE PERSPECTIVES:\*\*.*)/s);
+    
+    if (structuredMatch) {
+        const biasText = cleanText.substring(0, structuredMatch.index).trim();
+        const structuredContent = structuredMatch[1];
+        return { biasText, structuredContent };
+    }
+    
+    return { biasText: cleanText, structuredContent: '' };
+}
+
+// Create bias meter HTML
+function createBiasMeter(score) {
+    if (score === null) return '';
+
+    const getScoreClass = (score) => {
+        if (score <= 3) return 'score-low';
+        if (score <= 6) return 'score-moderate';
+        return 'score-high';
+    };
+
+    const getMeterClass = (position, score) => {
+        if (position <= score) {
+            if (score <= 3) return 'active-low';
+            if (score <= 6) return 'active-moderate';
+            return 'active-high';
+        }
+        return '';
+    };
+
+    let meterSegments = '';
+    for (let i = 1; i <= 10; i++) {
+        meterSegments += `<div class="meter-segment ${getMeterClass(i, score)}"></div>`;
+    }
+
+    let scaleNumbers = '';
+    for (let i = 0; i <= 10; i++) {
+        scaleNumbers += `<span>${i}</span>`;
+    }
+
+    return `
+        <div class="bias-score-header">
+            <span class="bias-score-title">Bias Score</span>
+            <span class="bias-score-value ${getScoreClass(score)}">${score}/10</span>
+        </div>
+        
+        <div class="meter-container">
+            <div class="meter-labels">
+                <span style="color: #059669;">Not Biased</span>
+                <span style="color: #dc2626;">Biased</span>
+            </div>
+            
+            <div class="meter-bar">
+                ${meterSegments}
+            </div>
+            
+            <div class="meter-scale">
+                ${scaleNumbers}
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #10b981;"></div>
+                <span style="color: #64748b;">Low Bias (0-3)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f59e0b;"></div>
+                <span style="color: #64748b;">Moderate Bias (4-6)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ef4444;"></div>
+                <span style="color: #64748b;">High Bias (7-10)</span>
+            </div>
+        </div>
+    `;
+}
+
+// Process markdown-like content for structured display
+function processStructuredContent(content) {
+    if (!content) return '';
+    
+    // Convert markdown-like formatting to HTML
+    return content
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>')
+        .replace(/^(.*)$/, '<p>$1</p>');
+}
+
 // Display analysis results
 function displayResults(data) {
     // Update article info
     articleTitle.textContent = data.title || 'No title available';
     articlePreview.textContent = data.content || 'No content preview available';
     
-    // Update bias analysis
-    biasAnalysis.textContent = data.biasAnalysis || 'No bias analysis available';
+    // Process bias analysis
+    const analysisText = data.biasAnalysis || 'No bias analysis available';
+    const biasScore = extractBiasScore(analysisText);
+    const { biasText, structuredContent: structuredText } = separateContent(analysisText);
+    
+    // Update bias meter
+    if (biasScore !== null) {
+        biasMeter.innerHTML = createBiasMeter(biasScore);
+        biasMeter.style.display = 'block';
+    } else {
+        biasMeter.style.display = 'none';
+    }
+    
+    // Update bias analysis text
+    biasAnalysis.textContent = biasText || analysisText;
+    
+    // Update structured content
+    if (structuredText) {
+        structuredContent.innerHTML = `
+            <h4>Detailed Analysis</h4>
+            <div>${processStructuredContent(structuredText)}</div>
+        `;
+        structuredContent.classList.remove('hidden');
+    } else {
+        structuredContent.classList.add('hidden');
+    }
     
     // Update sources list
     sourcesList.innerHTML = '';
@@ -138,7 +301,7 @@ function displayResults(data) {
         });
     } else {
         const li = document.createElement('li');
-        li.textContent = 'No sources available';
+        li.innerHTML = '<span style="color: #64748b; font-style: italic;">No sources available</span>';
         sourcesList.appendChild(li);
     }
     
@@ -205,13 +368,8 @@ async function loadCachedResult(url) {
     try {
         const key = `analysis_${btoa(url)}`;
         const result = await chrome.storage.local.get(key);
-        
-        if (result[key]) {
-            const { data, timestamp } = result[key];
-            // Cache expires after 1 hour
-            if (Date.now() - timestamp < 3600000) {
-                return data;
-            }
+        if (result[key] && Date.now() - result[key].timestamp < 300000) { // 5 minutes cache
+            return result[key].data;
         }
     } catch (error) {
         console.warn('Could not load cached result:', error);
