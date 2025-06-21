@@ -1,1 +1,97 @@
-[]
+[
+  {
+    "id": "gnews_1o6ufr5no_1750490242398",
+    "title": "Israel’s aid death traps for starving Gazans",
+    "date": "2025-06-21T04:52:30Z",
+    "description": "Near-daily Israeli massacres at food distribution sites have killed over 400 Palestinians in the past month alone.",
+    "category": "General",
+    "imageurl": [
+      "https://static.972mag.com/www/uploads/2025/06/001_image00009.jpg"
+    ],
+    "link": [
+      "https://www.972mag.com/hunger-games-israel-gaza-food-aid/"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "s",
+    "ai_score": 0.7335456904994895,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_xb9hfs3nx_1750490242398",
+    "title": "Diablo II: Resurrected Ladder Season 11 Now Live",
+    "date": "2025-06-21T03:47:24Z",
+    "description": "Ladder Season 11 begins on June 20! Muster the might to liberate Sanctuary’s denizens from sinister influences as you race to Level 99.",
+    "category": "General",
+    "imageurl": [
+      "https://bnetcmsus-a.akamaihd.net/cms/blog_header/n4/N4TWKH95498Y1748883506472.png"
+    ],
+    "link": [
+      "https://news.blizzard.com/en-us/article/24208340/diablo-ii-resurrected-ladder-season-11-now-live"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "l",
+    "ai_score": 0.55171510755758,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_qf6y9eoe8_1750490242398",
+    "title": "Iran, Israel launch new attacks after Tehran rules out nuclear talks",
+    "date": "2025-06-21T03:11:15Z",
+    "description": "Iran and Israel exchanged fresh attacks early on Saturday, a day after Tehran said it would not negotiate over its nuclear program while under threat.",
+    "category": "General",
+    "imageurl": [
+      "https://img.ksl.com/slc/3090/309024/30902472.jpeg?filter=kslv2/responsive_story_lg"
+    ],
+    "link": [
+      "https://www.ksl.com/article/51332799/iran-israel-launch-new-attacks-after-tehran-rules-out-nuclear-talks"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "s",
+    "ai_score": 0.5620817136429395,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_zd75mlj2r_1750490242398",
+    "title": "Pirates reliever Dennis Santana suspended 4 games, fined by MLB for taking swing at fan in Detroit",
+    "date": "2025-06-21T00:30:00Z",
+    "description": "Santana was seen taking a swing at a fan from the visitors' bullpen at Detroit's Comerica Park during the second game of a doubleheader on Thursday.",
+    "category": "General",
+    "imageurl": [
+      "https://s.yimg.com/ny/api/res/1.2/uDcPNn1rYcVCb1O_iXT1Pg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyMDA7aD04MDE7Y2Y9d2VicA--/https://s.yimg.com/os/creatr-uploaded-images/2025-06/8ef6e950-4e28-11f0-8d9b-b4f80ab9b4e1"
+    ],
+    "link": [
+      "https://sports.yahoo.com/mlb/breaking-news/article/pirates-reliever-dennis-santana-suspended-4-games-fined-by-mlb-for-taking-swing-at-fan-in-detroit-225202581.html"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "s",
+    "ai_score": 0.6487534812456544,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_8jwjh8azf_1750490242398",
+    "title": "Chef Anne Burrell's death investigated as possible drug overdose, law enforcement officials say",
+    "date": "2025-06-21T00:29:32Z",
+    "description": "A law enforcement official says Chef Anne Burrell's death is being investigated as a possible drug overdose.",
+    "category": "General",
+    "imageurl": [
+      "https://cdn.abcotvs.com/dip/images/16776076_Anne-Burrell-img.jpg?w=1600"
+    ],
+    "link": [
+      "https://6abc.com/post/chef-anne-burrells-death-investigated-possible-drug-overdose-law-enforcement-officials-say/16802195/"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "m",
+    "ai_score": 0.7668955781114694,
+    "challenge": false,
+    "challenge_id": null
+  }
+]
