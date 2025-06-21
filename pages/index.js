@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 // HeroUI components
 import { Button as HeroButton, Card as HeroCard, CardBody, CardHeader as HeroCardHeader, Input as HeroInput } from "@heroui/react";
+import IntroVideo from "@/components/IntroVideo";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -19,9 +22,58 @@ const inter = Inter({
 });
 
 export default function Home() {
+  const router = useRouter();
+  
+  // State to control intro video display
+  const [showIntro, setShowIntro] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [showMainContent, setShowMainContent] = useState(false);
+
+  // Check if we should show intro on component mount
+  useEffect(() => {
+    // Ensure we're on the client side
+    if (typeof window === 'undefined') return;
+    
+    const hasSeenIntro = localStorage.getItem('hasSeenIntro');
+    
+    console.log('Index page intro check:', { hasSeenIntro });
+    
+    // Show intro every time (you can change this logic if needed)
+    console.log('Showing intro video on index page');
+    setShowIntro(true);
+    setShowMainContent(false);
+    setIsLoaded(true);
+  }, []);
+
+  // Handle intro completion - redirect to news page
+  const handleIntroComplete = () => {
+    console.log('Intro completed - redirecting to news page');
+    localStorage.setItem('hasSeenIntro', 'true'); // Optional: save completion
+    setShowIntro(false);
+    
+    // Redirect to news page after a short delay
+    setTimeout(() => {
+      router.push('/news');
+    }, 500);
+  };
+
+  // Show loading until we check localStorage
+  if (!isLoaded) {
+    return (
+      <div className="fixed inset-0 bg-black flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show intro video first
+  if (showIntro) {
+    return <IntroVideo onComplete={handleIntroComplete} />;
+  }
+
   return (
     <div
-      className={`${inter.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-inter)]`}
+      className={`${inter.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-inter)] transition-opacity duration-1000 ${showMainContent ? 'opacity-100' : 'opacity-0'}`}
     >
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <Image
