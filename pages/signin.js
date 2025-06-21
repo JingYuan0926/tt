@@ -561,7 +561,7 @@ export default function SignIn() {
   );
 
   return (
-    <div className={`${inter.className} min-h-screen flex items-center justify-center bg-gray-50 p-4 pt-20`}>
+    <div className={`${inter.className} min-h-screen flex items-start justify-center bg-gray-30 p-4 pt-20`}>
       <Card 
         className={`w-full max-w-md mx-auto transform transition-all duration-700 ease-out ${
           isPageLoaded ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'
