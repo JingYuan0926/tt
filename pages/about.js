@@ -18,28 +18,28 @@ export default function About() {
   // Team members data
   const teamMembers = [
     {
-      name: "Sarah Johnson",
-      role: "Editor-in-Chief",
-      bio: "Former BBC journalist with 15 years of experience in investigative reporting and editorial leadership.",
-      image: "/team/sarah.jpg"
+        name: "Cedric Chung",
+        role: "2nd Year Computer Science Student",
+        bio: "Student @Taylor's University",
+        image: "/team/emily.jpg"
+      },
+      {
+        name: "Liew Qi Jian",
+        role: "2nd Year Computer Science Student",
+        bio: "Student @TARUMT",
+        image: "/team/derek.jpg"
+      },
+    {
+      name: "Phen Jing Yuan",
+      role: "3rd Year Computer Science Student",
+      bio: "Student @Taylor's University",
+      image: "/team/jy.jpg"
     },
     {
-      name: "David Rodriguez",
-      role: "Developer",
-      bio: "Full-stack developer specializing in AI and machine learning applications for media analysis.",
+      name: "Marcus Tan",
+      role: "3rd Year Computer Science Student",
+      bio: "Student @Taylor's University",
       image: "/team/marcus.jpg"
-    },
-    {
-      name: "Dr. Emily Rodriguez",
-      role: "Bias Analysis Expert",
-      bio: "PhD in Media Studies with expertise in bias detection and algorithmic fairness in journalism.",
-      image: "/team/emily.jpg"
-    },
-    {
-      name: "James Thompson",
-      role: "Data Scientist",
-      bio: "Specialist in natural language processing and sentiment analysis for news content.",
-      image: "/team/james.jpg"
     }
   ];
 
@@ -180,80 +180,6 @@ export default function About() {
 
           <Separator className="mb-16" />
 
-          {/* Team Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.0 }}
-            className="mb-16"
-          >
-            <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-6">
-Our Team
-              </h2>
-              <Separator className="w-24 mx-auto" />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {teamMembers.map((member, index) => (
-                <motion.div
-                  key={member.name}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 1.2 + index * 0.1 }}
-                >
-                  <Card className="h-full text-center hover:shadow-lg transition-shadow duration-300">
-                    <CardHeader>
-                      {/* Placeholder avatar */}
-                      <div className="w-24 h-24 sm:w-32 sm:h-32 bg-muted rounded-full mx-auto mb-4 flex items-center justify-center">
-                        <User className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground" />
-                      </div>
-                      <CardTitle className="text-lg sm:text-xl">{member.name}</CardTitle>
-                      <Badge variant="secondary" className="mx-auto w-fit">
-                        {member.role}
-                      </Badge>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription className="text-sm leading-relaxed">
-                        {member.bio}
-                      </CardDescription>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          <Separator className="mb-16" />
-
-          {/* Contact CTA Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.4 }}
-          >
-            <Card className="text-center max-w-4xl mx-auto">
-              <CardHeader>
-                <CardTitle className="text-2xl sm:text-3xl font-serif font-bold">
-                  Questions About Our Work?
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-lg max-w-2xl mx-auto">
-                  We're always happy to discuss our methodology, answer questions about our bias detection technology, 
-                  or hear feedback from our community.
-                </CardDescription>
-              </CardContent>
-              <CardFooter className="justify-center">
-                <Button 
-                  size="lg" 
-                  className="text-lg px-8"
-                >
-                  Get In Touch
-                </Button>
-              </CardFooter>
-            </Card>
-          </motion.div>
 
         </div>
       </div>
