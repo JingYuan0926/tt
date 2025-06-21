@@ -10,13 +10,37 @@ export default function handler(req, res) {
     const newsItem = req.body;
 
     // Validate required fields
-    if (!newsItem.title || !newsItem.description || !newsItem.size) {
-      return res.status(400).json({ message: 'Missing required fields: title, description, or size' });
+    if (!newsItem.title || !newsItem.description || !newsItem.size || !newsItem.category) {
+      return res.status(400).json({ message: 'Missing required fields: title, description, size, or category' });
     }
 
     // Validate size
     if (!['s', 'm', 'l', 'xl'].includes(newsItem.size)) {
       return res.status(400).json({ message: 'Invalid size. Must be s, m, l, or xl' });
+    }
+
+    // Validate category
+    const allowedCategories = [
+      'Technology',
+      'Politics',
+      'Business',
+      'Sports',
+      'Entertainment',
+      'Health',
+      'Science',
+      'World News',
+      'Local News',
+      'Weather',
+      'Automotive',
+      'Food & Dining',
+      'Social Media',
+      'Education',
+      'Environment',
+      'Other'
+    ];
+    
+    if (!allowedCategories.includes(newsItem.category)) {
+      return res.status(400).json({ message: 'Invalid category. Must be one of: ' + allowedCategories.join(', ') });
     }
 
     // Read existing news data
