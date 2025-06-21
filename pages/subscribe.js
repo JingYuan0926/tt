@@ -111,13 +111,8 @@ export default function Subscribe() {
       <div className="min-h-screen bg-white pt-2">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
           
-          {/* Header - matching Download page style */}
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center border-b-4 border-gray-900 pb-6 mb-8 animate-in slide-in-from-top duration-700"
-          >
+          {/* Header - matching News page style with bottom-to-top animation */}
+          <div className="text-center border-b-4 border-gray-900 pb-6 mb-8 animate-in slide-in-from-bottom duration-700">
             <h1 className="text-5xl md:text-6xl font-serif font-bold text-gray-900 mb-2">PRICING</h1>
             <div className="flex justify-center items-center gap-4 text-sm text-gray-600 font-mono">
               <span>SUBSCRIPTION</span>
@@ -132,7 +127,7 @@ export default function Subscribe() {
                 </>
               )}
             </div>
-          </motion.div>
+          </div>
 
           {/* Subtitle */}
           <motion.div
