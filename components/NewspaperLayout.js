@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const NewspaperLayout = ({ articles }) => {
   const [columns, setColumns] = useState(3);
@@ -83,10 +85,33 @@ const NewspaperLayout = ({ articles }) => {
     return columnArrays;
   };
 
+  // Function to truncate description to first sentence or show all if short
+  const truncateDescription = (description) => {
+    // Count words in the description
+    const wordCount = description.split(' ').length;
+    
+    // If less than 50 words, show all
+    if (wordCount < 50) {
+      return description;
+    }
+    
+    // Find the first sentence (ending with ., !, or ?)
+    const firstSentenceMatch = description.match(/^[^.!?]*[.!?]/);
+    
+    // If we found a sentence, return it, otherwise return first 50 words
+    if (firstSentenceMatch) {
+      return firstSentenceMatch[0];
+    } else {
+      // Fallback: return first 50 words if no sentence ending found
+      return description.split(' ').slice(0, 50).join(' ') + '...';
+    }
+  };
+
   const ArticleComponent = ({ article, index }) => {
     const textSizes = getTextSizes(article.size);
     const orientation = getRandomOrientation(article.size, article.originalIndex || index);
     const hasImage = article.imageurl && article.imageurl.length > 0;
+    const truncatedDescription = truncateDescription(article.description);
 
     // Get margin based on size for better spacing
     const getMarginBottom = (size) => {
@@ -119,7 +144,7 @@ const NewspaperLayout = ({ articles }) => {
                   {article.title}
                 </h3>
                 <p className={`${textSizes.description} text-gray-700`}>
-                  {article.description}
+                  {truncatedDescription}
                 </p>
               </div>
             </div>
@@ -133,7 +158,7 @@ const NewspaperLayout = ({ articles }) => {
                   {article.title}
                 </h3>
                 <p className={`${textSizes.description} text-gray-700`}>
-                  {article.description}
+                  {truncatedDescription}
                 </p>
               </div>
               <div className="flex-shrink-0 w-1/3">
@@ -169,7 +194,7 @@ const NewspaperLayout = ({ articles }) => {
                 {article.title}
               </h3>
               <p className={`${textSizes.description} text-gray-700`}>
-                {article.description}
+                {truncatedDescription}
               </p>
             </div>
           );
@@ -182,34 +207,36 @@ const NewspaperLayout = ({ articles }) => {
           {article.title}
         </h3>
         <p className={`${textSizes.description} text-gray-700`}>
-          {article.description}
+          {truncatedDescription}
         </p>
       </div>
     );
 
     return (
-      <motion.article 
-        className={`${getMarginBottom(article.size)} p-4 border-b border-gray-400 break-inside-avoid group cursor-pointer`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: (article.originalIndex || index) * 0.1 }}
-      >
-        {/* Category tag */}
-        <div className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3 pb-2 border-b border-gray-300">
-          {article.category}
-        </div>
-        
-        {renderContent()}
-        
-        {/* Date */}
-        <div className="text-xs text-gray-500 mt-3 pt-2 border-t border-gray-200">
-          {new Date(article.date).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          })}
-        </div>
-      </motion.article>
+      <Link href={`/details?id=${article.id}`} passHref>
+        <motion.article 
+          className={`${getMarginBottom(article.size)} p-4 border-b border-gray-400 break-inside-avoid group cursor-pointer hover:bg-gray-50 transition-colors duration-200`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: (article.originalIndex || index) * 0.1 }}
+        >
+          {/* Category tag */}
+          <div className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3 pb-2 border-b border-gray-300">
+            {article.category}
+          </div>
+          
+          {renderContent()}
+          
+          {/* Date */}
+          <div className="text-xs text-gray-500 mt-3 pt-2 border-t border-gray-200">
+            {new Date(article.date).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            })}
+          </div>
+        </motion.article>
+      </Link>
     );
   };
 
