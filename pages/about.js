@@ -1,6 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Head from 'next/head';
+import { Inter } from "next/font/google";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Search, Target, Lightbulb, Scale, User } from 'lucide-react';
+
+// Configure Inter font
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export default function About() {
   // Team members data
@@ -12,8 +24,8 @@ export default function About() {
       image: "/team/sarah.jpg"
     },
     {
-      name: "Marcus Chen",
-      role: "Lead Developer",
+      name: "David Rodriguez",
+      role: "Developer",
       bio: "Full-stack developer specializing in AI and machine learning applications for media analysis.",
       image: "/team/marcus.jpg"
     },
@@ -36,22 +48,22 @@ export default function About() {
     {
       title: "Transparency",
       description: "We believe in open, honest reporting and making our bias detection methodology transparent to all users.",
-      icon: "🔍"
+      icon: Search
     },
     {
       title: "Accuracy",
       description: "Our commitment to factual reporting and precise bias analysis ensures reliable information for our readers.",
-      icon: "🎯"
+      icon: Target
     },
     {
       title: "Innovation",
       description: "We leverage cutting-edge technology to provide real-time bias detection and comprehensive news analysis.",
-      icon: "💡"
+      icon: Lightbulb
     },
     {
       title: "Independence",
       description: "Our editorial independence ensures unbiased reporting, free from external pressures or influences.",
-      icon: "⚖️"
+      icon: Scale
     }
   ];
 
@@ -62,7 +74,7 @@ export default function About() {
         <meta name="description" content="Learn about Tea Time News - our mission, team, and commitment to unbiased journalism" />
       </Head>
       
-      <div className="min-h-screen bg-white pt-2">
+      <div className={`${inter.className} min-h-screen bg-background pt-2`}>
         <div className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
           
           {/* About Header - matching NewsHeader style */}
@@ -71,9 +83,9 @@ export default function About() {
             <div className="flex justify-center items-center gap-4 text-sm text-gray-600 font-mono">
               <span>OUR MISSION</span>
               <span>•</span>
-              <span>OUR TEAM</span>
-              <span>•</span>
               <span>OUR VALUES</span>
+              <span>•</span>
+              <span>OUR TEAM</span>
             </div>
           </div>
 
@@ -85,32 +97,48 @@ export default function About() {
             className="mb-16"
           >
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-6">
                 Our Mission
               </h2>
-              <div className="w-24 h-1 bg-gray-300 mx-auto mb-8"></div>
+              <Separator className="w-24 mx-auto" />
             </div>
             
-            <div className="max-w-4xl mx-auto">
-              <motion.div 
-                className="bg-gray-50 rounded-2xl p-8 sm:p-12"
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
+              <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
               >
-                <p className="text-lg sm:text-xl text-gray-700 leading-relaxed mb-6">
-                  At Tea Time News, we believe that informed citizens are the cornerstone of a healthy democracy. 
-                  Our mission is to provide transparent, unbiased news analysis powered by cutting-edge technology 
-                  that helps readers identify potential bias in news reporting.
-                </p>
-                <p className="text-lg sm:text-xl text-gray-700 leading-relaxed">
-                  We combine traditional journalistic integrity with innovative AI-powered bias detection tools, 
-                  ensuring our readers receive not just the news, but the context and analysis needed to form 
-                  their own informed opinions.
-                </p>
+                <Card className="h-full">
+                  <CardContent className="p-8">
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                      At Tea Time News, we believe that informed citizens are the cornerstone of a healthy democracy. 
+                      Our mission is to provide transparent, unbiased news analysis powered by cutting-edge technology 
+                      that helps readers identify potential bias in news reporting.
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+              >
+                <Card className="h-full">
+                  <CardContent className="p-8">
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                      We combine traditional journalistic integrity with innovative AI-powered bias detection tools, 
+                      ensuring our readers receive not just the news, but the context and analysis needed to form 
+                      their own informed opinions.
+                    </p>
+                  </CardContent>
+                </Card>
               </motion.div>
             </div>
           </motion.div>
+
+          <Separator className="mb-16" />
 
           {/* Values Section */}
           <motion.div
@@ -120,28 +148,37 @@ export default function About() {
             className="mb-16"
           >
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-6">
                 Our Values
               </h2>
-              <div className="w-24 h-1 bg-gray-300 mx-auto mb-8"></div>
+              <Separator className="w-24 mx-auto" />
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {values.map((value, index) => (
                 <motion.div
                   key={value.title}
-                  className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow duration-300"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
                 >
-                  <div className="text-4xl mb-4">{value.icon}</div>
-                  <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4">{value.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{value.description}</p>
+                  <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                    <CardHeader>
+                      <value.icon className="w-12 h-12 mb-2 text-primary" />
+                      <CardTitle className="text-xl sm:text-2xl">{value.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <CardDescription className="text-base leading-relaxed">
+                        {value.description}
+                      </CardDescription>
+                    </CardContent>
+                  </Card>
                 </motion.div>
               ))}
             </div>
           </motion.div>
+
+          <Separator className="mb-16" />
 
           {/* Team Section */}
           <motion.div
@@ -151,54 +188,71 @@ export default function About() {
             className="mb-16"
           >
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-6">
-                Meet Our Team
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-6">
+Our Team
               </h2>
-              <div className="w-24 h-1 bg-gray-300 mx-auto mb-8"></div>
+              <Separator className="w-24 mx-auto" />
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {teamMembers.map((member, index) => (
                 <motion.div
                   key={member.name}
-                  className="text-center bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 1.2 + index * 0.1 }}
                 >
-                  {/* Placeholder avatar */}
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <span className="text-2xl sm:text-3xl text-gray-500">👤</span>
-                  </div>
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{member.name}</h3>
-                  <p className="text-blue-600 font-medium mb-3">{member.role}</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{member.bio}</p>
+                  <Card className="h-full text-center hover:shadow-lg transition-shadow duration-300">
+                    <CardHeader>
+                      {/* Placeholder avatar */}
+                      <div className="w-24 h-24 sm:w-32 sm:h-32 bg-muted rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <User className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground" />
+                      </div>
+                      <CardTitle className="text-lg sm:text-xl">{member.name}</CardTitle>
+                      <Badge variant="secondary" className="mx-auto w-fit">
+                        {member.role}
+                      </Badge>
+                    </CardHeader>
+                    <CardContent>
+                      <CardDescription className="text-sm leading-relaxed">
+                        {member.bio}
+                      </CardDescription>
+                    </CardContent>
+                  </Card>
                 </motion.div>
               ))}
             </div>
           </motion.div>
+
+          <Separator className="mb-16" />
 
           {/* Contact CTA Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.4 }}
-            className="text-center bg-gray-50 rounded-2xl p-8 sm:p-12"
           >
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 mb-4">
-              Questions About Our Work?
-            </h2>
-            <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
-              We're always happy to discuss our methodology, answer questions about our bias detection technology, 
-              or hear feedback from our community.
-            </p>
-            <motion.button
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Get In Touch
-            </motion.button>
+            <Card className="text-center max-w-4xl mx-auto">
+              <CardHeader>
+                <CardTitle className="text-2xl sm:text-3xl font-serif font-bold">
+                  Questions About Our Work?
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-lg max-w-2xl mx-auto">
+                  We're always happy to discuss our methodology, answer questions about our bias detection technology, 
+                  or hear feedback from our community.
+                </CardDescription>
+              </CardContent>
+              <CardFooter className="justify-center">
+                <Button 
+                  size="lg" 
+                  className="text-lg px-8"
+                >
+                  Get In Touch
+                </Button>
+              </CardFooter>
+            </Card>
           </motion.div>
 
         </div>
