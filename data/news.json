@@ -22,14 +22,195 @@
     "title": "Malaysia Announces New Economic Recovery Plan for 2025",
     "date": "2025-06-21T10:30:00Z",
     "description": "Malaysian Prime Minister Anwar Ibrahim unveiled a comprehensive economic recovery plan aimed at boosting GDP growth to 5.5% in 2025. The plan includes significant investments in digital infrastructure, green technology initiatives, and support for small and medium enterprises (SMEs). Key highlights include a RM50 billion stimulus package, tax incentives for renewable energy projects, and enhanced digital payment systems across rural areas. The government also announced plans to strengthen ties with ASEAN partners and attract foreign direct investment through streamlined regulatory processes.",
-    "category": "Business",
+    "category": "Economy",
     "imageurl": [
       "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixlib=rb-4.0.3&w=800&q=80"
     ],
     "link": [
       "https://www.bernama.com/en/news.php?id=2345678"
     ],
-    "comments": [],
+    "comments": [
+      {
+        "id": 1,
+        "user": "Aisyah",
+        "content": "Great to see Malaysia expanding into new markets! This will boost our economy.",
+        "sentiment": "positive"
+      },
+      {
+        "id": 2,
+        "user": "Ravi",
+        "content": "Diversifying export destinations is a smart move given the current geopolitical climate.",
+        "sentiment": "positive"
+      },
+      {
+        "id": 3,
+        "user": "Mei Ling",
+        "content": "Proud of our sustainable palm oil practices being showcased globally.",
+        "sentiment": "positive"
+      },
+      {
+        "id": 4,
+        "user": "Farid",
+        "content": "This could help stabilize palm oil prices for local farmers.",
+        "sentiment": "positive"
+      },
+      {
+        "id": 5,
+        "user": "Siti",
+        "content": "Malaysia’s diplomatic outreach is commendable. Looking forward to new partnerships.",
+        "sentiment": "positive"
+      },
+      {
+        "id": 6,
+        "user": "John",
+        "content": "Reducing dependency on traditional markets is the right strategy.",
+        "sentiment": "positive"
+      },
+      {
+        "id": 7,
+        "user": "Nadia",
+        "content": "This initiative will create more jobs in the palm oil sector.",
+        "sentiment": "positive"
+      },
+      {
+        "id": 8,
+        "user": "Ahmad",
+        "content": "Glad to see the government taking proactive steps for the industry.",
+        "sentiment": "positive"
+      },
+      {
+        "id": 9,
+        "user": "Priya",
+        "content": "Trade missions are a great way to build international trust.",
+        "sentiment": "positive"
+      },
+      {
+        "id": 10,
+        "user": "Zul",
+        "content": "Sustainable production practices will help counter negative perceptions.",
+        "sentiment": "positive"
+      },
+      {
+        "id": 11,
+        "user": "Lina",
+        "content": "Curious to see which new countries will become buyers.",
+        "sentiment": "neutral"
+      },
+      {
+        "id": 12,
+        "user": "Wei",
+        "content": "I hope the expansion strategy includes smallholder farmers.",
+        "sentiment": "neutral"
+      },
+      {
+        "id": 13,
+        "user": "Sam",
+        "content": "Let’s wait and see how effective these trade missions are.",
+        "sentiment": "neutral"
+      },
+      {
+        "id": 14,
+        "user": "Maya",
+        "content": "Will this affect domestic palm oil prices?",
+        "sentiment": "neutral"
+      },
+      {
+        "id": 15,
+        "user": "Hafiz",
+        "content": "How will the government ensure fair trade agreements?",
+        "sentiment": "neutral"
+      },
+      {
+        "id": 16,
+        "user": "Raj",
+        "content": "Expanding to new markets is risky if those countries have strict import regulations.",
+        "sentiment": "negative"
+      },
+      {
+        "id": 17,
+        "user": "Emily",
+        "content": "Some countries are moving away from palm oil due to environmental concerns.",
+        "sentiment": "negative"
+      },
+      {
+        "id": 18,
+        "user": "Ben",
+        "content": "Diplomatic outreach alone may not be enough to convince new buyers.",
+        "sentiment": "negative"
+      },
+      {
+        "id": 19,
+        "user": "Nur",
+        "content": "The palm oil industry still faces criticism for deforestation.",
+        "sentiment": "negative"
+      },
+      {
+        "id": 20,
+        "user": "Alex",
+        "content": "What about the impact on indigenous communities?",
+        "sentiment": "negative"
+      },
+      {
+        "id": 21,
+        "user": "FactCheck1",
+        "content": "Actually, recent studies show Malaysia’s palm oil sector has reduced deforestation rates in the last five years.",
+        "sentiment": "counter-proof"
+      },
+      {
+        "id": 22,
+        "user": "FactCheck2",
+        "content": "Not all new markets are unfamiliar with palm oil; some have used it in processed foods for years.",
+        "sentiment": "counter-proof"
+      },
+      {
+        "id": 23,
+        "user": "FactCheck3",
+        "content": "The RSPO certification has improved Malaysia’s reputation for sustainable palm oil.",
+        "sentiment": "counter-proof"
+      },
+      {
+        "id": 24,
+        "user": "FactCheck4",
+        "content": "EU restrictions are tough, but Malaysia has successfully negotiated with other regions.",
+        "sentiment": "counter-proof"
+      },
+      {
+        "id": 25,
+        "user": "FactCheck5",
+        "content": "Satellite data confirms that replanting initiatives are increasing biodiversity in some plantations.",
+        "sentiment": "counter-proof"
+      },
+      {
+        "id": 26,
+        "user": "Researcher1",
+        "content": "According to the Malaysian Palm Oil Council, over 40 countries currently import our palm oil.",
+        "sentiment": "fact-check"
+      },
+      {
+        "id": 27,
+        "user": "Researcher2",
+        "content": "The World Bank reports that palm oil is still the most efficient oil crop per hectare.",
+        "sentiment": "fact-check"
+      },
+      {
+        "id": 28,
+        "user": "Researcher3",
+        "content": "Malaysia’s palm oil exports grew by 5% last year despite global challenges.",
+        "sentiment": "fact-check"
+      },
+      {
+        "id": 29,
+        "user": "Researcher4",
+        "content": "The government’s sustainable palm oil certification is recognized by several international bodies.",
+        "sentiment": "fact-check"
+      },
+      {
+        "id": 30,
+        "user": "Researcher5",
+        "content": "A recent UN report highlighted Malaysia’s efforts in reducing the carbon footprint of palm oil production.",
+        "sentiment": "fact-check"
+      }
+    ],
     "verification_status": true,
     "size": "l",
     "challenge": false,
@@ -219,6 +400,196 @@
     "comments": [],
     "verification_status": true,
     "size": "m",
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_a229lx9q4_1750530319812",
+    "title": "Kerry see off Cavan but left sweating over injuries",
+    "date": "2025-06-21T17:42:43Z",
+    "description": "Kerry beat Cavan 3-20 to 1-17 to reach the All-Ireland SFC quarter-finals but Mike Breen sustained an injury before the game and Diarmuid O'Connor at the throw-in.",
+    "category": "General",
+    "imageurl": [
+      "https://www.rte.ie/images/0022c322-1600.jpg"
+    ],
+    "link": [
+      "https://www.rte.ie/sport/football/2025/0621/1519652-kerry-see-off-cavan-but-left-sweating-over-injuries/"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "m",
+    "ai_score": 0.6152852672428826,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_3znq6b5fh_1750530319812",
+    "title": "US reportedly moving B-2 bombers to Guam as Trump considers Iran strikes",
+    "date": "2025-06-21T17:23:00Z",
+    "description": "Officials tell Reuters bombers moving to Pacific Island but unclear whether deployment tied to Middle East tensions",
+    "category": "General",
+    "imageurl": [
+      "https://i.guim.co.uk/img/media/fb97c36a13cbf5d53e76744eae4c6530f37b9a56/418_0_4164_3333/master/4164.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=6273ea2f3b99a1f1032fb194bc289125"
+    ],
+    "link": [
+      "https://www.theguardian.com/us-news/2025/jun/21/us-guam-trump-iran"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "m",
+    "ai_score": 0.788442704405421,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_oa85ig53x_1750530319812",
+    "title": "British man arrested in Cyprus suspected of spying and terror offences",
+    "date": "2025-06-21T17:04:49Z",
+    "description": "The Foreign Office says it is in contact with Cypriot authorities after the arrest.",
+    "category": "General",
+    "imageurl": [
+      "https://ichef.bbci.co.uk/news/1024/branded_news/0215/live/a8b7bcf0-4ebb-11f0-9aa0-796ec11eecac.jpg"
+    ],
+    "link": [
+      "https://www.bbc.com/news/articles/c628jy5rg78o"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "s",
+    "ai_score": 0.5804261692541154,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_jupy93mkj_1750530319812",
+    "title": "Saudi FM reaffirms support for Palestine, condemns Israeli strikes on Iran at OIC meeting in Istanbul",
+    "date": "2025-06-21T17:03:51Z",
+    "description": "RIYADH: Saudi Foreign Minister Prince Faisal bin Farhan reaffirmed the Kingdom’s unwavering support for the Palestinian cause during the opening session of the 51st meeting of the Council of Foreign Ministers of the Organization of Islamic Cooperation, held in Istanbul on Saturday. The foreign minister also condemned the Israeli strikes on Iran, describing them as a “blatant”",
+    "category": "General",
+    "imageurl": [
+      "https://www.arabnews.com/sites/default/files/styles/660x371_watermarksaudi/public/main-image/2025/06/21/4613896-922834361.jpeg?itok=UK4oj7sM"
+    ],
+    "link": [
+      "https://www.arabnews.com/node/2605303/saudi-arabia"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "m",
+    "ai_score": 0.5752675293692213,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_zfokh4941_1750530319812",
+    "title": "Raja Raghuvanshi's brother's big question: 'Instead of murder, Sonam, Raj Kushwaha could have...'",
+    "date": "2025-06-21T17:00:16Z",
+    "description": "Meghalaya murder: He said the family still doesn't understand why Raj Kushwaha murdered Raja Raghuvanshi. | Latest News India",
+    "category": "General",
+    "imageurl": [
+      "https://www.hindustantimes.com/ht-img/img/2025/06/21/1600x900/PTI06-09-2025-000223A-0_1750051994547_1750525025319.jpg"
+    ],
+    "link": [
+      "https://www.hindustantimes.com/india-news/raja-raghuvanshis-brothers-big-question-instead-of-murder-sonam-raj-kushwaha-could-have-101750524839289.html"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "s",
+    "ai_score": 0.7664853109411058,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_c0i8smrbd_1750530319812",
+    "title": "Live score updates as Cork take on Dublin in All-Ireland SFC clash at Croke Park",
+    "date": "2025-06-21T16:59:34Z",
+    "description": "Cork is looking to advance to the quarter-finals",
+    "category": "General",
+    "imageurl": [
+      "https://i2-prod.corkbeo.ie/incoming/article31907222.ece/ALTERNATES/s1200/0_inpho_02045829.jpg"
+    ],
+    "link": [
+      "https://www.corkbeo.ie/news/local-news/live-score-updates-cork-take-31907417"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "m",
+    "ai_score": 0.5975074654822189,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_5wqzm22hk_1750530319812",
+    "title": "Pakistan plans to nominate Trump for Nobel Peace Prize",
+    "date": "2025-06-21T16:58:22Z",
+    "description": "Islamabad says Trump helped end recent fighting with India, but New Delhi denies he played any role.",
+    "category": "General",
+    "imageurl": [
+      "https://ichef.bbci.co.uk/news/1024/branded_news/03c9/live/0f389200-4eb8-11f0-bfc7-a1c53566193a.jpg"
+    ],
+    "link": [
+      "https://www.bbc.com/news/articles/cwyx5yw8y28o"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "s",
+    "ai_score": 0.6792649735393984,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_ax7ca5rxg_1750530319812",
+    "title": "Jack Draper reveals tonsillitis struggle after semi-final defeat at Queen's Club Championship against Jiri Lehecka",
+    "date": "2025-06-21T16:52:30Z",
+    "description": "Jack Draper was beaten 6-4 4-6 7-5 by Jiri Lehecka in the Queens Club Championship semi-finals; follow scores and reports from Queens Club and you can watch all the action from the tours on Sky Sports Tennis and Sky Sports+, stream through NOW and Sky Sports app",
+    "category": "General",
+    "imageurl": [
+      "https://e0.365dm.com/25/06/1600x900/skysports-jack-draper-tennis_6947509.jpg?20250621170109"
+    ],
+    "link": [
+      "https://www.skysports.com/tennis/news/12110/13386713/jack-draper-suffers-semi-final-defeat-at-queens-club-championship-against-jiri-lehecka"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "m",
+    "ai_score": 0.5279900309609297,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_ty1vhxdap_1750530319812",
+    "title": "GAA live updates: 14-man Dublin pull off shock of the hurling summer to beat Limerick",
+    "date": "2025-06-21T16:35:32Z",
+    "description": "Clifford hat-trick fires Kerry to victory over Cavan at Fitzgerald Stadium",
+    "category": "General",
+    "imageurl": [
+      "https://www.irishtimes.com/resizer/v2/64ADPTXO62SLEEWCCZVPPHT3H4.jpg?smart=true&auth=b727c15e4de92202899bc33e6e69dcaf125be6a498d66e934e029f2a831bc1b5&width=1200&height=630"
+    ],
+    "link": [
+      "https://www.irishtimes.com/sport/gaelic-games/2025/06/21/gaa-live-updates-all-ireland-preliminary-quarter-finals-in-football-quarter-finals-in-hurling/"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "s",
+    "ai_score": 0.575598483761947,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_telfqtflc_1750530319812",
+    "title": "Grow a Garden Paradise Egg",
+    "date": "2025-06-21T16:31:39Z",
+    "description": "How to get the Paradise Egg in Grow a Garden, including a look at all of the Paradise Egg pets. This includes the Paradise Pet traits and odds!",
+    "category": "General",
+    "imageurl": [
+      "https://assetsio.gnwcdn.com/Grow-a-Garden-Paradise-Egg-Header.jpg?width=1200&height=630&fit=crop&enable=upscale&auto=webp"
+    ],
+    "link": [
+      "https://www.eurogamer.net/paradise-egg-grow-a-garden"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "s",
+    "ai_score": 0.7852060501866895,
     "challenge": false,
     "challenge_id": null
   }
