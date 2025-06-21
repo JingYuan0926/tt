@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@heroicons/react": "^2.2.0",
     "@heroui/react": "^2.7.11",
     "@hookform/resolvers": "^5.1.1",

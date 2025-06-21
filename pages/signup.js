@@ -23,7 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ErrorModal, SuccessModal } from "@/components/ui/modal";
+import { ErrorModal } from "@/components/ui/modal";
 
 // Configure Inter font
 const inter = Inter({
@@ -61,83 +61,11 @@ const signupSchema = z.object({
   path: ["confirmPassword"],
 });
 
-// Theme Toggle Component
-function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
 
-  useEffect(() => {
-    // Check for saved theme preference or default to system preference
-    const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      setIsDark(false);
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    
-    if (newTheme) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
-
-  return (
-    <Button
-      variant="outline"
-      size="icon"
-      onClick={toggleTheme}
-      className="fixed top-4 right-4 z-50"
-    >
-      {isDark ? (
-        // Sun icon for light mode
-        <svg
-          className="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-          />
-        </svg>
-      ) : (
-        // Moon icon for dark mode
-        <svg
-          className="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-          />
-        </svg>
-      )}
-    </Button>
-  );
-}
 
 export default function SignUp() {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [kycFile, setKycFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProcessingIC, setIsProcessingIC] = useState(false);
@@ -149,13 +77,10 @@ export default function SignUp() {
     message: '',
     details: null
   });
-  const [successModal, setSuccessModal] = useState({
-    isOpen: false,
-    title: '',
-    message: '',
-    details: null
-  });
+  const [successModal, setSuccessModal] = useState(false);
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
   const [checkDetailsModal, setCheckDetailsModal] = useState(false);
+  const [isCheckDetailsModalVisible, setIsCheckDetailsModalVisible] = useState(false);
 
   // Helper functions for modals
   const showErrorModal = (title, message, details = null) => {
@@ -167,13 +92,9 @@ export default function SignUp() {
     });
   };
 
-  const showSuccessModal = (title, message, details = null) => {
-    setSuccessModal({
-      isOpen: true,
-      title,
-      message,
-      details
-    });
+  const showSuccessModal = () => {
+    setSuccessModal(true);
+    setIsSuccessModalVisible(true);
   };
 
   const closeErrorModal = () => {
@@ -181,11 +102,17 @@ export default function SignUp() {
   };
 
   const closeSuccessModal = () => {
-    setSuccessModal(prev => ({ ...prev, isOpen: false }));
+    setIsSuccessModalVisible(false);
+    setTimeout(() => {
+      setSuccessModal(false);
+    }, 150); // Match the animation duration
   };
 
   const closeCheckDetailsModal = () => {
-    setCheckDetailsModal(false);
+    setIsCheckDetailsModalVisible(false);
+    setTimeout(() => {
+      setCheckDetailsModal(false);
+    }, 150); // Match the animation duration
   };
 
   // Initialize form with react-hook-form and Zod validation
@@ -291,8 +218,11 @@ export default function SignUp() {
           }
         });
 
-        // Document parsed successfully - show check details modal
-        setCheckDetailsModal(true);
+        // Document parsed successfully - show check details modal after transition
+        setTimeout(() => {
+          setCheckDetailsModal(true);
+          setIsCheckDetailsModalVisible(true);
+        }, 200); // Slight delay after step transition
       } else {
         throw new Error('No data extracted from the document');
       }
@@ -314,13 +244,17 @@ export default function SignUp() {
     }
   };
 
-  // Handle step navigation
+  // Handle step navigation with smooth transitions
   const nextStep = async () => {
     if (currentStep === 1) {
       const stepFields = ['username', 'email', 'password', 'confirmPassword'];
       const isValid = await form.trigger(stepFields);
       if (isValid) {
-        setCurrentStep(2);
+        setIsTransitioning(true);
+        setTimeout(() => {
+          setCurrentStep(2);
+          setIsTransitioning(false);
+        }, 150);
       } else {
         console.log('Validation errors:', form.formState.errors);
       }
@@ -328,7 +262,11 @@ export default function SignUp() {
       if (kycFile) {
         // Parse document and auto-fill step 3
         await parseICDocument();
-        setCurrentStep(3);
+        setIsTransitioning(true);
+        setTimeout(() => {
+          setCurrentStep(3);
+          setIsTransitioning(false);
+        }, 150);
       } else {
         showErrorModal(
           'Document Required',
@@ -340,7 +278,11 @@ export default function SignUp() {
   };
 
   const prevStep = () => {
-    setCurrentStep(currentStep - 1);
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentStep(currentStep - 1);
+      setIsTransitioning(false);
+    }, 150);
   };
 
   // Modular function to save account data to JSON file
@@ -393,17 +335,8 @@ export default function SignUp() {
       // Save account data to JSON file
       const savedAccount = await saveAccountToJSON(values);
       
-      // Show success modal with account details
-      showSuccessModal(
-        'Account Created Successfully',
-        'Your account has been created and saved successfully!',
-        [
-          `User ID: ${savedAccount.userId}`,
-          `Account Number: ${savedAccount.accountNumber}`,
-          `Username: ${savedAccount.username}`,
-          `Registration Date: ${savedAccount.registrationDate}`
-        ]
-      );
+      // Show success modal
+      showSuccessModal();
       
       // Reset form after successful submission
       form.reset();
@@ -447,10 +380,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className={`${inter.variable} min-h-screen flex items-center justify-center bg-background p-4 font-[family-name:var(--font-inter)]`}>
-      {/* Theme Toggle Button */}
-      <ThemeToggle />
-      
+    <div className={`${inter.variable} min-h-screen flex items-center justify-center bg-gray-50 p-4 font-[family-name:var(--font-inter)]`}>
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Create Account</CardTitle>
@@ -484,10 +414,15 @@ export default function SignUp() {
         
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               
-              {/* Step 1: Account Details */}
-              {currentStep === 1 && (
+              {/* Form Content with Smooth Transitions */}
+              <div className={`transition-all duration-150 space-y-4 ${
+                isTransitioning ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
+              }`}>
+                
+                {/* Step 1: Account Details */}
+                {currentStep === 1 && (
                 <>
                   {/* Username Field */}
                   <FormField
@@ -788,11 +723,11 @@ export default function SignUp() {
                           <FormControl>
                             <select 
                               {...field} 
-                              className="flex h-9 w-full rounded-md border border-input bg-background text-foreground px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring dark:bg-background dark:text-foreground"
+                              className="flex h-9 w-full rounded-md border border-gray-300 bg-white text-gray-900 px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
                             >
-                              <option value="" className="bg-background text-foreground">Select gender</option>
-                              <option value="Male" className="bg-background text-foreground">Male</option>
-                              <option value="Female" className="bg-background text-foreground">Female</option>
+                              <option value="" className="bg-white text-gray-900">Select gender</option>
+                              <option value="Male" className="bg-white text-gray-900">Male</option>
+                              <option value="Female" className="bg-white text-gray-900">Female</option>
                             </select>
                           </FormControl>
                           <FormMessage />
@@ -822,6 +757,8 @@ export default function SignUp() {
                   </div>
                 </>
               )}
+              
+              </div>
             </form>
           </Form>
 
@@ -849,18 +786,55 @@ export default function SignUp() {
         details={errorModal.details}
       />
 
-      <SuccessModal
-        isOpen={successModal.isOpen}
-        onClose={closeSuccessModal}
-        title={successModal.title}
-        message={successModal.message}
-        details={successModal.details}
-      />
+      {/* Success Modal */}
+      {successModal && (
+        <div 
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-150 ${
+            isSuccessModalVisible ? 'bg-black/50 backdrop-blur-sm' : 'bg-black/0'
+          }`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closeSuccessModal();
+            }
+          }}
+        >
+          <Card 
+            className={`w-full max-w-md mx-auto transform transition-all duration-150 ${
+              isSuccessModalVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+            }`}
+          >
+            <CardHeader className="space-y-1">
+              <CardTitle className="text-2xl font-bold text-center">Account Created Successfully</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Button 
+                onClick={closeSuccessModal}
+                className="w-full"
+              >
+                OK
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Check Details Modal */}
       {checkDetailsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <Card className="w-full max-w-md mx-auto">
+        <div 
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-150 ${
+            isCheckDetailsModalVisible ? 'bg-black/50 backdrop-blur-sm' : 'bg-black/0'
+          }`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closeCheckDetailsModal();
+            }
+          }}
+        >
+          <Card 
+            className={`w-full max-w-md mx-auto transform transition-all duration-150 ${
+              isCheckDetailsModalVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+            }`}
+          >
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl font-bold text-center">Verify Information</CardTitle>
               <CardDescription className="text-center">
