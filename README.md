@@ -1,5 +1,6 @@
 # Tea Time
 
+**Tackling Challenge 2: Digital integrity in the age of misinformation**
 **Empowering informed conversations: AI-powered sentiment & bias analysis on Malaysia’s news**
 
 Check out the live demo of **Tea Time**: 👉 [Click here to try it out](https://tt-ruby-chi.vercel.app)
@@ -21,4 +22,54 @@ This exploration led us to design the platform Tea Time as a responsive PWA with
 - **Uses AI to classify comments** as positive, negative, or neutral  
 - **Generates bias-analysis reports** on each article, flagging potential slants and offering reading guidance  
 - **Highlights “the bigger picture”** to prevent misinterpretation by using AI
+
+## Getting Started 🚀
+
+Clone the repository and start the development server:
+
+```bash
+git clone https://github.com/JingYuan0926/tt.git
+cd tt
+npm install
+npm run dev
+```
+
+
+## Technology Used 🛠️
+
+- **NextUI** for frontend components  
+- **shadcn/ui** for UI primitives  
+- **HeroUI** for design elements  
+- **Tailwind CSS** for utility-first styling  
+- **GNews API** for news aggregation  
+- **Resend API** for OTP delivery  
+- **Stripe** for payment processing  
+- **MongoDB** as the primary database  
+- **OpenAI** for AI-driven sentiment & bias analysis & AI summaries 
+- **Gemini** for document parsing & KYC  
+- **Elliptic Curve Cryptography** for secure KYC data encryption  
+- **Google Chrome Extension** for in-page AI summaries & bias checks  
+- **Progressive Web App (PWA)** support for any device including web and mobile
+
+
+
+
+## Team Members 👥
+
+- **Derek Liew Qi Jian**  
+  - *Role*: Project Lead, Front End  
+  - [LinkedIn](https://www.linkedin.com/in/derek2403/) | [Twitter](https://x.com/derek2403)
+
+- **Phen Jing Yuan**  
+  - *Role*: Back End  
+  - [LinkedIn](https://www.linkedin.com/in/jing-yuan-phen-b42266295/) | [Twitter](https://x.com/ilovedahmo)
+
+- **Marcus Tan Chi Yau**  
+  - *Role*: Frontend Developer & UI/UX Design  
+  - [LinkedIn](https://www.linkedin.com/in/marcus-tan-8846ba271/)
+
+- **Cedric Chung Theng Fung**  
+  - *Role*: Full Stack  
+  - [LinkedIn](https://www.linkedin.com/in/cedric-chung-2756b4310/)
+
 
