@@ -21,7 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ErrorModal, SuccessModal } from "@/components/ui/modal";
+import { ErrorModal } from "@/components/ui/modal";
 
 // Configure Inter font
 const inter = Inter({
@@ -40,83 +40,11 @@ const signinSchema = z.object({
   }),
 });
 
-// Theme Toggle Component
-function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
 
-  useEffect(() => {
-    // Check for saved theme preference or default to system preference
-    const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      setIsDark(false);
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    
-    if (newTheme) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
-
-  return (
-    <Button
-      variant="outline"
-      size="icon"
-      onClick={toggleTheme}
-      className="fixed top-4 right-4 z-50"
-    >
-      {isDark ? (
-        // Sun icon for light mode
-        <svg
-          className="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-          />
-        </svg>
-      ) : (
-        // Moon icon for dark mode
-        <svg
-          className="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-          />
-        </svg>
-      )}
-    </Button>
-  );
-}
 
 export default function SignIn() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   
   // Modal states
   const [errorModal, setErrorModal] = useState({
@@ -125,12 +53,7 @@ export default function SignIn() {
     message: '',
     details: null
   });
-  const [successModal, setSuccessModal] = useState({
-    isOpen: false,
-    title: '',
-    message: '',
-    details: null
-  });
+  const [successModal, setSuccessModal] = useState(false);
 
   // Helper functions for modals
   const showErrorModal = (title, message, details = null) => {
@@ -142,13 +65,9 @@ export default function SignIn() {
     });
   };
 
-  const showSuccessModal = (title, message, details = null) => {
-    setSuccessModal({
-      isOpen: true,
-      title,
-      message,
-      details
-    });
+  const showSuccessModal = () => {
+    setSuccessModal(true);
+    setIsModalVisible(true);
   };
 
   const closeErrorModal = () => {
@@ -156,7 +75,10 @@ export default function SignIn() {
   };
 
   const closeSuccessModal = () => {
-    setSuccessModal(prev => ({ ...prev, isOpen: false }));
+    setIsModalVisible(false);
+    setTimeout(() => {
+      setSuccessModal(false);
+    }, 150); // Match the animation duration
   };
 
   // Initialize form with react-hook-form and Zod validation
@@ -178,14 +100,7 @@ export default function SignIn() {
 
       // TODO: Replace this with actual authentication logic
       // For now, we'll just show a success message
-      showSuccessModal(
-        'Sign In Successful',
-        'Welcome back! You have been successfully signed in.',
-        [
-          `Username: ${values.username}`,
-          'Redirecting to dashboard...'
-        ]
-      );
+      showSuccessModal();
       
       // Reset form after successful submission
       form.reset();
@@ -211,10 +126,7 @@ export default function SignIn() {
   };
 
   return (
-    <div className={`${inter.variable} min-h-screen flex items-center justify-center bg-background p-4 font-[family-name:var(--font-inter)]`}>
-      {/* Theme Toggle Button */}
-      <ThemeToggle />
-      
+    <div className={`${inter.variable} min-h-screen flex items-center justify-center bg-gray-50 p-4 font-[family-name:var(--font-inter)]`}>
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
@@ -311,13 +223,37 @@ export default function SignIn() {
         details={errorModal.details}
       />
 
-      <SuccessModal
-        isOpen={successModal.isOpen}
-        onClose={closeSuccessModal}
-        title={successModal.title}
-        message={successModal.message}
-        details={successModal.details}
-      />
+      {/* Success Modal */}
+      {successModal && (
+        <div 
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-150 ${
+            isModalVisible ? 'bg-black/50 backdrop-blur-sm' : 'bg-black/0'
+          }`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              closeSuccessModal();
+            }
+          }}
+        >
+          <Card 
+            className={`w-full max-w-md mx-auto transform transition-all duration-150 ${
+              isModalVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+            }`}
+          >
+            <CardHeader className="space-y-1">
+              <CardTitle className="text-2xl font-bold text-center">Sign In Successful</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Button 
+                onClick={closeSuccessModal}
+                className="w-full"
+              >
+                OK
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 } 
