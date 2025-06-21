@@ -64,7 +64,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-white border-t border-border mt-16">
+    <footer className="bg-white border-t border-gray-250 mt-16">
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Newsletter Section */}
         <motion.div
@@ -161,7 +161,7 @@ const Footer = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.0, delay: 0.8 }}
-          className="pt-8 border-t border-border"
+          className="pt-8 border-t border-gray-250"
         >
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
             <div className="mb-4 md:mb-0">
