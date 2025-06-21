@@ -2,8 +2,8 @@ import React from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { Button, Chip, Divider, Avatar, Textarea } from "@heroui/react";
-import { ArrowLeftIcon, ShareIcon, BookmarkIcon, HeartIcon, ChatBubbleLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Button, Chip, Divider, Avatar, Textarea, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from "@heroui/react";
+import { ArrowLeftIcon, ShareIcon, BookmarkIcon, HeartIcon, ChatBubbleLeftIcon, XMarkIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { CheckCircleIcon, CpuChipIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
@@ -46,8 +46,11 @@ export default function Details() {
   const [isBookmarked, setIsBookmarked] = React.useState(false);
   const [isCommentsSidebarOpen, setIsCommentsSidebarOpen] = React.useState(false);
   const [newComment, setNewComment] = React.useState('');
+  const [biasAnalysis, setBiasAnalysis] = React.useState(null);
+  const [isAnalyzing, setIsAnalyzing] = React.useState(false);
+  const {isOpen, onOpen, onClose} = useDisclosure();
 
-  // Use comments from the article data, or fall back to sample comments
+  // Use comments from the article data
   const [comments, setComments] = React.useState(article?.comments?.map(comment => ({
     id: comment.id,
     author: comment.user,
@@ -55,40 +58,7 @@ export default function Details() {
     time: new Date(comment.timestamp).toLocaleDateString(),
     content: comment.content,
     likes: comment.vote?.upvotes || 0
-  })) || [
-    {
-      id: 1,
-      author: "John Mitchell",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&w=150&q=80",
-      time: "2 hours ago",
-      content: "This is a fascinating perspective on the evolution of tea culture. I've been practicing traditional tea ceremony for years, and I can see both sides of this debate.",
-      likes: 12
-    },
-    {
-      id: 2,
-      author: "Maria Santos",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&w=150&q=80",
-      time: "4 hours ago",
-      content: "Technology has definitely changed how I approach tea brewing. My smart kettle ensures perfect temperature every time, but I still appreciate the mindful aspects of traditional methods.",
-      likes: 8
-    },
-    {
-      id: 3,
-      author: "David Chen",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=150&q=80",
-      time: "6 hours ago",
-      content: "As someone who works in the tea industry, I think the key is finding balance. Technology can enhance the experience without replacing the soul of tea culture.",
-      likes: 15
-    },
-    {
-      id: 4,
-      author: "Sarah Kim",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&w=150&q=80",
-      time: "8 hours ago",
-      content: "Great article! I'm curious about the long-term effects of this technological shift on tea education and cultural preservation.",
-      likes: 6
-    }
-  ]);
+  })) || []);
 
   const handleAddComment = () => {
     if (newComment.trim()) {
@@ -102,6 +72,33 @@ export default function Details() {
       };
       setComments([comment, ...comments]);
       setNewComment('');
+    }
+  };
+
+  const handleBiasAnalysis = async () => {
+    setIsAnalyzing(true);
+    onOpen();
+    
+    try {
+      const response = await fetch('/api/analyze-news', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newsId: article.id }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setBiasAnalysis(data.analysis);
+      } else {
+        setBiasAnalysis(`Error: ${data.error || 'Failed to analyze article'}`);
+      }
+    } catch (error) {
+      setBiasAnalysis(`Error: Failed to connect to analysis service`);
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
@@ -274,7 +271,7 @@ export default function Details() {
           {/* Horizontal line and verification badges */}
           <div className="mb-8">
             <Divider className="mb-4" />
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 flex-wrap">
               <div className="flex items-center gap-2">
                 <CheckCircleIcon className="w-5 h-5 text-green-500" />
                 <Chip 
@@ -297,8 +294,81 @@ export default function Details() {
                   AI Score: {Math.round(article.ai_score * 100)}%
                 </Chip>
               </div>
+              <Button
+                color="secondary"
+                variant="flat"
+                size="sm"
+                startContent={<ShieldCheckIcon className="w-4 h-4" />}
+                onClick={handleBiasAnalysis}
+                className="text-purple-700 bg-purple-50 hover:bg-purple-100"
+              >
+                Analyze Bias
+              </Button>
             </div>
           </div>
+
+          {/* Bias Analysis Modal */}
+          <Modal 
+            isOpen={isOpen} 
+            onClose={onClose}
+            size="3xl"
+            scrollBehavior="inside"
+            className="max-h-[80vh]"
+          >
+            <ModalContent>
+              <ModalHeader className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <ShieldCheckIcon className="w-6 h-6 text-purple-600" />
+                  <span>Bias Analysis Report</span>
+                </div>
+                <p className="text-sm text-gray-600 font-normal">
+                  AI-powered analysis of "{article.title}"
+                </p>
+              </ModalHeader>
+              <ModalBody>
+                {isAnalyzing ? (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <Spinner size="lg" color="primary" className="mb-4" />
+                    <p className="text-gray-600">Analyzing article for bias and perspective...</p>
+                    <p className="text-sm text-gray-500 mt-2">This may take a few moments</p>
+                  </div>
+                ) : biasAnalysis ? (
+                  <div className="space-y-4">
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                      <p className="text-sm text-yellow-800">
+                        <strong>Disclaimer:</strong> This analysis is generated by AI and should be used as a starting point for critical thinking, not as absolute truth.
+                      </p>
+                    </div>
+                    <div className="prose prose-sm max-w-none">
+                      <pre className="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed">
+                        {biasAnalysis}
+                      </pre>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-gray-600">Click "Analyze Bias" to get started</p>
+                  </div>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+                {biasAnalysis && (
+                  <Button 
+                    color="primary" 
+                    onPress={() => {
+                      setBiasAnalysis(null);
+                      handleBiasAnalysis();
+                    }}
+                  >
+                    Re-analyze
+                  </Button>
+                )}
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
 
           {/* Hero Image */}
           {article.imageurl && article.imageurl.length > 0 && (
@@ -322,167 +392,53 @@ export default function Details() {
             </motion.div>
           )}
 
-          {/* Article Meta */}
-          <motion.div 
-            className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 pb-6 border-b border-gray-200"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            <div className="flex items-center mb-4 md:mb-0">
-              <Avatar 
-                src={`https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=150&q=80`}
-                alt="News Author"
-                className="mr-3"
-                size="md"
-              />
-              <div>
-                <p className="font-semibold text-black">News Team</p>
-                <p className="text-sm text-gray-600">{article.category} Correspondent</p>
-                <p className="text-sm text-gray-500">
-                  Published {new Date(article.date).toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric'
-                  })} • 5 min read
-                </p>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-center gap-3">
-              <Button
-                isIconOnly
-                variant="light"
-                size="sm"
-                onClick={() => setIsLiked(!isLiked)}
-                className={isLiked ? "text-red-500" : "text-gray-500"}
-              >
-                {isLiked ? <HeartSolidIcon className="w-5 h-5" /> : <HeartIcon className="w-5 h-5" />}
-              </Button>
-              <Button
-                isIconOnly
-                variant="light"
-                size="sm"
-                onClick={() => setIsBookmarked(!isBookmarked)}
-                className={isBookmarked ? "text-blue-500" : "text-gray-500"}
-              >
-                <BookmarkIcon className="w-5 h-5" />
-              </Button>
-              <Button
-                isIconOnly
-                variant="light"
-                size="sm"
-                className="text-gray-500"
-              >
-                <ShareIcon className="w-5 h-5" />
-              </Button>
-            </div>
-          </motion.div>
-
-          {/* Article Content */}
-          <motion.div 
-            className="prose prose-lg max-w-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            <p className="text-lg leading-relaxed mb-6 text-gray-800">
-              {article.description}
-            </p>
-            
-            {/* Additional Images */}
-            {article.imageurl && article.imageurl.length > 1 && (
-              <div className="my-10 grid grid-cols-1 md:grid-cols-2 gap-4">
-                {article.imageurl.slice(1).map((img, index) => (
-                  <motion.img 
-                    key={index}
-                    src={img}
-                    alt={`${article.title} - Image ${index + 2}`}
-                    className="w-full h-[250px] object-cover rounded-lg shadow-md"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1.0 + (index * 0.1) }}
-                    onError={(e) => {
-                      e.target.src = 'https://via.placeholder.com/400x250/f3f4f6/6b7280?text=Image+Not+Available';
-                    }}
-                  />
-                ))}
-              </div>
-            )}
-
-            {/* External Links */}
-            {article.link && article.link.length > 0 && (
-              <motion.div 
-                className="my-8 p-4 bg-blue-50 rounded-lg"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.2 }}
-              >
-                <h3 className="font-semibold text-blue-900 mb-3">Related Links:</h3>
-                <ul className="space-y-2">
-                  {article.link.map((link, index) => (
-                    <li key={index}>
-                      <a 
-                        href={link} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 underline"
-                      >
-                        {link}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            )}
-
-            <Divider className="my-8" />
-
-            {/* Author Bio Section - Simplified since we don't have author data */}
-            <motion.div 
-              className="bg-gray-50 rounded-lg p-6 mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.4 }}
-            >
-              <div className="flex items-start gap-4">
-                <Avatar 
-                  src={`https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=150&q=80`}
-                  alt="News Team"
-                  size="lg"
+          {/* Additional Images */}
+          {article.imageurl && article.imageurl.length > 1 && (
+            <div className="my-10 grid grid-cols-1 md:grid-cols-2 gap-4">
+              {article.imageurl.slice(1).map((img, index) => (
+                <motion.img 
+                  key={index}
+                  src={img}
+                  alt={`${article.title} - Image ${index + 2}`}
+                  className="w-full h-[250px] object-cover rounded-lg shadow-md"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.0 + (index * 0.1) }}
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/400x250/f3f4f6/6b7280?text=Image+Not+Available';
+                  }}
                 />
-                <div>
-                  <h3 className="font-bold text-lg mb-2">About Our News Team</h3>
-                  <p className="text-gray-700 mb-2">
-                    Our dedicated news team covers the latest developments in {article.category.toLowerCase()} 
-                    and other important topics, bringing you verified and timely information.
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Follow our coverage for more updates
-                  </p>
-                </div>
-              </div>
-            </motion.div>
+              ))}
+            </div>
+          )}
 
-            {/* Related Articles - Simplified since we don't have related articles data */}
+          {/* External Links */}
+          {article.link && article.link.length > 0 && (
             <motion.div 
-              className="border-t pt-8"
+              className="my-8 p-4 bg-blue-50 rounded-lg"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.6 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
             >
-              <h3 className="text-xl font-bold mb-6">More in {article.category}</h3>
-              <div className="text-center py-8">
-                <p className="text-gray-600 mb-4">Discover more articles in this category</p>
-                <Link href="/news">
-                  <Button color="primary" variant="flat">
-                    Browse All News
-                  </Button>
-                </Link>
-              </div>
+              <h3 className="font-semibold text-blue-900 mb-3">Related Links:</h3>
+              <ul className="space-y-2">
+                {article.link.map((link, index) => (
+                  <li key={index}>
+                    <a 
+                      href={link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline"
+                    >
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </motion.div>
-          </motion.div>
+          )}
+
+          <Divider className="my-8" />
         </motion.article>
       </main>
     </div>
