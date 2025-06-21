@@ -1,10 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 export default function Subscribe() {
   const [billingCycle, setBillingCycle] = useState('monthly');
   const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const router = useRouter();
+
+  // Check authentication status on component mount
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      if (typeof window !== 'undefined') {
+        const storedUser = localStorage.getItem('currentUser');
+        const isStoredLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        
+        if (isStoredLoggedIn && storedUser) {
+          setIsLoggedIn(true);
+          setCurrentUser(JSON.parse(storedUser));
+        } else {
+          setIsLoggedIn(false);
+          setCurrentUser(null);
+        }
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
 
   const plans = [
     {
@@ -48,6 +73,13 @@ export default function Subscribe() {
   ];
 
   const handleSubscribe = async (planName) => {
+    // Check if user is logged in for both Free and Pro plans
+    if (!isLoggedIn || !currentUser) {
+      // Show modal instead of alert
+      setShowLoginModal(true);
+      return;
+    }
+
     if (planName === 'Free') {
       console.log('Subscribing to Free plan');
       // Handle free plan signup (maybe redirect to registration)
@@ -93,6 +125,12 @@ export default function Subscribe() {
               <span>PRICING TIERS</span>
               <span>•</span>
               <span>AI-POWERED ANALYSIS</span>
+              {isLoggedIn && currentUser && (
+                <>
+                  <span>•</span>
+                  <span>LOGGED IN AS {currentUser.username?.toUpperCase()}</span>
+                </>
+              )}
             </div>
           </motion.div>
 
@@ -209,7 +247,9 @@ export default function Subscribe() {
                       Processing...
                     </div>
                   ) : (
-                    plan.buttonText
+                    <>
+                      {plan.buttonText}
+                    </>
                   )}
                 </motion.button>
               </motion.div>
@@ -232,6 +272,59 @@ export default function Subscribe() {
           </motion.div>
         </div>
       </div>
+
+      {/* Login Required Modal */}
+      {showLoginModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowLoginModal(false);
+            }
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl"
+          >
+            <div className="text-center mb-6">
+              <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Authentication Required</h3>
+              <p className="text-gray-600">
+                Please login or create an account to subscribe to Tea Time plans.
+              </p>
+            </div>
+            
+            <div className="flex gap-3">
+              <motion.button
+                onClick={() => setShowLoginModal(false)}
+                className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl transition-colors duration-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Close
+              </motion.button>
+              <motion.button
+                onClick={() => {
+                  setShowLoginModal(false);
+                  router.push('/profile');
+                }}
+                className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors duration-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Sign In/Sign Up
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </>
   );
 }
