@@ -7,7 +7,7 @@ const ProfilePage = () => {
   const user = userData[0];
 
   return (
-    <div className="min-h-screen bg-white mt-5">
+    <div className="min-h-screen bg-white pt-5">
       <div className="max-w-7xl mx-auto px-4 pt-4 pb-8 relative">
         {/* Edit Profile Icon */}
         <motion.button
