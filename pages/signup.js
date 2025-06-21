@@ -299,39 +299,30 @@ export default function SignUp() {
     }, 150);
   };
 
-  // Modular function to save account data to JSON file
-  const saveAccountToJSON = async (accountData) => {
+  // Modular function to register user with MongoDB
+  const registerUser = async (accountData) => {
     try {
-      // Prepare data with KYC file information
-      const dataToSave = {
-        ...accountData,
-        kycFileName: kycFile?.name || null,
-        kycFileSize: kycFile?.size || null,
-        kycFileType: kycFile?.type || null
-      };
-      
-      // Send to API endpoint
-      const response = await fetch('/api/save-user', {
+      // Send to MongoDB registration API endpoint
+      const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dataToSave),
+        body: JSON.stringify(accountData),
       });
       
       const result = await response.json();
       
       if (!response.ok) {
-        throw new Error(result.message || 'Failed to save user');
+        throw new Error(result.error || 'Failed to register user');
       }
       
-      console.log('✅ Account saved to file:', result.filePath);
-      console.log(`📊 Total users: ${result.totalUsers}`);
+      console.log('✅ User registered successfully:', result.message);
       console.log('👤 New user:', result.user);
       
       return result.user;
     } catch (error) {
-      console.error('Error saving account:', error);
+      console.error('Error registering user:', error);
       throw error;
     }
   };
@@ -346,8 +337,8 @@ export default function SignUp() {
     setIsSubmitting(true);
     
     try {
-      // Save account data to JSON file
-      const savedAccount = await saveAccountToJSON(values);
+      // Register user with MongoDB
+      const registeredUser = await registerUser(values);
       
       // Show success modal
       showSuccessModal();
@@ -360,7 +351,7 @@ export default function SignUp() {
       console.error('Signup error:', error);
       
       // Handle specific error types
-      if (error.message.includes('Duplicate')) {
+      if (error.message.includes('Username already exists') || error.message.includes('Email already registered')) {
         showErrorModal(
           'Account Already Exists',
           error.message,
@@ -370,11 +361,23 @@ export default function SignUp() {
             'Contact support if you believe this is an error'
           ]
         );
-      } else if (error.message.includes('API configuration')) {
+      } else if (error.message.includes('Password must be at least')) {
         showErrorModal(
-          'System Configuration Error',
-          'There is a system configuration issue. Please contact support.',
-          ['This is not an issue with your input', 'Please try again later or contact support']
+          'Password Requirements',
+          error.message,
+          ['Password must be at least 6 characters long', 'Use a combination of letters, numbers, and symbols for better security']
+        );
+      } else if (error.message.includes('valid email')) {
+        showErrorModal(
+          'Invalid Email',
+          error.message,
+          ['Please enter a valid email address format', 'Example: user@example.com']
+        );
+      } else if (error.message.includes('Connection test failed')) {
+        showErrorModal(
+          'Database Connection Error',
+          'Unable to connect to the database. Please try again later.',
+          ['Check your internet connection', 'Contact support if the problem persists']
         );
       } else {
         showErrorModal(
