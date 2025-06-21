@@ -34,7 +34,7 @@ const NewsPage = () => {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 1.0, delay: 0.2 }}
           className="mb-8"
         >
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -48,7 +48,7 @@ const NewsPage = () => {
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 1.2, delay: 0.4 }}
         >
           <NewspaperLayout articles={filteredArticles} />
         </motion.div>

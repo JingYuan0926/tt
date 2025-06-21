@@ -27,14 +27,24 @@ export default function IntroVideo({ onComplete }) {
       });
     };
 
-    // Handle video end
-    const handleVideoEnd = () => {
-      // Start fade out animation
-      setIsFadingOut(true);
-      // Complete transition after fade animation
-      setTimeout(() => {
-        onComplete();
-      }, 1000);
+    // Handle video time update - redirect 1 second before end
+    const handleTimeUpdate = () => {
+      const currentTime = video.currentTime;
+      const duration = video.duration;
+      
+      // Check if we're 1 second before the end
+      if (duration && currentTime >= duration - 1) {
+        console.log('Video about to end - redirecting to news page');
+        // Start fade out animation
+        setIsFadingOut(true);
+        // Complete transition after fade animation
+        setTimeout(() => {
+          onComplete();
+        }, 500);
+        
+        // Remove event listener to prevent multiple triggers
+        video.removeEventListener('timeupdate', handleTimeUpdate);
+      }
     };
 
     // Handle video error
@@ -45,12 +55,12 @@ export default function IntroVideo({ onComplete }) {
     };
 
     video.addEventListener('canplay', handleCanPlay);
-    video.addEventListener('ended', handleVideoEnd);
+    video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('error', handleVideoError);
 
     return () => {
       video.removeEventListener('canplay', handleCanPlay);
-      video.removeEventListener('ended', handleVideoEnd);
+      video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('error', handleVideoError);
     };
   }, [onComplete]);
@@ -74,9 +84,9 @@ export default function IntroVideo({ onComplete }) {
   };
 
   return (
-    <div className={`fixed inset-0 z-50 bg-black flex items-center justify-center transition-opacity duration-1000 ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}>
+    <div className={`fixed inset-0 z-50 bg-black transition-opacity duration-1000 ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}>
       {/* Video container */}
-      <div className="relative w-full h-full">
+      <div className="absolute inset-0">
         <video
           ref={videoRef}
           className="w-full h-full object-cover"
@@ -111,29 +121,6 @@ export default function IntroVideo({ onComplete }) {
               </svg>
             </button>
           </div>
-        )}
-
-        {/* Skip button */}
-        {isVideoLoaded && (
-          <button
-            onClick={handleSkipIntro}
-            className="absolute top-6 right-6 bg-black bg-opacity-50 hover:bg-opacity-70 text-white px-4 py-2 rounded-full transition-all duration-300 text-sm"
-          >
-            Skip Intro
-          </button>
-        )}
-
-        {/* Developer helper - reset intro (only in development) */}
-        {process.env.NODE_ENV === 'development' && isVideoLoaded && (
-          <button
-            onClick={() => {
-              localStorage.removeItem('hasSeenIntro');
-              window.location.reload();
-            }}
-            className="absolute bottom-6 right-6 bg-blue-600 bg-opacity-50 hover:bg-opacity-70 text-white px-4 py-2 rounded-full transition-all duration-300 text-xs"
-          >
-            Reset Intro (Dev)
-          </button>
         )}
       </div>
     </div>

@@ -105,12 +105,12 @@ export default function Details() {
           </div>
 
           {/* Main Title */}
-          <h1 className="text-4xl md:text-5xl font-bold text-black leading-tight mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-black leading-tight mb-6 text-justify">
             {article.title}
           </h1>
 
           {/* Subtitle/Description */}
-          <p className="text-xl text-gray-700 leading-relaxed mb-8 font-light">
+          <p className="text-xl text-gray-700 leading-relaxed mb-8 font-light text-justify">
             {article.description}
           </p>
 
@@ -148,7 +148,7 @@ export default function Details() {
                   e.target.src = 'https://via.placeholder.com/800x500/f3f4f6/6b7280?text=Image+Not+Available';
                 }}
               />
-              <p className="text-sm text-gray-500 mt-2 italic">
+              <p className="text-sm text-gray-500 mt-2 italic text-justify">
                 {article.title} - Category: {article.category}
               </p>
             </motion.div>
