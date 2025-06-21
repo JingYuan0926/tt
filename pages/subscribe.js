@@ -137,7 +137,7 @@ export default function Subscribe() {
             className="text-center mb-12"
           >
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900 mb-4">
-              Get Tea Time Pro that helps you understand media perspectives and make informed decisions
+            Get Tea Time Pro — understand media bias and decide smarter.
             </h2>
             <div className="w-24 h-1 bg-gray-300 mx-auto mb-8"></div>
 
