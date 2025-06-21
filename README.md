@@ -16,7 +16,7 @@ Check out the live demo of **Tea Time**: 👉 [Click here to try it out](https:/
 
 We noticed even perfectly accurate information can get twisted as it passes from person to person, just like the classic “telephone game.” For instance, the word “Polish” might be taken as the country or as nail cleaner, and “present” can mean now or gift, depending on who hears it. Misinterpretation often happens not because the facts are wrong, but because people miss the broader context.
 
-> **“What if there were a way to let everyone see the full picture, so that every nuance of a news article is preserved?”**
+> *“What if there were a way to let everyone see the full picture, so that every nuance of a news article is preserved?”*
 
 That question sparked Tea Time. By combining crowdsourced commentary with AI-driven sentiment analysis (to see how everyone comments) and bias analysis (to flag where an article slants), then providing a concise summary to guide interpretation, we ensure no detail is lost in transmission and that misinformation gets caught before it spreads.
 
