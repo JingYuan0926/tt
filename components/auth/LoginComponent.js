@@ -60,7 +60,8 @@ const LoginComponent = ({
   onSwitchToSignup, 
   showErrorModal, 
   showSuccessModal,
-  userData 
+  userData,
+  isTransitioning: parentIsTransitioning = false
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -338,7 +339,7 @@ const LoginComponent = ({
       
       <CardContent>
         <div className={`transition-all duration-150 space-y-4 ${
-          isTransitioning ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
+          (isTransitioning || parentIsTransitioning) ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
         }`}>
           <Form {...regularForm}>
             <form onSubmit={regularForm.handleSubmit(onRegularSubmit)} className="space-y-4">
@@ -368,7 +369,7 @@ const LoginComponent = ({
                             : "Enter your email or username"
                         }
                         {...field}
-                        disabled={isSubmitting || isTransitioning}
+                        disabled={isSubmitting || isTransitioning || parentIsTransitioning}
                       />
                     </FormControl>
                     <FormMessage />
@@ -388,7 +389,7 @@ const LoginComponent = ({
                         type="password"
                         placeholder="Enter your password" 
                         {...field}
-                        disabled={isSubmitting || isTransitioning}
+                        disabled={isSubmitting || isTransitioning || parentIsTransitioning}
                       />
                     </FormControl>
                     <FormMessage />
@@ -400,7 +401,7 @@ const LoginComponent = ({
               <Button 
                 type="submit" 
                 className="w-full"
-                disabled={isSubmitting || isTransitioning}
+                disabled={isSubmitting || isTransitioning || parentIsTransitioning}
               >
                 {isSubmitting ? "Signing In..." : "Sign In"}
               </Button>
@@ -423,7 +424,7 @@ const LoginComponent = ({
             variant="outline" 
             className="w-full"
             onClick={handleOtpSigninClick}
-            disabled={isSubmitting || isTransitioning}
+            disabled={isSubmitting || isTransitioning || parentIsTransitioning}
           >
             Sign in with OTP
           </Button>
@@ -446,7 +447,7 @@ const LoginComponent = ({
                 type="button"
                 onClick={onSwitchToSignup}
                 className="font-medium text-primary hover:underline"
-                disabled={isSubmitting || isTransitioning}
+                disabled={isSubmitting || isTransitioning || parentIsTransitioning}
               >
                 Sign up
               </button>
@@ -466,7 +467,7 @@ const LoginComponent = ({
       
       <CardContent>
         <div className={`transition-all duration-150 space-y-4 ${
-          isTransitioning ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
+          (isTransitioning || parentIsTransitioning) ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
         }`}>
           <Form {...gmailForm}>
             <form onSubmit={gmailForm.handleSubmit(onGmailSubmit)} className="space-y-4">
@@ -482,7 +483,7 @@ const LoginComponent = ({
                         type="email"
                         placeholder="Enter your Gmail address" 
                         {...field}
-                        disabled={isSubmitting || isTransitioning}
+                        disabled={isSubmitting || isTransitioning || parentIsTransitioning}
                       />
                     </FormControl>
                     <FormMessage />
@@ -493,7 +494,7 @@ const LoginComponent = ({
               <Button 
                 type="submit" 
                 className="w-full"
-                disabled={isSubmitting || isTransitioning}
+                disabled={isSubmitting || isTransitioning || parentIsTransitioning}
               >
                 {isSubmitting ? "Sending OTP..." : "Send OTP"}
               </Button>
@@ -505,7 +506,7 @@ const LoginComponent = ({
             variant="outline" 
             className="w-full mt-4"
             onClick={handleBackToRegular}
-            disabled={isSubmitting || isTransitioning}
+            disabled={isSubmitting || isTransitioning || parentIsTransitioning}
           >
             Back to Password Sign in
           </Button>
@@ -526,7 +527,7 @@ const LoginComponent = ({
       
       <CardContent>
         <div className={`transition-all duration-150 space-y-4 ${
-          isTransitioning ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
+          (isTransitioning || parentIsTransitioning) ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
         }`}>
           <Form {...otpForm}>
             <form onSubmit={otpForm.handleSubmit(onOtpSubmit)} className="space-y-4">
@@ -543,7 +544,7 @@ const LoginComponent = ({
                         placeholder="Enter here" 
                         maxLength={6}
                         {...field}
-                        disabled={isSubmitting || isTransitioning}
+                        disabled={isSubmitting || isTransitioning || parentIsTransitioning}
                         className="text-center text-lg tracking-widest"
                       />
                     </FormControl>
@@ -555,7 +556,7 @@ const LoginComponent = ({
               <Button 
                 type="submit" 
                 className="w-full"
-                disabled={isSubmitting || isTransitioning}
+                disabled={isSubmitting || isTransitioning || parentIsTransitioning}
               >
                 {isSubmitting ? "Verifying..." : "Verify OTP"}
               </Button>
@@ -567,7 +568,7 @@ const LoginComponent = ({
             variant="outline" 
             className="w-full mt-4"
             onClick={() => onGmailSubmit({ gmail: userGmail })}
-            disabled={isSubmitting || isTransitioning}
+            disabled={isSubmitting || isTransitioning || parentIsTransitioning}
           >
             Resend OTP
           </Button>
@@ -577,7 +578,7 @@ const LoginComponent = ({
             variant="ghost" 
             className="w-full mt-2"
             onClick={handleBackToGmail}
-            disabled={isSubmitting || isTransitioning}
+            disabled={isSubmitting || isTransitioning || parentIsTransitioning}
           >
             Change Gmail Address
           </Button>

@@ -33,7 +33,7 @@ export default function Download() {
         <div className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
           
           {/* Download Header - matching NewsHeader style */}
-          <div className="text-center border-b-4 border-gray-900 pb-6 mb-8 mt-12 animate-in slide-in-from-bottom duration-700">
+          <div className="text-center border-b-4 border-gray-900 pb-6 mb-8 animate-in slide-in-from-bottom duration-700">
             <h1 className="text-5xl md:text-6xl font-serif font-bold text-gray-900 mb-2">DOWNLOAD</h1>
             <div className="flex justify-center items-center gap-4 text-sm text-gray-600 font-mono">
               <span>EXTENSION</span>
