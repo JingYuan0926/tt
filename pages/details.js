@@ -6,8 +6,13 @@ import { Button, Chip, Divider, Avatar, Textarea, Modal, ModalContent, ModalHead
 import { ArrowLeftIcon, ShareIcon, BookmarkIcon, HeartIcon, ChatBubbleLeftIcon, XMarkIcon, ShieldCheckIcon, LinkIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { CheckCircleIcon, CpuChipIcon } from '@heroicons/react/24/solid';
+import { Button, Chip, Divider } from "@heroui/react";
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import newsData from '../data/news.json';
+import BiasAnalysis from '../components/BiasAnalysis';
+import CommentsSection from '../components/CommentsSection';
 
 export default function Details() {
   const router = useRouter();
@@ -15,6 +20,31 @@ export default function Details() {
   
   // Find the article by ID
   const article = newsData.find(item => item.id === id);
+  
+  // Function to save comment to the JSON file
+  const handleAddComment = async (articleId, comment) => {
+    try {
+      const response = await fetch('/api/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          articleId,
+          comment
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save comment');
+      }
+
+      console.log('Comment saved successfully');
+    } catch (error) {
+      console.error('Error saving comment:', error);
+      throw error;
+    }
+  };
   
   // If article not found, show loading or error
   if (!article && id) {
@@ -42,109 +72,6 @@ export default function Details() {
     );
   }
 
-  const [isLiked, setIsLiked] = React.useState(false);
-  const [isBookmarked, setIsBookmarked] = React.useState(false);
-  const [isCommentsSidebarOpen, setIsCommentsSidebarOpen] = React.useState(false);
-  const [newComment, setNewComment] = React.useState('');
-  const [biasAnalysis, setBiasAnalysis] = React.useState(null);
-  const [isAnalyzing, setIsAnalyzing] = React.useState(false);
-  const [aiSources, setAiSources] = React.useState([]);
-  const [isGeneratingSources, setIsGeneratingSources] = React.useState(false);
-  const [sourcesGenerated, setSourcesGenerated] = React.useState(false);
-  const {isOpen, onOpen, onClose} = useDisclosure();
-
-  // Use comments from the article data
-  const [comments, setComments] = React.useState(article?.comments?.map(comment => ({
-    id: comment.id,
-    author: comment.user,
-    avatar: `https://images.unsplash.com/photo-150${Math.floor(Math.random() * 9) + 1}003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=150&q=80`,
-    time: new Date(comment.timestamp).toLocaleDateString(),
-    content: comment.content,
-    likes: comment.vote?.upvotes || 0
-  })) || []);
-
-  const handleAddComment = () => {
-    if (newComment.trim()) {
-      const comment = {
-        id: comments.length + 1,
-        author: "You",
-        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&w=150&q=80",
-        time: "Just now",
-        content: newComment,
-        likes: 0
-      };
-      setComments([comment, ...comments]);
-      setNewComment('');
-    }
-  };
-
-  const handleBiasAnalysis = async () => {
-    setIsAnalyzing(true);
-    onOpen();
-    
-    try {
-      const response = await fetch('/api/analyze-news', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ newsId: article.id }),
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        setBiasAnalysis(data.analysis);
-      } else {
-        setBiasAnalysis(`Error: ${data.error || 'Failed to analyze article'}`);
-      }
-    } catch (error) {
-      setBiasAnalysis(`Error: Failed to connect to analysis service`);
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
-
-  const handleGenerateSources = async () => {
-    setIsGeneratingSources(true);
-    
-    try {
-      const response = await fetch('/api/generate-sources', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: article.title,
-          description: article.description,
-          category: article.category
-        }),
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        setAiSources(data.sources);
-        setSourcesGenerated(true);
-      } else {
-        console.error('Failed to generate sources:', data.error);
-        setAiSources([]);
-      }
-    } catch (error) {
-      console.error('Error generating sources:', error);
-      setAiSources([]);
-    } finally {
-      setIsGeneratingSources(false);
-    }
-  };
-
-  // Auto-generate sources when component mounts
-  React.useEffect(() => {
-    if (article && !sourcesGenerated) {
-      handleGenerateSources();
-    }
-  }, [article, sourcesGenerated]);
-
   return (
     <div className="min-h-screen bg-white">
       <Head>
@@ -154,131 +81,11 @@ export default function Details() {
       </Head>
 
       <main className="bg-white relative">
-        {/* Comments Sidebar */}
-        <motion.div 
-          className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
-            isCommentsSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-          initial={false}
-          animate={{
-            x: isCommentsSidebarOpen ? 0 : '100%'
-          }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
-        >
-          <div className="h-full flex flex-col">
-            {/* Sidebar Header */}
-            <motion.div 
-              className="p-6 border-b border-gray-200 flex items-center justify-between"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-            >
-              <div className="flex items-center gap-2">
-                <ChatBubbleLeftIcon className="w-6 h-6 text-gray-700" />
-                <h2 className="text-xl font-bold text-gray-900">Comments ({comments.length})</h2>
-              </div>
-              <Button
-                isIconOnly
-                variant="light"
-                size="sm"
-                onClick={() => setIsCommentsSidebarOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <XMarkIcon className="w-5 h-5" />
-              </Button>
-            </motion.div>
+        {/* Bias Analysis Component */}
+        <BiasAnalysis article={article} />
 
-            {/* Add Comment Section */}
-            <motion.div 
-              className="p-6 border-b border-gray-200"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-            >
-              <Textarea
-                placeholder="Share your thoughts on this article..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                minRows={3}
-                className="mb-3"
-              />
-              <Button 
-                color="primary" 
-                size="sm" 
-                onClick={handleAddComment}
-                disabled={!newComment.trim()}
-              >
-                Post Comment
-              </Button>
-            </motion.div>
-
-            {/* Comments List */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              {comments.map((comment, index) => (
-                <motion.div 
-                  key={comment.id} 
-                  className="flex gap-3"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.3 + (index * 0.1) }}
-                >
-                  <Avatar
-                    src={comment.avatar}
-                    alt={comment.author}
-                    size="sm"
-                    className="flex-shrink-0"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold text-sm text-gray-900">{comment.author}</span>
-                      <span className="text-xs text-gray-500">{comment.time}</span>
-                    </div>
-                    <p className="text-sm text-gray-700 leading-relaxed mb-2">{comment.content}</p>
-                    <div className="flex items-center gap-4">
-                      <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-500 transition-colors">
-                        <HeartIcon className="w-4 h-4" />
-                        {comment.likes}
-                      </button>
-                      <button className="text-xs text-gray-500 hover:text-blue-500 transition-colors">
-                        Reply
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Overlay */}
-        {isCommentsSidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
-            onClick={() => setIsCommentsSidebarOpen(false)}
-          />
-        )}
-
-        {/* Comments Button - Fixed Position */}
-        <motion.div 
-          className="fixed right-6 top-1/2 transform -translate-y-1/2 z-30"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 1.8 }}
-        >
-          <Button
-            color="primary"
-            variant="shadow"
-            size="lg"
-            onClick={() => setIsCommentsSidebarOpen(true)}
-            className="rounded-full px-4 py-2 flex items-center gap-2"
-          >
-            <ChatBubbleLeftIcon className="w-5 h-5" />
-            <span className="hidden sm:inline">Comments</span>
-            <Chip size="sm" color="primary" variant="solid" className="text-white bg-white bg-opacity-20">
-              {comments.length}
-            </Chip>
-          </Button>
-        </motion.div>
+        {/* Comments Section Component */}
+        <CommentsSection article={article} onAddComment={handleAddComment} />
 
         {/* Article Header */}
         <motion.article 
@@ -326,81 +133,8 @@ export default function Details() {
                   {article.verification_status ? "Verified" : "Pending Verification"}
                 </Chip>
               </div>
-              <Button
-                color="secondary"
-                variant="flat"
-                size="sm"
-                startContent={<ShieldCheckIcon className="w-4 h-4" />}
-                onClick={handleBiasAnalysis}
-                className="text-purple-700 bg-purple-50 hover:bg-purple-100"
-              >
-                Analyze Bias
-              </Button>
             </div>
           </div>
-
-          {/* Bias Analysis Modal */}
-          <Modal 
-            isOpen={isOpen} 
-            onClose={onClose}
-            size="3xl"
-            scrollBehavior="inside"
-            className="max-h-[80vh]"
-          >
-            <ModalContent>
-              <ModalHeader className="flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <ShieldCheckIcon className="w-6 h-6 text-purple-600" />
-                  <span>Bias Analysis Report</span>
-                </div>
-                <p className="text-sm text-gray-600 font-normal">
-                  AI-powered analysis of "{article.title}"
-                </p>
-              </ModalHeader>
-              <ModalBody>
-                {isAnalyzing ? (
-                  <div className="flex flex-col items-center justify-center py-12">
-                    <Spinner size="lg" color="primary" className="mb-4" />
-                    <p className="text-gray-600">Analyzing article for bias and perspective...</p>
-                    <p className="text-sm text-gray-500 mt-2">This may take a few moments</p>
-                  </div>
-                ) : biasAnalysis ? (
-                  <div className="space-y-4">
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                      <p className="text-sm text-yellow-800">
-                        <strong>Disclaimer:</strong> This analysis is generated by AI and should be used as a starting point for critical thinking, not as absolute truth.
-                      </p>
-                    </div>
-                    <div className="prose prose-sm max-w-none">
-                      <pre className="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed">
-                        {biasAnalysis}
-                      </pre>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-gray-600">Click "Analyze Bias" to get started</p>
-                  </div>
-                )}
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                {biasAnalysis && (
-                  <Button 
-                    color="primary" 
-                    onPress={() => {
-                      setBiasAnalysis(null);
-                      handleBiasAnalysis();
-                    }}
-                  >
-                    Re-analyze
-                  </Button>
-                )}
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
 
           {/* Hero Image */}
           {article.imageurl && article.imageurl.length > 0 && (
