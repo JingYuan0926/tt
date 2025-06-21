@@ -116,7 +116,7 @@ export default function SignUp() {
     setIsSuccessModalVisible(false);
     setTimeout(() => {
       setSuccessModal(false);
-      // Redirect to signin page after successful signup
+      // Redirect to signin page after user clicks OK
       router.push('/signin');
     }, 150); // Match the animation duration
   };
@@ -493,13 +493,9 @@ export default function SignUp() {
       // Save account data to JSON file
       const savedAccount = await saveAccountToJSON(values);
       
-      // Show success modal
+      // Show success modal - don't reset form until user clicks OK
       showSuccessModal();
       
-      // Reset form after successful submission
-      form.reset();
-      setKycFile(null);
-      setCurrentStep(1);
     } catch (error) {
       console.error('Signup error:', error);
       
