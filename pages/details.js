@@ -14,8 +14,59 @@ export default function Details() {
   const router = useRouter();
   const { id } = router.query;
   
+  // State for generated sources
+  const [generatedSources, setGeneratedSources] = React.useState([]);
+  const [loadingSources, setLoadingSources] = React.useState(false);
+  const [sourcesError, setSourcesError] = React.useState(null);
+  
   // Find the article by ID
   const article = newsData.find(item => item.id === id);
+
+  // Function to generate sources using the API
+  const generateSources = async () => {
+    if (!article) return;
+    
+    setLoadingSources(true);
+    setSourcesError(null);
+    
+    try {
+      const response = await fetch('/api/generate-sources', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: article.title,
+          description: article.description,
+          category: article.category
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate sources');
+      }
+
+      const data = await response.json();
+      
+      if (data.success && data.sources) {
+        setGeneratedSources(data.sources);
+      } else {
+        throw new Error('Invalid response format');
+      }
+    } catch (error) {
+      console.error('Error generating sources:', error);
+      setSourcesError(error.message);
+    } finally {
+      setLoadingSources(false);
+    }
+  };
+
+  // Generate sources when article is loaded
+  React.useEffect(() => {
+    if (article && article.title && article.description) {
+      generateSources();
+    }
+  }, [article]);
   
   // Function to save comment to the JSON file
   const handleAddComment = async (articleId, comment) => {
@@ -174,29 +225,98 @@ export default function Details() {
             </div>
           )}
 
-          {/* External Links */}
-          {article.link && article.link.length > 0 && (
+          {/* External Links and Generated Sources */}
+          {((article.link && article.link.length > 0) || generatedSources.length > 0 || loadingSources) && (
             <motion.div 
               className="my-8 p-4 bg-blue-50 rounded-lg"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.2 }}
             >
-              <h3 className="font-semibold text-blue-900 mb-3">Related Links:</h3>
-              <ul className="space-y-2">
-                {article.link.map((link, index) => (
-                  <li key={index}>
-                    <a 
-                      href={link} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 underline"
+              <h3 className="font-semibold text-blue-900 mb-3">Related Links & Sources:</h3>
+              
+              {/* Existing article links */}
+              {article.link && article.link.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="font-medium text-blue-800 mb-2 text-sm">Original Sources:</h4>
+                  <ul className="space-y-2">
+                    {article.link.map((link, index) => (
+                      <li key={index}>
+                        <a 
+                          href={link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline block"
+                        >
+                          {link}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* AI Generated Sources */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-medium text-blue-800 text-sm">AI-Generated Related Sources:</h4>
+                  {!loadingSources && !sourcesError && (
+                    <Button
+                      size="sm"
+                      variant="light"
+                      onClick={generateSources}
+                      className="text-blue-600 hover:text-blue-800"
                     >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+                      Refresh Sources
+                    </Button>
+                  )}
+                </div>
+
+                {loadingSources && (
+                  <div className="flex items-center gap-2 text-blue-600">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                    <span className="text-sm">Generating relevant sources...</span>
+                  </div>
+                )}
+
+                {sourcesError && (
+                  <div className="text-red-600 text-sm mb-2">
+                    Error generating sources: {sourcesError}
+                    <Button
+                      size="sm"
+                      variant="light"
+                      onClick={generateSources}
+                      className="ml-2 text-red-600 hover:text-red-800"
+                    >
+                      Retry
+                    </Button>
+                  </div>
+                )}
+
+                {generatedSources.length > 0 && (
+                  <ul className="space-y-2">
+                    {generatedSources.map((source, index) => (
+                      <li key={index} className="border-l-2 border-blue-200 pl-3">
+                        <a 
+                          href={source.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline block font-medium"
+                        >
+                          {source.title}
+                        </a>
+                        <span className="text-blue-500 text-xs block mt-1">
+                          {source.url}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {!loadingSources && !sourcesError && generatedSources.length === 0 && (
+                  <p className="text-blue-600 text-sm italic">No additional sources generated yet.</p>
+                )}
+              </div>
             </motion.div>
           )}
 
