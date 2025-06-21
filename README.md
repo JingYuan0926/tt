@@ -49,6 +49,8 @@ npm run dev
 
 ## Technology Used 🛠️
 
+- **CursorAI** for code assistant
+- **ChatGPT** for code debugging
 - **NextUI** for frontend components  
 - **shadcn/ui** for UI primitives  
 - **HeroUI** for design elements  
