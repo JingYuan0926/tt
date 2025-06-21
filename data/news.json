@@ -14,7 +14,6 @@
     "comments": [],
     "verification_status": true,
     "size": "l",
-    "ai_score": 0.95,
     "challenge": false,
     "challenge_id": null
   },
@@ -33,7 +32,6 @@
     "comments": [],
     "verification_status": false,
     "size": "s",
-    "ai_score": 0.7335456904994895,
     "challenge": false,
     "challenge_id": null
   },
@@ -52,7 +50,6 @@
     "comments": [],
     "verification_status": false,
     "size": "l",
-    "ai_score": 0.55171510755758,
     "challenge": false,
     "challenge_id": null
   },
@@ -71,7 +68,6 @@
     "comments": [],
     "verification_status": false,
     "size": "s",
-    "ai_score": 0.5620817136429395,
     "challenge": false,
     "challenge_id": null
   },
@@ -90,7 +86,6 @@
     "comments": [],
     "verification_status": false,
     "size": "s",
-    "ai_score": 0.6487534812456544,
     "challenge": false,
     "challenge_id": null
   },
@@ -109,7 +104,6 @@
     "comments": [],
     "verification_status": false,
     "size": "m",
-    "ai_score": 0.7668955781114694,
     "challenge": false,
     "challenge_id": null
   }

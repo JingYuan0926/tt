@@ -283,17 +283,6 @@ export default function Details() {
                   {article.verification_status ? "Verified" : "Pending Verification"}
                 </Chip>
               </div>
-              <div className="flex items-center gap-2">
-                <CpuChipIcon className="w-5 h-5 text-blue-500" />
-                <Chip 
-                  color="primary" 
-                  variant="flat" 
-                  size="sm"
-                  className="text-blue-700 bg-blue-50"
-                >
-                  AI Score: {Math.round(article.ai_score * 100)}%
-                </Chip>
-              </div>
               <Button
                 color="secondary"
                 variant="flat"
