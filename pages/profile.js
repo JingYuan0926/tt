@@ -38,7 +38,7 @@ const ProfilePage = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center border-b-4 border-gray-900 pb-6 mb-8 animate-in slide-in-from-top duration-700"
+          className="text-center border-b-4 border-gray-900 pb-6 mb-8 animate-in slide-in-from-bottom duration-700"
         >
           <h1 className="text-5xl md:text-6xl font-serif font-bold text-gray-900 mb-2">PROFILE</h1>
           <div className="flex justify-center items-center gap-4 text-sm text-gray-600 font-mono">
