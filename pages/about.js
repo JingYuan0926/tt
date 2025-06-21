@@ -84,8 +84,6 @@ export default function About() {
               <span>OUR MISSION</span>
               <span>•</span>
               <span>OUR VALUES</span>
-              <span>•</span>
-              <span>OUR TEAM</span>
             </div>
           </div>
 
