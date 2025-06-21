@@ -307,7 +307,7 @@ export default function Details() {
           </h1>
 
           {/* Subtitle/Description */}
-          <p className="text-xl text-gray-700 leading-relaxed mb-8 font-light">
+          <p className="text-xl text-gray-700 leading-relaxed mb-8 font-light text-justify">
             {article.description}
           </p>
 
