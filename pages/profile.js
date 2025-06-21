@@ -240,10 +240,10 @@ const ProfilePage = () => {
     }, 150);
   };
 
-  // Save account data to JSON file
+  // Save account data to MongoDB
   const saveAccountToJSON = async (accountData) => {
     try {
-      const response = await fetch('/api/save-user', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -254,12 +254,15 @@ const ProfilePage = () => {
       const result = await response.json();
       
       if (!response.ok) {
-        throw new Error(result.message || 'Failed to save user');
+        throw new Error(result.error || 'Failed to register user');
       }
+      
+      console.log('✅ User registered successfully:', result.message);
+      console.log('👤 New user:', result.user);
       
       return result.user;
     } catch (error) {
-      console.error('Error saving account:', error);
+      console.error('Error registering user:', error);
       throw error;
     }
   };
@@ -301,7 +304,8 @@ const ProfilePage = () => {
     } catch (error) {
       console.error('Signup error:', error);
       
-      if (error.message.includes('Duplicate')) {
+      // Handle specific error types from MongoDB register API
+      if (error.message.includes('Username already exists') || error.message.includes('Email already registered') || error.message.includes('IC number already registered')) {
         showErrorModal(
           'Account Already Exists',
           error.message,
@@ -311,11 +315,34 @@ const ProfilePage = () => {
             'Contact support if you believe this is an error'
           ]
         );
-      } else if (error.message.includes('API configuration')) {
+      } else if (error.message.includes('Password must be at least 6 characters')) {
         showErrorModal(
-          'System Configuration Error',
-          'There is a system configuration issue. Please contact support.',
-          ['This is not an issue with your input', 'Please try again later or contact support']
+          'Invalid Password',
+          error.message,
+          [
+            'Password must be at least 6 characters long',
+            'Choose a strong password for better security'
+          ]
+        );
+      } else if (error.message.includes('Invalid IC number format') || error.message.includes('Invalid postal code format')) {
+        showErrorModal(
+          'Invalid Format',
+          error.message,
+          [
+            'Please check your IC number format (123456-78-9012)',
+            'Postal code should be 5 digits',
+            'Verify all information is entered correctly'
+          ]
+        );
+      } else if (error.message.includes('Password encryption failed') || error.message.includes('ECC')) {
+        showErrorModal(
+          'System Security Error',
+          'Unable to secure your password. Please try again.',
+          [
+            'This is a temporary system issue',
+            'Please try registering again',
+            'Contact support if the problem persists'
+          ]
         );
       } else {
         showErrorModal(
@@ -427,6 +454,72 @@ const ProfilePage = () => {
   // Use currentUser data if available, otherwise fallback to default user
   const displayUser = currentUser || user;
 
+  // Helper function to map MongoDB user data to display format
+  const mapUserDataForDisplay = (userData) => {
+    if (!userData) return null;
+    
+    // If it's already in the correct format (from JSON file), return as is
+    if (userData.fullName && userData.icNumber) {
+      return userData;
+    }
+    
+    // Map MongoDB structure to display format
+    return {
+      // Basic user info
+      username: userData.username || '',
+      email: userData.email || '',
+      
+      // Personal info from profile.identity
+      fullName: userData.profile?.identity?.fullName || userData.username || 'User',
+      icNumber: userData.profile?.identity?.icNumber || 'Not provided',
+      gender: userData.profile?.identity?.gender || 'Not specified',
+      citizenship: userData.profile?.identity?.citizenship || userData.profile?.identity?.country || 'Not specified',
+      
+      // Address info from profile.address
+      address: userData.profile?.address?.street || 'Not provided',
+      city: userData.profile?.address?.city || 'Not provided',
+      state: userData.profile?.address?.state || 'Not provided',
+      postCode: userData.profile?.address?.postCode || 'Not provided',
+      country: userData.profile?.address?.country || userData.profile?.identity?.country || 'Malaysia',
+      
+      // Account info
+      registrationDate: userData.createdAt ? new Date(userData.createdAt).toLocaleDateString() : new Date().toLocaleDateString(),
+      status: userData.isActive ? 'active' : 'inactive',
+      
+      // Account details (for compatibility with JSON structure)
+      accountNumber: userData._id?.toString().slice(-8).toUpperCase() || 'N/A',
+      userId: userData._id?.toString() || 'N/A',
+      
+      // KYC info
+      kycFileName: userData.profile?.kyc?.fileName || 'No document uploaded',
+      kycFileType: userData.profile?.kyc?.fileType || 'N/A',
+      kycFileSize: userData.profile?.kyc?.fileSize || 0,
+      
+      // Timestamps
+      timestamp: userData.updatedAt || userData.createdAt || new Date().toISOString(),
+    };
+  };
+
+  // Get properly mapped user data for display
+  const mappedDisplayUser = mapUserDataForDisplay(displayUser);
+
+  // Helper function to safely get user initials
+  const getUserInitials = (user) => {
+    if (!user || !user.fullName) return 'U';
+    
+    try {
+      return user.fullName
+        .split(' ')
+        .map(name => name[0])
+        .join('')
+        .substring(0, 2)
+        .toUpperCase();
+    } catch (error) {
+      console.warn('Error getting user initials:', error);
+      return user.username ? user.username.substring(0, 2).toUpperCase() : 'U';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white pt-5">
       <div className="max-w-7xl mx-auto px-4 pt-4 pb-8 relative">
@@ -492,7 +585,7 @@ const ProfilePage = () => {
           <div className="flex justify-center items-center gap-4 text-sm text-gray-600 font-mono">
             <span>ACCOUNT</span>
             <span>•</span>
-            <span>MEMBER SINCE {displayUser.registrationDate}</span>
+            <span>MEMBER SINCE {mappedDisplayUser.registrationDate}</span>
             {currentUser && (
               <>
                 <span>•</span>
@@ -516,19 +609,19 @@ const ProfilePage = () => {
               <div className="flex flex-col md:flex-row items-center md:items-end -mt-16 mb-6">
                 <div className="w-32 h-32 bg-gray-300 rounded-full border-4 border-white shadow-lg flex items-center justify-center mb-4 md:mb-0 md:mr-6">
                   <span className="text-4xl font-bold text-gray-700">
-                    {displayUser.fullName.split(' ').map(name => name[0]).join('').substring(0, 2)}
+                    {getUserInitials(mappedDisplayUser)}
                   </span>
                 </div>
                 <div className="text-center md:text-left">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">{displayUser.fullName}</h2>
-                  <p className="text-gray-600 text-lg">@{displayUser.username}</p>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">{mappedDisplayUser.fullName}</h2>
+                  <p className="text-gray-600 text-lg">@{mappedDisplayUser.username}</p>
                   <div className="flex items-center justify-center md:justify-start mt-2 gap-2">
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      displayUser.status === 'active' 
+                      mappedDisplayUser.status === 'active' 
                         ? 'bg-green-100 text-green-800' 
                         : 'bg-red-100 text-red-800'
                     }`}>
-                      {displayUser.status.charAt(0).toUpperCase() + displayUser.status.slice(1)}
+                      {mappedDisplayUser.status.charAt(0).toUpperCase() + mappedDisplayUser.status.slice(1)}
                     </span>
                     {currentUser && (
                       <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
@@ -554,19 +647,19 @@ const ProfilePage = () => {
               <div className="space-y-4">
                 <div className="pb-3 border-b border-gray-200">
                   <label className="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
-                  <p className="text-lg text-gray-900">{displayUser.fullName}</p>
+                  <p className="text-lg text-gray-900">{mappedDisplayUser.fullName}</p>
                 </div>
                 <div className="pb-3 border-b border-gray-200">
                   <label className="block text-sm font-medium text-gray-600 mb-1">IC Number</label>
-                  <p className="text-lg text-gray-900">{displayUser.icNumber}</p>
+                  <p className="text-lg text-gray-900">{mappedDisplayUser.icNumber}</p>
                 </div>
                 <div className="pb-3 border-b border-gray-200">
                   <label className="block text-sm font-medium text-gray-600 mb-1">Gender</label>
-                  <p className="text-lg text-gray-900">{displayUser.gender}</p>
+                  <p className="text-lg text-gray-900">{mappedDisplayUser.gender}</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-600 mb-1">Citizenship</label>
-                  <p className="text-lg text-gray-900">{displayUser.citizenship}</p>
+                  <p className="text-lg text-gray-900">{mappedDisplayUser.citizenship}</p>
                 </div>
               </div>
             </div>
@@ -577,15 +670,15 @@ const ProfilePage = () => {
               <div className="space-y-4">
                 <div className="pb-3 border-b border-gray-200">
                   <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
-                  <p className="text-lg text-gray-900">{displayUser.email}</p>
+                  <p className="text-lg text-gray-900">{mappedDisplayUser.email}</p>
                 </div>
                 <div className="pb-3 border-b border-gray-200">
                   <label className="block text-sm font-medium text-gray-600 mb-1">Username</label>
-                  <p className="text-lg text-gray-900">@{displayUser.username}</p>
+                  <p className="text-lg text-gray-900">@{mappedDisplayUser.username}</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-600 mb-1">Registration Date</label>
-                  <p className="text-lg text-gray-900">{displayUser.registrationDate}</p>
+                  <p className="text-lg text-gray-900">{mappedDisplayUser.registrationDate}</p>
                 </div>
               </div>
             </div>
@@ -602,24 +695,24 @@ const ProfilePage = () => {
             <div className="grid md:grid-cols-2 gap-6">
               <div className="pb-3 border-b border-gray-200">
                 <label className="block text-sm font-medium text-gray-600 mb-1">Address</label>
-                <p className="text-lg text-gray-900 whitespace-pre-line">{displayUser.address}</p>
+                <p className="text-lg text-gray-900 whitespace-pre-line">{mappedDisplayUser.address}</p>
               </div>
               <div className="space-y-4">
                 <div className="pb-3 border-b border-gray-200">
                   <label className="block text-sm font-medium text-gray-600 mb-1">City</label>
-                  <p className="text-lg text-gray-900">{displayUser.city}</p>
+                  <p className="text-lg text-gray-900">{mappedDisplayUser.city}</p>
                 </div>
                 <div className="pb-3 border-b border-gray-200">
                   <label className="block text-sm font-medium text-gray-600 mb-1">State</label>
-                  <p className="text-lg text-gray-900">{displayUser.state}</p>
+                  <p className="text-lg text-gray-900">{mappedDisplayUser.state}</p>
                 </div>
                 <div className="pb-3 border-b border-gray-200">
                   <label className="block text-sm font-medium text-gray-600 mb-1">Post Code</label>
-                  <p className="text-lg text-gray-900">{displayUser.postCode}</p>
+                  <p className="text-lg text-gray-900">{mappedDisplayUser.postCode}</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-600 mb-1">Country</label>
-                  <p className="text-lg text-gray-900">{displayUser.country}</p>
+                  <p className="text-lg text-gray-900">{mappedDisplayUser.country}</p>
                 </div>
               </div>
             </div>
@@ -636,22 +729,22 @@ const ProfilePage = () => {
             <div className="grid md:grid-cols-2 gap-6">
               <div className="pb-3 border-b border-gray-200">
                 <label className="block text-sm font-medium text-gray-600 mb-1">Account Number</label>
-                <p className="text-lg text-gray-900 font-mono">{displayUser.accountNumber}</p>
+                <p className="text-lg text-gray-900 font-mono">{mappedDisplayUser.accountNumber}</p>
               </div>
               <div className="pb-3 border-b border-gray-200">
                 <label className="block text-sm font-medium text-gray-600 mb-1">User ID</label>
-                <p className="text-lg text-gray-900 font-mono">{displayUser.userId}</p>
+                <p className="text-lg text-gray-900 font-mono">{mappedDisplayUser.userId}</p>
               </div>
               <div className="pb-3 border-b border-gray-200">
                 <label className="block text-sm font-medium text-gray-600 mb-1">KYC Document</label>
-                <p className="text-lg text-gray-900">{displayUser.kycFileName}</p>
+                <p className="text-lg text-gray-900">{mappedDisplayUser.kycFileName}</p>
                 <p className="text-sm text-gray-600">
-                  {displayUser.kycFileType} • {(displayUser.kycFileSize / 1024).toFixed(1)} KB
+                  {mappedDisplayUser.kycFileType} • {(mappedDisplayUser.kycFileSize / 1024).toFixed(1)} KB
                 </p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">Last Updated</label>
-                <p className="text-lg text-gray-900">{new Date(displayUser.timestamp).toLocaleString()}</p>
+                <p className="text-lg text-gray-900">{new Date(mappedDisplayUser.timestamp).toLocaleString()}</p>
               </div>
             </div>
           </motion.div>
