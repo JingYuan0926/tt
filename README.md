@@ -3,7 +3,12 @@
 **Tackling Challenge 2: Digital integrity in the age of misinformation**
 **Empowering informed conversations: AI-powered sentiment & bias analysis on Malaysia’s news**
 
+![Image](https://github.com/JingYuan0926/tt/blob/main/public/LandingPage.png?raw=true)
+![Image](https://github.com/JingYuan0926/tt/blob/main/public/News.png?raw=true)
+
+
 Check out the live demo of **Tea Time**: 👉 [Click here to try it out](https://tt-ruby-chi.vercel.app)
+
 
 
 ## Inspiration: How We Came Up With This Idea 💡
