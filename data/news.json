@@ -6,8 +6,8 @@
     "description": "Scientists at MIT have achieved a major breakthrough in quantum computing, developing a new algorithm that could solve complex problems in minutes instead of years.",
     "category": "Technology",
     "imageurl": [
-      "https://example.com/images/quantum-computing-1.jpg",
-      "https://example.com/images/quantum-computing-2.jpg"
+      "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=400&fit=crop&crop=center",
+      "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=600&h=400&fit=crop&crop=center"
     ],
     "link": [
       "https://mit.edu/research/quantum-breakthrough",
@@ -36,7 +36,7 @@
       }
     ],
     "verification_status": true,
-    "size": "l",
+    "size": "xl",
     "ai_score": 0.92,
     "challenge": false,
     "challenge_id": null
@@ -48,7 +48,7 @@
     "description": "Tesla announces revolutionary battery technology that promises 500-mile range and 10-minute charging times.",
     "category": "Automotive",
     "imageurl": [
-      "https://example.com/images/tesla-battery.jpg"
+      "https://images.unsplash.com/photo-1593941707882-a5bac6861d75?w=600&h=400&fit=crop&crop=center"
     ],
     "link": [],
     "comments": [
@@ -84,7 +84,7 @@
       }
     ],
     "verification_status": true,
-    "size": "xl",
+    "size": "l",
     "ai_score": 0.88,
     "challenge": false,
     "challenge_id": null
@@ -96,9 +96,8 @@
     "description": "Downtown's 'Fusion Kitchen' wins the prestigious 'Best New Restaurant' award at the National Culinary Awards.",
     "category": "Food & Dining",
     "imageurl": [
-      "https://example.com/images/fusion-kitchen.jpg",
-      "https://example.com/images/award-ceremony.jpg",
-      "https://example.com/images/chef-portrait.jpg"
+      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop&crop=center",
+      "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=600&h=400&fit=crop&crop=center"
     ],
     "link": [
       "https://nationalculinaryawards.com/winners-2024"
@@ -133,26 +132,25 @@
   },
   {
     "id": "news_004",
-    "title": "Controversial Social Media Policy Changes",
+    "title": "Climate Change Summit Reaches Historic Agreement",
     "date": "2024-01-12T16:45:00Z",
-    "description": "Major social media platform announces new content moderation policies that have sparked debate among users and experts.",
-    "category": "Social Media",
+    "description": "World leaders unite on ambitious climate goals for the next decade, promising unprecedented action on global warming.",
+    "category": "Environment",
     "imageurl": [
-      "https://example.com/images/social-media-policy.jpg"
+      "https://images.unsplash.com/photo-1569163139394-de44aa2aa999?w=600&h=400&fit=crop&crop=center"
     ],
     "link": [
-      "https://platform.com/policy-updates",
-      "https://techcrunch.com/social-media-policy-changes"
+      "https://climate-summit.org/2024-agreement"
     ],
     "comments": [
       {
         "id": "comment_008",
-        "user": "free_speech_advocate",
-        "content": "This is censorship! They're limiting our freedom of expression.",
+        "user": "climate_activist",
+        "content": "Finally some real action! This gives me hope for the future.",
         "timestamp": "2024-01-12T17:00:00Z",
         "vote": {
           "upvotes": 67,
-          "downvotes": 23
+          "downvotes": 5
         }
       },
       {
@@ -178,28 +176,28 @@
     ],
     "verification_status": false,
     "size": "l",
-    "ai_score": 0.65,
+    "ai_score": 0.89,
     "challenge": false,
     "challenge_id": null
   },
   {
     "id": "news_005",
-    "title": "Weather Alert: Severe Storm Warning",
+    "title": "Major Breakthrough in Cancer Treatment",
     "date": "2024-01-11T20:30:00Z",
-    "description": "National Weather Service issues severe storm warning for the tri-state area, with potential for heavy rainfall and flooding.",
-    "category": "Weather",
+    "description": "New immunotherapy treatment shows 95% success rate in clinical trials, offering hope to millions of patients worldwide.",
+    "category": "Health",
     "imageurl": [
-      "https://example.com/images/storm-radar.jpg",
-      "https://example.com/images/weather-map.jpg"
+      "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&h=400&fit=crop&crop=center",
+      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=400&fit=crop&crop=center"
     ],
     "link": [
-      "https://weather.gov/alerts/storm-warning-2024-001"
+      "https://medical-journal.org/cancer-breakthrough-2024"
     ],
     "comments": [
       {
         "id": "comment_011",
-        "user": "weather_watcher",
-        "content": "Stay safe everyone! This looks like it could be serious.",
+        "user": "medical_researcher",
+        "content": "This is groundbreaking research. The implications are enormous.",
         "timestamp": "2024-01-11T21:00:00Z",
         "vote": {
           "upvotes": 89,
@@ -218,8 +216,96 @@
       }
     ],
     "verification_status": true,
-    "size": "s",
+    "size": "xl",
     "ai_score": 0.95,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "news_006",
+    "title": "Space Mission Discovers New Planet",
+    "date": "2024-01-10T14:20:00Z",
+    "description": "NASA's latest space telescope discovers potentially habitable exoplanet just 20 light-years away from Earth.",
+    "category": "Science",
+    "imageurl": [
+      "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=600&h=400&fit=crop&crop=center"
+    ],
+    "link": [
+      "https://nasa.gov/exoplanet-discovery-2024"
+    ],
+    "comments": [
+      {
+        "id": "comment_015",
+        "user": "space_enthusiast",
+        "content": "This could change everything we know about life in the universe!",
+        "timestamp": "2024-01-10T15:00:00Z",
+        "vote": {
+          "upvotes": 42,
+          "downvotes": 2
+        }
+      }
+    ],
+    "verification_status": true,
+    "size": "m",
+    "ai_score": 0.91,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "news_007",
+    "title": "Global Economic Markets Show Strong Recovery",
+    "date": "2024-01-09T11:30:00Z",
+    "description": "Stock markets worldwide experience significant gains as investors show renewed confidence in economic stability.",
+    "category": "Business",
+    "imageurl": [
+      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&h=400&fit=crop&crop=center"
+    ],
+    "link": [],
+    "comments": [
+      {
+        "id": "comment_020",
+        "user": "financial_analyst",
+        "content": "The recovery is stronger than most economists predicted.",
+        "timestamp": "2024-01-09T12:00:00Z",
+        "vote": {
+          "upvotes": 28,
+          "downvotes": 8
+        }
+      }
+    ],
+    "verification_status": true,
+    "size": "s",
+    "ai_score": 0.78,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "news_008",
+    "title": "Revolutionary AI Art Exhibition Opens",
+    "date": "2024-01-08T16:45:00Z",
+    "description": "The world's first major exhibition featuring artwork created entirely by artificial intelligence opens to record crowds.",
+    "category": "Culture",
+    "imageurl": [
+      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop&crop=center"
+    ],
+    "link": [
+      "https://ai-art-exhibition.com/2024"
+    ],
+    "comments": [
+      {
+        "id": "comment_025",
+        "user": "art_critic",
+        "content": "This challenges everything we thought we knew about creativity.",
+        "timestamp": "2024-01-08T17:30:00Z",
+        "vote": {
+          "upvotes": 34,
+          "downvotes": 12
+        }
+      }
+    ],
+    "verification_status": true,
+    "size": "m",
+    "ai_score": 0.82,
     "challenge": false,
     "challenge_id": null
   },
