@@ -22,5 +22,29 @@
     "kycFileName": "Untitled 1.png",
     "kycFileSize": 70200,
     "kycFileType": "image/png"
+  },
+  {
+    "userId": "USER_1750479197930",
+    "accountNumber": "ACC000002",
+    "id": "1750479197930",
+    "timestamp": "2025-06-21T04:13:17.930Z",
+    "registrationDate": "6/21/2025",
+    "status": "active",
+    "username": "marcusy345",
+    "email": "MARCUS.TANCHIYAU@outlook.COM",
+    "password": "123",
+    "confirmPassword": "123",
+    "icNumber": "460619-12-5087",
+    "fullName": "ABD RAUF BIN HAMSAH",
+    "address": "KAMPUNG MASJID\nPO BOX 42\n89007 KENINGAU\nSABAH",
+    "postCode": "89007",
+    "city": "KENINGAU",
+    "state": "SABAH",
+    "country": "MALAYSIA",
+    "citizenship": "WARGANEGARA",
+    "gender": "Male",
+    "kycFileName": "ic.jpg",
+    "kycFileSize": 100466,
+    "kycFileType": "image/jpeg"
   }
 ]

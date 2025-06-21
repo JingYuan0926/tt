@@ -22,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { ErrorModal, SuccessModal } from "@/components/ui/modal";
 
 // Configure Inter font
 const inter = Inter({
@@ -138,6 +139,47 @@ export default function SignUp() {
   const [currentStep, setCurrentStep] = useState(1);
   const [kycFile, setKycFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Modal states
+  const [errorModal, setErrorModal] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    details: null
+  });
+  const [successModal, setSuccessModal] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    details: null
+  });
+
+  // Helper functions for modals
+  const showErrorModal = (title, message, details = null) => {
+    setErrorModal({
+      isOpen: true,
+      title,
+      message,
+      details
+    });
+  };
+
+  const showSuccessModal = (title, message, details = null) => {
+    setSuccessModal({
+      isOpen: true,
+      title,
+      message,
+      details
+    });
+  };
+
+  const closeErrorModal = () => {
+    setErrorModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  const closeSuccessModal = () => {
+    setSuccessModal(prev => ({ ...prev, isOpen: false }));
+  };
 
   // Initialize form with react-hook-form and Zod validation
   const form = useForm({
@@ -166,13 +208,22 @@ export default function SignUp() {
       // Validate file type (accept common document formats)
       const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
       if (!allowedTypes.includes(file.type)) {
-        alert('Please upload a valid document (JPEG, PNG, or PDF)');
+        showErrorModal(
+          'Invalid File Type',
+          'Please upload a valid document format.',
+          ['Supported formats: JPEG, PNG, PDF', 'Make sure the file extension is correct']
+        );
         return;
       }
       
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert('File size must be less than 5MB');
+        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        showErrorModal(
+          'File Too Large',
+          `File size is ${fileSizeMB}MB. Maximum allowed size is 5MB.`,
+          ['Try compressing the image', 'Use a different image with smaller file size']
+        );
         return;
       }
       
@@ -180,25 +231,126 @@ export default function SignUp() {
     }
   };
 
-  // Mock Gemini API to parse IC document (hardcoded for now)
-  const parseICDocument = () => {
-    // Simulate API parsing - replace with actual Gemini API call
-    const mockData = {
-      icNumber: "123456-78-9012",
-      fullName: "Ahmad Bin Abdullah",
-      address: "No. 123, Jalan Bukit Bintang",
-      postCode: "55100",
-      city: "Kuala Lumpur",
-      state: "Wilayah Persekutuan",
-      country: "Malaysia",
-      citizenship: "Malaysian",
-      gender: "Male"
-    };
-    
-    // Auto-fill the form with parsed data
-    Object.keys(mockData).forEach(key => {
-      form.setValue(key, mockData[key]);
-    });
+  // Parse IC document using Google Gemini API
+  const parseICDocument = async () => {
+    if (!kycFile) {
+      showErrorModal(
+        'No Document Selected',
+        'Please upload an IC document first before proceeding.',
+        ['Click "Choose File" to select your IC document', 'Ensure the document is clear and readable']
+      );
+      return;
+    }
+
+    try {
+      // Show loading state with better styling
+      const loadingMessage = document.createElement('div');
+      loadingMessage.id = 'parsing-loading';
+      loadingMessage.innerHTML = `
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                    background: rgba(0,0,0,0.5); z-index: 1000; display: flex; 
+                    align-items: center; justify-content: center;">
+          <div style="background: white; padding: 30px; border-radius: 12px; 
+                      box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; 
+                      max-width: 300px; animation: pulse 2s infinite;">
+                         <div style="margin-bottom: 15px; display: flex; justify-content: center;">
+               <svg style="width: 32px; height: 32px; color: #4f46e5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+               </svg>
+             </div>
+             <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px; color: #333;">
+               Analyzing IC Document
+             </div>
+            <div style="font-size: 14px; color: #666; line-height: 1.4;">
+              Please wait while our AI processes your document...<br>
+              This may take 10-30 seconds
+            </div>
+            <div style="margin-top: 15px; height: 4px; background: #f0f0f0; border-radius: 2px; overflow: hidden;">
+              <div style="height: 100%; background: linear-gradient(90deg, #4f46e5, #7c3aed); 
+                          animation: loading 2s infinite; border-radius: 2px;"></div>
+            </div>
+          </div>
+        </div>
+        <style>
+          @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+          }
+          @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+          }
+        </style>
+      `;
+      document.body.appendChild(loadingMessage);
+
+      // Convert file to base64
+      const fileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
+        });
+      };
+
+      const imageData = await fileToBase64(kycFile);
+      
+      // Call the Gemini API endpoint
+      const response = await fetch('/api/parse-ic-document', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageData: imageData,
+          mimeType: kycFile.type
+        }),
+      });
+
+      const result = await response.json();
+
+      // Remove loading message
+      document.getElementById('parsing-loading')?.remove();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to parse IC document');
+      }
+
+      if (result.success && result.data) {
+        // Auto-fill the form with parsed data
+        Object.keys(result.data).forEach(key => {
+          if (result.data[key] && result.data[key].trim() !== '') {
+            form.setValue(key, result.data[key]);
+          }
+        });
+
+        // Show success message
+        showSuccessModal(
+          'Document Parsed Successfully',
+          'Your IC document has been analyzed and personal details have been auto-filled.',
+          ['Please review all extracted information', 'Make any necessary corrections before submitting', 'All fields can be edited manually if needed']
+        );
+      } else {
+        throw new Error('No data extracted from the document');
+      }
+
+    } catch (error) {
+      // Remove loading message if it exists
+      document.getElementById('parsing-loading')?.remove();
+      
+      console.error('Error parsing IC document:', error);
+      showErrorModal(
+        'Document Parsing Failed',
+        `Unable to process your IC document: ${error.message}`,
+        [
+          'Ensure the image is clear and well-lit',
+          'Make sure the IC document is fully visible',
+          'Check that the file format is supported (JPEG, PNG, PDF)',
+          'Try taking a new photo with better lighting'
+        ]
+      );
+    }
   };
 
   // Handle step navigation
@@ -213,10 +365,15 @@ export default function SignUp() {
       }
     } else if (currentStep === 2) {
       if (kycFile) {
-        parseICDocument(); // Parse document and auto-fill step 3
+        // Parse document and auto-fill step 3
+        await parseICDocument();
         setCurrentStep(3);
       } else {
-        alert('Please upload your IC document first');
+        showErrorModal(
+          'Document Required',
+          'Please upload your IC document before proceeding to the next step.',
+          ['Click "Choose File" to select your document', 'Supported formats: JPEG, PNG, PDF']
+        );
       }
     }
   };
@@ -275,10 +432,17 @@ export default function SignUp() {
       // Save account data to JSON file
       const savedAccount = await saveAccountToJSON(values);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      alert(`Account created successfully!\nUser ID: ${savedAccount.userId}\nAccount Number: ${savedAccount.accountNumber}\nUsername: ${savedAccount.username}`);
+      // Show success modal with account details
+      showSuccessModal(
+        'Account Created Successfully',
+        'Your account has been created and saved successfully!',
+        [
+          `User ID: ${savedAccount.userId}`,
+          `Account Number: ${savedAccount.accountNumber}`,
+          `Username: ${savedAccount.username}`,
+          `Registration Date: ${savedAccount.registrationDate}`
+        ]
+      );
       
       // Reset form after successful submission
       form.reset();
@@ -286,7 +450,36 @@ export default function SignUp() {
       setCurrentStep(1);
     } catch (error) {
       console.error('Signup error:', error);
-      alert('An error occurred while saving account. Please try again.');
+      
+      // Handle specific error types
+      if (error.message.includes('Duplicate')) {
+        showErrorModal(
+          'Account Already Exists',
+          error.message,
+          [
+            'Please use a different username if username is taken',
+            'Use a different email address if email is already registered',
+            'Contact support if you believe this is an error'
+          ]
+        );
+      } else if (error.message.includes('API configuration')) {
+        showErrorModal(
+          'System Configuration Error',
+          'There is a system configuration issue. Please contact support.',
+          ['This is not an issue with your input', 'Please try again later or contact support']
+        );
+      } else {
+        showErrorModal(
+          'Account Creation Failed',
+          error.message || 'An unexpected error occurred while creating your account.',
+          [
+            'Please check your internet connection',
+            'Verify all required fields are filled correctly',
+            'Try submitting the form again',
+            'Contact support if the problem persists'
+          ]
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -432,24 +625,50 @@ export default function SignUp() {
               {currentStep === 2 && (
                 <>
                   {/* KYC Document Upload */}
-                  <div className="space-y-2">
-                    <Label htmlFor="kyc-upload">KYC Document Upload</Label>
-                    <Input
-                      id="kyc-upload"
-                      type="file"
-                      accept=".jpg,.jpeg,.png,.pdf"
-                      onChange={handleFileUpload}
-                      disabled={isSubmitting}
-                      className="cursor-pointer"
-                    />
-                    <p className="text-sm text-muted-foreground">
-                      Upload your Malaysian IC (JPEG, PNG, or PDF)
-                    </p>
-                    {kycFile && (
-                      <p className="text-sm text-green-600 dark:text-green-400">
-                        ✓ File selected: {kycFile.name}
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="kyc-upload">KYC Document Upload</Label>
+                      <Input
+                        id="kyc-upload"
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.pdf"
+                        onChange={handleFileUpload}
+                        disabled={isSubmitting}
+                        className="cursor-pointer mt-2"
+                      />
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Upload your Malaysian IC (JPEG, PNG, or PDF - Max 10MB)
                       </p>
-                    )}
+                      {kycFile && (
+                        <p className="text-sm text-green-600 dark:text-green-400 mt-2">
+                          ✓ File selected: {kycFile.name}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* AI Processing Info */}
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <div className="text-blue-500">
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
+                            AI-Powered Document Processing
+                          </h4>
+                          <p className="text-sm text-blue-700 dark:text-blue-300 mb-2">
+                            Our AI will automatically extract your personal details from the IC document.
+                          </p>
+                          <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
+                            <div>• Ensure the document is well-lit and clearly visible</div>
+                            <div>• All text should be readable and not blurred</div>
+                            <div>• Processing takes 10-30 seconds</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Navigation Buttons */}
@@ -657,6 +876,23 @@ export default function SignUp() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Modal Components */}
+      <ErrorModal
+        isOpen={errorModal.isOpen}
+        onClose={closeErrorModal}
+        title={errorModal.title}
+        message={errorModal.message}
+        details={errorModal.details}
+      />
+
+      <SuccessModal
+        isOpen={successModal.isOpen}
+        onClose={closeSuccessModal}
+        title={successModal.title}
+        message={successModal.message}
+        details={successModal.details}
+      />
     </div>
   );
 } 
