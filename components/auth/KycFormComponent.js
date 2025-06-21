@@ -272,6 +272,29 @@ const KycFormComponent = ({
           ['Click "Choose File" to select your document', 'Supported formats: JPEG, PNG, PDF']
         );
       }
+    } else {
+      onNextStep();
+    }
+  };
+
+  // Handle form submission with MongoDB registration
+  const handleSubmit = async (formData) => {
+    try {
+      // Add KYC file metadata to form data
+      const registrationData = {
+        ...formData,
+        // Include KYC file information for MongoDB storage
+        kycFileName: kycFile ? kycFile.name : null,
+        kycFileSize: kycFile ? kycFile.size : null,
+        kycFileType: kycFile ? kycFile.type : null,
+        icDocumentProcessed: !!kycFile // Boolean indicating if IC document was uploaded
+      };
+
+      // Call the parent component's submit handler
+      await onSubmit(registrationData);
+    } catch (error) {
+      console.error('KYC form submission error:', error);
+      throw error;
     }
   };
 
@@ -569,7 +592,7 @@ const KycFormComponent = ({
           isTransitioning ? 'opacity-0 transform scale-95' : 'opacity-100 transform scale-100'
         }`}>
           <Form {...signupForm}>
-            <form onSubmit={signupForm.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={signupForm.handleSubmit(handleSubmit)} className="space-y-4">
               
               <div className="grid grid-cols-2 gap-4">
                 {/* IC Number */}

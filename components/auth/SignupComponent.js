@@ -62,6 +62,8 @@ const SignupComponent = ({
     const isValid = await signupForm.trigger(stepFields);
     if (isValid) {
       onSignup();
+    } else {
+      console.log('Validation errors:', signupForm.formState.errors);
     }
   };
 
