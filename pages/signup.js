@@ -394,7 +394,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className={`${inter.variable} min-h-screen flex items-start justify-center bg-gray-50 p-4 pt-8 font-[family-name:var(--font-inter)]`}>
+    <div className={`${inter.variable} min-h-screen flex items-start justify-center bg-gray-30 p-4 pt-8 font-[family-name:var(--font-inter)]`}>
       <Card 
         className={`w-full max-w-md mx-auto transform transition-all duration-700 ease-out ${
           isPageLoaded ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'
