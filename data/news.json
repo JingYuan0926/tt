@@ -4,6 +4,7 @@
     "title": "Breakthrough in Quantum Computing Research",
     "date": "2024-01-15T10:30:00Z",
     "description": "Scientists at MIT have achieved a major breakthrough in quantum computing, developing a new algorithm that could solve complex problems in minutes instead of years.",
+    "category": "Technology",
     "imageurl": [
       "https://example.com/images/quantum-computing-1.jpg",
       "https://example.com/images/quantum-computing-2.jpg"
@@ -45,6 +46,7 @@
     "title": "New Electric Vehicle Battery Technology",
     "date": "2024-01-14T14:20:00Z",
     "description": "Tesla announces revolutionary battery technology that promises 500-mile range and 10-minute charging times.",
+    "category": "Automotive",
     "imageurl": [
       "https://example.com/images/tesla-battery.jpg"
     ],
@@ -92,6 +94,7 @@
     "title": "Local Restaurant Wins National Award",
     "date": "2024-01-13T09:15:00Z",
     "description": "Downtown's 'Fusion Kitchen' wins the prestigious 'Best New Restaurant' award at the National Culinary Awards.",
+    "category": "Food & Dining",
     "imageurl": [
       "https://example.com/images/fusion-kitchen.jpg",
       "https://example.com/images/award-ceremony.jpg",
@@ -133,6 +136,7 @@
     "title": "Controversial Social Media Policy Changes",
     "date": "2024-01-12T16:45:00Z",
     "description": "Major social media platform announces new content moderation policies that have sparked debate among users and experts.",
+    "category": "Social Media",
     "imageurl": [
       "https://example.com/images/social-media-policy.jpg"
     ],
@@ -183,6 +187,7 @@
     "title": "Weather Alert: Severe Storm Warning",
     "date": "2024-01-11T20:30:00Z",
     "description": "National Weather Service issues severe storm warning for the tri-state area, with potential for heavy rainfall and flooding.",
+    "category": "Weather",
     "imageurl": [
       "https://example.com/images/storm-radar.jpg",
       "https://example.com/images/weather-map.jpg"
@@ -223,6 +228,7 @@
     "title": "Debunked: Quantum Computing Claims Exaggerated",
     "date": "2024-01-15T16:00:00Z",
     "description": "Independent researchers challenge MIT's quantum computing breakthrough, claiming the results have been overstated and the algorithm's practical applications are limited.",
+    "category": "Technology",
     "imageurl": [
       "https://example.com/images/quantum-skeptic.jpg",
       "https://example.com/images/research-paper.jpg"
@@ -264,6 +270,7 @@
     "title": "Tesla Battery Claims: Fact Check",
     "date": "2024-01-14T18:30:00Z",
     "description": "Automotive experts question Tesla's battery technology announcement, pointing out that similar claims have been made before without delivery.",
+    "category": "Automotive",
     "imageurl": [
       "https://example.com/images/battery-skeptic.jpg"
     ],

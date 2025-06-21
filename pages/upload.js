@@ -6,12 +6,32 @@ export default function Upload() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    category: '',
     imageurl: [''],
     link: [''],
     size: 's'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
+
+  const categories = [
+    'Technology',
+    'Politics',
+    'Business',
+    'Sports',
+    'Entertainment',
+    'Health',
+    'Science',
+    'World News',
+    'Local News',
+    'Weather',
+    'Automotive',
+    'Food & Dining',
+    'Social Media',
+    'Education',
+    'Environment',
+    'Other'
+  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,6 +84,7 @@ export default function Upload() {
         title: formData.title,
         date: new Date().toISOString(),
         description: formData.description,
+        category: formData.category,
         imageurl: cleanImageUrls,
         link: cleanLinks,
         comments: [],
@@ -89,6 +110,7 @@ export default function Upload() {
         setFormData({
           title: '',
           description: '',
+          category: '',
           imageurl: [''],
           link: [''],
           size: 's'
@@ -140,6 +162,28 @@ export default function Upload() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter news title"
               />
+            </div>
+
+            {/* Category */}
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+                Category *
+              </label>
+              <select
+                id="category"
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Select a category</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Description */}
