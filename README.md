@@ -43,7 +43,7 @@ npm run dev
 ```
 
 ## System Architecture High-Level Overview🏗️
-![Image](https://github.com/JingYuan0926/tt/blob/main/public/Achitecture.png?raw=true)
+![Image](https://github.com/JingYuan0926/tt/blob/main/public/Architecture.png?raw=true)
 
 
 ## Technology Used 🛠️
