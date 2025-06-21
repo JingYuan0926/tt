@@ -69,6 +69,7 @@ export default function SignUp() {
   const [kycFile, setKycFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProcessingIC, setIsProcessingIC] = useState(false);
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
   
   // Modal states
   const [errorModal, setErrorModal] = useState({
@@ -134,6 +135,15 @@ export default function SignUp() {
       gender: "",
     },
   });
+
+  // Page load animation effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageLoaded(true);
+    }, 100); // Small delay to ensure smooth entrance
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Handle file upload for KYC document
   const handleFileUpload = (event) => {
@@ -381,7 +391,11 @@ export default function SignUp() {
 
   return (
     <div className={`${inter.variable} min-h-screen flex items-center justify-center bg-gray-50 p-4 pt-20 font-[family-name:var(--font-inter)]`}>
-      <Card className="w-full max-w-md mx-auto">
+      <Card 
+        className={`w-full max-w-md mx-auto transform transition-all duration-700 ease-out ${
+          isPageLoaded ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'
+        }`}
+      >
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Create Account</CardTitle>
           <CardDescription className="text-center">
