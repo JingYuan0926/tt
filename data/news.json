@@ -1,1 +1,301 @@
- 
+[
+  {
+    "id": "news_001",
+    "title": "Breakthrough in Quantum Computing Research",
+    "date": "2024-01-15T10:30:00Z",
+    "description": "Scientists at MIT have achieved a major breakthrough in quantum computing, developing a new algorithm that could solve complex problems in minutes instead of years.",
+    "imageurl": [
+      "https://example.com/images/quantum-computing-1.jpg",
+      "https://example.com/images/quantum-computing-2.jpg"
+    ],
+    "link": [
+      "https://mit.edu/research/quantum-breakthrough",
+      "https://science.org/quantum-computing-advancements"
+    ],
+    "comments": [
+      {
+        "id": "comment_001",
+        "user": "tech_enthusiast",
+        "content": "This is incredible! The implications for cryptography are huge.",
+        "timestamp": "2024-01-15T11:00:00Z",
+        "vote": {
+          "upvotes": 45,
+          "downvotes": 2
+        }
+      },
+      {
+        "id": "comment_002",
+        "user": "skeptic_reader",
+        "content": "I'll believe it when I see it implemented in practice.",
+        "timestamp": "2024-01-15T11:15:00Z",
+        "vote": {
+          "upvotes": 12,
+          "downvotes": 8
+        }
+      }
+    ],
+    "verification_status": true,
+    "size": "l",
+    "ai_score": 0.92,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "news_002",
+    "title": "New Electric Vehicle Battery Technology",
+    "date": "2024-01-14T14:20:00Z",
+    "description": "Tesla announces revolutionary battery technology that promises 500-mile range and 10-minute charging times.",
+    "imageurl": [
+      "https://example.com/images/tesla-battery.jpg"
+    ],
+    "link": [],
+    "comments": [
+      {
+        "id": "comment_003",
+        "user": "ev_owner",
+        "content": "Finally! This addresses my biggest concern about EVs.",
+        "timestamp": "2024-01-14T15:00:00Z",
+        "vote": {
+          "upvotes": 78,
+          "downvotes": 3
+        }
+      },
+      {
+        "id": "comment_004",
+        "user": "battery_expert",
+        "content": "The chemistry behind this is fascinating. Great step forward!",
+        "timestamp": "2024-01-14T15:30:00Z",
+        "vote": {
+          "upvotes": 34,
+          "downvotes": 1
+        }
+      },
+      {
+        "id": "comment_005",
+        "user": "price_watcher",
+        "content": "But what about the cost? Will this make EVs more expensive?",
+        "timestamp": "2024-01-14T16:00:00Z",
+        "vote": {
+          "upvotes": 23,
+          "downvotes": 5
+        }
+      }
+    ],
+    "verification_status": true,
+    "size": "xl",
+    "ai_score": 0.88,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "news_003",
+    "title": "Local Restaurant Wins National Award",
+    "date": "2024-01-13T09:15:00Z",
+    "description": "Downtown's 'Fusion Kitchen' wins the prestigious 'Best New Restaurant' award at the National Culinary Awards.",
+    "imageurl": [
+      "https://example.com/images/fusion-kitchen.jpg",
+      "https://example.com/images/award-ceremony.jpg",
+      "https://example.com/images/chef-portrait.jpg"
+    ],
+    "link": [
+      "https://nationalculinaryawards.com/winners-2024"
+    ],
+    "comments": [
+      {
+        "id": "comment_006",
+        "user": "food_lover",
+        "content": "I've been there! The food is absolutely amazing. Well deserved!",
+        "timestamp": "2024-01-13T10:00:00Z",
+        "vote": {
+          "upvotes": 15,
+          "downvotes": 0
+        }
+      },
+      {
+        "id": "comment_007",
+        "user": "local_resident",
+        "content": "Great for our community! This will bring more tourists.",
+        "timestamp": "2024-01-13T10:30:00Z",
+        "vote": {
+          "upvotes": 8,
+          "downvotes": 1
+        }
+      }
+    ],
+    "verification_status": true,
+    "size": "m",
+    "ai_score": 0.75,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "news_004",
+    "title": "Controversial Social Media Policy Changes",
+    "date": "2024-01-12T16:45:00Z",
+    "description": "Major social media platform announces new content moderation policies that have sparked debate among users and experts.",
+    "imageurl": [
+      "https://example.com/images/social-media-policy.jpg"
+    ],
+    "link": [
+      "https://platform.com/policy-updates",
+      "https://techcrunch.com/social-media-policy-changes"
+    ],
+    "comments": [
+      {
+        "id": "comment_008",
+        "user": "free_speech_advocate",
+        "content": "This is censorship! They're limiting our freedom of expression.",
+        "timestamp": "2024-01-12T17:00:00Z",
+        "vote": {
+          "upvotes": 67,
+          "downvotes": 23
+        }
+      },
+      {
+        "id": "comment_009",
+        "user": "moderation_expert",
+        "content": "Actually, these policies are quite reasonable and follow industry standards.",
+        "timestamp": "2024-01-12T17:30:00Z",
+        "vote": {
+          "upvotes": 42,
+          "downvotes": 15
+        }
+      },
+      {
+        "id": "comment_010",
+        "user": "platform_user",
+        "content": "I just want to know how this affects my daily usage.",
+        "timestamp": "2024-01-12T18:00:00Z",
+        "vote": {
+          "upvotes": 28,
+          "downvotes": 2
+        }
+      }
+    ],
+    "verification_status": false,
+    "size": "l",
+    "ai_score": 0.65,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "news_005",
+    "title": "Weather Alert: Severe Storm Warning",
+    "date": "2024-01-11T20:30:00Z",
+    "description": "National Weather Service issues severe storm warning for the tri-state area, with potential for heavy rainfall and flooding.",
+    "imageurl": [
+      "https://example.com/images/storm-radar.jpg",
+      "https://example.com/images/weather-map.jpg"
+    ],
+    "link": [
+      "https://weather.gov/alerts/storm-warning-2024-001"
+    ],
+    "comments": [
+      {
+        "id": "comment_011",
+        "user": "weather_watcher",
+        "content": "Stay safe everyone! This looks like it could be serious.",
+        "timestamp": "2024-01-11T21:00:00Z",
+        "vote": {
+          "upvotes": 89,
+          "downvotes": 1
+        }
+      },
+      {
+        "id": "comment_012",
+        "user": "emergency_prep",
+        "content": "Make sure you have emergency supplies ready. Better safe than sorry.",
+        "timestamp": "2024-01-11T21:15:00Z",
+        "vote": {
+          "upvotes": 56,
+          "downvotes": 0
+        }
+      }
+    ],
+    "verification_status": true,
+    "size": "s",
+    "ai_score": 0.95,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "challenge_001",
+    "title": "Debunked: Quantum Computing Claims Exaggerated",
+    "date": "2024-01-15T16:00:00Z",
+    "description": "Independent researchers challenge MIT's quantum computing breakthrough, claiming the results have been overstated and the algorithm's practical applications are limited.",
+    "imageurl": [
+      "https://example.com/images/quantum-skeptic.jpg",
+      "https://example.com/images/research-paper.jpg"
+    ],
+    "link": [
+      "https://arxiv.org/quantum-computing-analysis",
+      "https://scientific-american.com/quantum-hype"
+    ],
+    "comments": [
+      {
+        "id": "comment_013",
+        "user": "quantum_researcher",
+        "content": "I've reviewed the original paper and this challenge raises valid concerns about scalability.",
+        "timestamp": "2024-01-15T16:30:00Z",
+        "vote": {
+          "upvotes": 34,
+          "downvotes": 12
+        }
+      },
+      {
+        "id": "comment_014",
+        "user": "mit_defender",
+        "content": "The challenge doesn't understand the fundamental breakthrough here. It's not about immediate practical use.",
+        "timestamp": "2024-01-15T17:00:00Z",
+        "vote": {
+          "upvotes": 18,
+          "downvotes": 25
+        }
+      }
+    ],
+    "verification_status": true,
+    "size": "l",
+    "ai_score": 0.78,
+    "challenge": true,
+    "challenge_id": "news_001"
+  },
+  {
+    "id": "challenge_002",
+    "title": "Tesla Battery Claims: Fact Check",
+    "date": "2024-01-14T18:30:00Z",
+    "description": "Automotive experts question Tesla's battery technology announcement, pointing out that similar claims have been made before without delivery.",
+    "imageurl": [
+      "https://example.com/images/battery-skeptic.jpg"
+    ],
+    "link": [
+      "https://ev-skeptics.org/tesla-battery-analysis"
+    ],
+    "comments": [
+      {
+        "id": "comment_015",
+        "user": "battery_analyst",
+        "content": "The chemistry described is theoretically possible but manufacturing at scale is the real challenge.",
+        "timestamp": "2024-01-14T19:00:00Z",
+        "vote": {
+          "upvotes": 42,
+          "downvotes": 8
+        }
+      },
+      {
+        "id": "comment_016",
+        "user": "tesla_fan",
+        "content": "Tesla has delivered on promises before. Why doubt them now?",
+        "timestamp": "2024-01-14T19:30:00Z",
+        "vote": {
+          "upvotes": 15,
+          "downvotes": 31
+        }
+      }
+    ],
+    "verification_status": true,
+    "size": "m",
+    "ai_score": 0.82,
+    "challenge": true,
+    "challenge_id": "news_002"
+  }
+] 
