@@ -6,11 +6,16 @@ import { motion } from 'framer-motion';
 export default function BiasAnalysis({ article }) {
   const [biasAnalysis, setBiasAnalysis] = React.useState(null);
   const [isAnalyzing, setIsAnalyzing] = React.useState(false);
+  const [hasAnalyzed, setHasAnalyzed] = React.useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleBiasAnalysis = async () => {
+    if (hasAnalyzed && biasAnalysis) {
+      onOpen();
+      return;
+    }
+
     setIsAnalyzing(true);
-    onOpen();
     
     try {
       const response = await fetch('/api/analyze-news', {
@@ -25,6 +30,7 @@ export default function BiasAnalysis({ article }) {
       
       if (data.success) {
         setBiasAnalysis(data.analysis);
+        setHasAnalyzed(true);
       } else {
         setBiasAnalysis(`Error: ${data.error || 'Failed to analyze article'}`);
       }
@@ -33,6 +39,24 @@ export default function BiasAnalysis({ article }) {
     } finally {
       setIsAnalyzing(false);
     }
+  };
+
+  // Auto-start analysis when component mounts
+  React.useEffect(() => {
+    if (article && article.id && !hasAnalyzed && !isAnalyzing) {
+      handleBiasAnalysis();
+    }
+  }, [article]);
+
+  const openModal = () => {
+    onOpen();
+    // If analysis isn't done yet and modal is opened, show the loading state
+  };
+
+  const reAnalyze = () => {
+    setBiasAnalysis(null);
+    setHasAnalyzed(false);
+    handleBiasAnalysis();
   };
 
   return (
@@ -48,11 +72,17 @@ export default function BiasAnalysis({ article }) {
           color="secondary"
           variant="shadow"
           size="lg"
-          onClick={handleBiasAnalysis}
-          className="rounded-full px-4 py-2 flex items-center gap-2 text-purple-700 bg-purple-50 hover:bg-purple-100"
+          onClick={openModal}
+          className="rounded-full px-4 py-2 flex items-center gap-2 text-purple-700 bg-purple-50 hover:bg-purple-100 relative"
         >
           <ShieldCheckIcon className="w-5 h-5" />
           <span className="hidden sm:inline">Bias Check</span>
+          {isAnalyzing && (
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+          )}
+          {hasAnalyzed && !isAnalyzing && (
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full"></div>
+          )}
         </Button>
       </motion.div>
 
@@ -69,6 +99,9 @@ export default function BiasAnalysis({ article }) {
             <div className="flex items-center gap-2">
               <ShieldCheckIcon className="w-6 h-6 text-purple-600" />
               <span>Bias Analysis Report</span>
+              {isAnalyzing && (
+                <Spinner size="sm" color="primary" />
+              )}
             </div>
             <p className="text-sm text-gray-600 font-normal">
               AI-powered analysis of "{article.title}"
@@ -79,7 +112,7 @@ export default function BiasAnalysis({ article }) {
               <div className="flex flex-col items-center justify-center py-12">
                 <Spinner size="lg" color="primary" className="mb-4" />
                 <p className="text-gray-600">Analyzing article for bias and perspective...</p>
-                <p className="text-sm text-gray-500 mt-2">This may take a few moments</p>
+                <p className="text-sm text-gray-500 mt-2">This analysis started when you loaded the page</p>
               </div>
             ) : biasAnalysis ? (
               <div className="space-y-4">
@@ -96,7 +129,7 @@ export default function BiasAnalysis({ article }) {
               </div>
             ) : (
               <div className="text-center py-8">
-                <p className="text-gray-600">Click "Bias Check" to get started</p>
+                <p className="text-gray-600">Starting analysis...</p>
               </div>
             )}
           </ModalBody>
@@ -104,13 +137,10 @@ export default function BiasAnalysis({ article }) {
             <Button color="danger" variant="light" onPress={onClose}>
               Close
             </Button>
-            {biasAnalysis && (
+            {biasAnalysis && !isAnalyzing && (
               <Button 
                 color="primary" 
-                onPress={() => {
-                  setBiasAnalysis(null);
-                  handleBiasAnalysis();
-                }}
+                onPress={reAnalyze}
               >
                 Re-analyze
               </Button>

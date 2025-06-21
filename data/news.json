@@ -119,7 +119,14 @@
     "link": [
       "https://www.bernama.com/en/general/news.php?id=2345683"
     ],
-    "comments": [],
+    "comments": [
+      {
+        "id": 1750501634961,
+        "user": "You",
+        "content": "I think this is bull shit",
+        "timestamp": "2025-06-21T10:27:14.961Z"
+      }
+    ],
     "verification_status": true,
     "size": "m",
     "challenge": false,
