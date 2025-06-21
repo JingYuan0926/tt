@@ -1,5 +1,8 @@
 import "@/styles/globals.css";
 import { useEffect } from "react";
+import {HeroUIProvider} from "@heroui/react";
+import Header from "@/components/Header";
+
 
 // Stagewise toolbar integration
 function setupStagewise() {
@@ -46,5 +49,10 @@ export default function App({ Component, pageProps }) {
     setupStagewise();
   }, []);
 
-  return <Component {...pageProps} />;
+  return (
+    <HeroUIProvider>
+      <Header />
+      <Component {...pageProps} />
+    </HeroUIProvider>
+  );
 }
