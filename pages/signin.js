@@ -141,10 +141,7 @@ export default function SignIn() {
     setIsSubmitting(true);
     
     try {
-      // Simulate authentication process (replace with actual API call)
       await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // TODO: Replace this with actual authentication logic
       showSuccessModal();
       regularForm.reset();
       
@@ -201,7 +198,6 @@ export default function SignIn() {
     setIsSubmitting(true);
     
     try {
-      // Call the real API to send OTP
       const response = await fetch('/api/send-otp', {
         method: 'POST',
         headers: {
@@ -251,7 +247,6 @@ export default function SignIn() {
     setIsSubmitting(true);
     
     try {
-      // Call the real API to verify OTP
       const response = await fetch('/api/verify-otp', {
         method: 'POST',
         headers: {
