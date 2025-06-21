@@ -74,9 +74,9 @@ export default function IntroVideo({ onComplete }) {
   };
 
   return (
-    <div className={`fixed inset-0 z-50 bg-black flex items-center justify-center transition-opacity duration-1000 ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}>
+    <div className={`fixed inset-0 z-50 bg-black transition-opacity duration-1000 ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}>
       {/* Video container */}
-      <div className="relative w-full h-full">
+      <div className="absolute inset-0">
         <video
           ref={videoRef}
           className="w-full h-full object-cover"
@@ -111,29 +111,6 @@ export default function IntroVideo({ onComplete }) {
               </svg>
             </button>
           </div>
-        )}
-
-        {/* Skip button */}
-        {isVideoLoaded && (
-          <button
-            onClick={handleSkipIntro}
-            className="absolute top-6 right-6 bg-black bg-opacity-50 hover:bg-opacity-70 text-white px-4 py-2 rounded-full transition-all duration-300 text-sm"
-          >
-            Skip Intro
-          </button>
-        )}
-
-        {/* Developer helper - reset intro (only in development) */}
-        {process.env.NODE_ENV === 'development' && isVideoLoaded && (
-          <button
-            onClick={() => {
-              localStorage.removeItem('hasSeenIntro');
-              window.location.reload();
-            }}
-            className="absolute bottom-6 right-6 bg-blue-600 bg-opacity-50 hover:bg-opacity-70 text-white px-4 py-2 rounded-full transition-all duration-300 text-xs"
-          >
-            Reset Intro (Dev)
-          </button>
         )}
       </div>
     </div>
