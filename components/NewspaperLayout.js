@@ -85,10 +85,33 @@ const NewspaperLayout = ({ articles }) => {
     return columnArrays;
   };
 
+  // Function to truncate description to first sentence or show all if short
+  const truncateDescription = (description) => {
+    // Count words in the description
+    const wordCount = description.split(' ').length;
+    
+    // If less than 50 words, show all
+    if (wordCount < 50) {
+      return description;
+    }
+    
+    // Find the first sentence (ending with ., !, or ?)
+    const firstSentenceMatch = description.match(/^[^.!?]*[.!?]/);
+    
+    // If we found a sentence, return it, otherwise return first 50 words
+    if (firstSentenceMatch) {
+      return firstSentenceMatch[0];
+    } else {
+      // Fallback: return first 50 words if no sentence ending found
+      return description.split(' ').slice(0, 50).join(' ') + '...';
+    }
+  };
+
   const ArticleComponent = ({ article, index }) => {
     const textSizes = getTextSizes(article.size);
     const orientation = getRandomOrientation(article.size, article.originalIndex || index);
     const hasImage = article.imageurl && article.imageurl.length > 0;
+    const truncatedDescription = truncateDescription(article.description);
 
     // Get margin based on size for better spacing
     const getMarginBottom = (size) => {
@@ -121,7 +144,7 @@ const NewspaperLayout = ({ articles }) => {
                   {article.title}
                 </h3>
                 <p className={`${textSizes.description} text-gray-700`}>
-                  {article.description}
+                  {truncatedDescription}
                 </p>
               </div>
             </div>
@@ -135,7 +158,7 @@ const NewspaperLayout = ({ articles }) => {
                   {article.title}
                 </h3>
                 <p className={`${textSizes.description} text-gray-700`}>
-                  {article.description}
+                  {truncatedDescription}
                 </p>
               </div>
               <div className="flex-shrink-0 w-1/3">
@@ -171,7 +194,7 @@ const NewspaperLayout = ({ articles }) => {
                 {article.title}
               </h3>
               <p className={`${textSizes.description} text-gray-700`}>
-                {article.description}
+                {truncatedDescription}
               </p>
             </div>
           );
@@ -184,7 +207,7 @@ const NewspaperLayout = ({ articles }) => {
           {article.title}
         </h3>
         <p className={`${textSizes.description} text-gray-700`}>
-          {article.description}
+          {truncatedDescription}
         </p>
       </div>
     );
