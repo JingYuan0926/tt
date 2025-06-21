@@ -141,76 +141,143 @@ export default function Upload() {
     const previewImage = getPreviewImage();
     const title = formData.title || 'Your news title will appear here...';
     const description = formData.description || 'Your news description will appear here...';
+    const category = formData.category || 'Category';
 
-    // Small size - title and description only (no image)
+    // Function to get text sizes based on article size (matching NewspaperLayout)
+    const getTextSizes = (size) => {
+      switch (size) {
+        case 'l': return {
+          title: 'text-xl md:text-2xl font-bold leading-tight',
+          description: 'text-sm leading-relaxed',
+          image: 'h-48 md:h-64'
+        };
+        case 'm': return {
+          title: 'text-lg md:text-xl font-semibold leading-tight',
+          description: 'text-sm leading-relaxed',
+          image: 'h-40 md:h-48'
+        };
+        case 's': return {
+          title: 'text-base md:text-lg font-semibold leading-tight',
+          description: 'text-xs md:text-sm leading-relaxed',
+          image: 'h-32 md:h-40'
+        };
+        default: return {
+          title: 'text-lg font-semibold leading-tight',
+          description: 'text-sm leading-relaxed',
+          image: 'h-40'
+        };
+      }
+    };
+
+    const textSizes = getTextSizes(formData.size);
+
+    // Small size - text only with newspaper styling
     if (formData.size === 's') {
       return (
-        <div className="bg-white p-4 max-w-sm">
-          <h3 className="font-bold text-sm mb-2">
+        <div className="bg-white p-4 border-b border-gray-400 break-inside-avoid max-w-sm">
+          {/* Category tag */}
+          <div className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3 pb-2 border-b border-gray-300">
+            {category}
+          </div>
+          
+          <h3 className={`${textSizes.title} text-gray-900 mb-2`}>
             {title}
           </h3>
-          <p className="text-xs text-gray-600 line-clamp-3">
+          <p className={`${textSizes.description} text-gray-700`}>
             {description}
           </p>
-        </div>
-      );
-    }
-
-    // Medium size - image in top-left, title and description fill the rest
-    if (formData.size === 'm') {
-      return (
-        <div className="bg-white p-4 max-w-sm">
-          <div className="flex gap-3">
-            {previewImage && (
-              <div className="w-16 h-16 flex-shrink-0">
-                <img 
-                  src={previewImage} 
-                  alt="Preview" 
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              </div>
-            )}
-            <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-sm mb-2 line-clamp-2">
-                {title}
-              </h3>
-              <p className="text-xs text-gray-600 line-clamp-3">
-                {description}
-              </p>
-            </div>
+          
+          {/* Date */}
+          <div className="text-xs text-gray-500 mt-3 pt-2 border-t border-gray-200">
+            {new Date().toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            })}
           </div>
         </div>
       );
     }
 
-    // Large size - bigger image, more space for content
-    if (formData.size === 'l') {
+    // Medium size - image in top-left with newspaper styling
+    if (formData.size === 'm') {
       return (
-        <div className="bg-white p-4 max-w-md">
-          <div className="flex gap-4">
+        <div className="bg-white p-4 border-b border-gray-400 break-inside-avoid max-w-sm">
+          {/* Category tag */}
+          <div className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3 pb-2 border-b border-gray-300">
+            {category}
+          </div>
+          
+          <div className="flex gap-3">
             {previewImage && (
-              <div className="w-24 h-24 flex-shrink-0">
+              <div className="flex-shrink-0 w-1/3">
                 <img 
                   src={previewImage} 
                   alt="Preview" 
-                  className="w-full h-full object-cover"
+                  className={`w-full ${textSizes.image} object-cover`}
                   onError={(e) => {
-                    e.target.style.display = 'none';
+                    e.target.src = 'https://via.placeholder.com/300x200/f3f4f6/6b7280?text=No+Image';
                   }}
                 />
               </div>
             )}
-            <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-base mb-3">
+            <div className="flex-1">
+              <h3 className={`${textSizes.title} text-gray-900 mb-2`}>
                 {title}
               </h3>
-              <p className="text-sm text-gray-600 line-clamp-6">
+              <p className={`${textSizes.description} text-gray-700`}>
                 {description}
               </p>
             </div>
+          </div>
+          
+          {/* Date */}
+          <div className="text-xs text-gray-500 mt-3 pt-2 border-t border-gray-200">
+            {new Date().toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // Large size - image on top with newspaper styling
+    if (formData.size === 'l') {
+      return (
+        <div className="bg-white p-4 border-b border-gray-400 break-inside-avoid max-w-md">
+          {/* Category tag */}
+          <div className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3 pb-2 border-b border-gray-300">
+            {category}
+          </div>
+          
+          <div>
+            {previewImage && (
+              <img 
+                src={previewImage} 
+                alt="Preview" 
+                className={`w-full ${textSizes.image} object-cover mb-3`}
+                onError={(e) => {
+                  e.target.src = 'https://via.placeholder.com/400x300/f3f4f6/6b7280?text=No+Image';
+                }}
+              />
+            )}
+            <h3 className={`${textSizes.title} text-gray-900 mb-2`}>
+              {title}
+            </h3>
+            <p className={`${textSizes.description} text-gray-700`}>
+              {description}
+            </p>
+          </div>
+          
+          {/* Date */}
+          <div className="text-xs text-gray-500 mt-3 pt-2 border-t border-gray-200">
+            {new Date().toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            })}
           </div>
         </div>
       );

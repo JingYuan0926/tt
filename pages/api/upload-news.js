@@ -36,6 +36,7 @@ export default function handler(req, res) {
       'Social Media',
       'Education',
       'Environment',
+      'General',
       'Other'
     ];
     

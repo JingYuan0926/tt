@@ -304,5 +304,100 @@
     "ai_score": 0.82,
     "challenge": true,
     "challenge_id": "news_002"
+  },
+  {
+    "id": "gnews_20d5mkb6l_1750482056365",
+    "title": "Iran, Israel launch new attacks after Tehran rules out nuclear talks",
+    "date": "2025-06-21T03:11:15Z",
+    "description": "Iran and Israel exchanged fresh attacks early on Saturday, a day after Tehran said it would not negotiate over its nuclear program while under threat.",
+    "category": "General",
+    "imageurl": [
+      "https://img.ksl.com/slc/3090/309024/30902472.jpeg?filter=kslv2/responsive_story_lg"
+    ],
+    "link": [
+      "https://www.ksl.com/article/51332799/iran-israel-launch-new-attacks-after-tehran-rules-out-nuclear-talks"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "s",
+    "ai_score": 0.7592522307306138,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_lryzfeaj1_1750482056365",
+    "title": "Chef Anne Burrell's death investigated as possible drug overdose, law enforcement officials say",
+    "date": "2025-06-21T00:29:32Z",
+    "description": "A law enforcement official says Chef Anne Burrell's death is being investigated as a possible drug overdose.",
+    "category": "General",
+    "imageurl": [
+      "https://cdn.abcotvs.com/dip/images/16776076_Anne-Burrell-img.jpg?w=1600"
+    ],
+    "link": [
+      "https://6abc.com/post/chef-anne-burrells-death-investigated-possible-drug-overdose-law-enforcement-officials-say/16802195/"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "m",
+    "ai_score": 0.6136726768179671,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_ou81d2g9d_1750482056365",
+    "title": "'Jaw-Dropping' Photo Of Sophie Cunningham Has Everyone's Attention",
+    "date": "2025-06-21T00:00:57Z",
+    "description": "Don't look now, but Sophie Cunningham is quickly becoming one of the most popular players in the WNBA. Prior to the 2025 WNBA season, the Indiana Fever acquired Cunningham from the Phoenix Mercury in a four-team trade. It hasn't taken long for her to win over the fans in Indiana. Not only has ...",
+    "category": "General",
+    "imageurl": [
+      "https://media.zenfs.com/en/the_spun_articles_751/9cfdfa2849c58f918c7eba50cd9e79fe"
+    ],
+    "link": [
+      "https://sports.yahoo.com/article/jaw-dropping-photo-sophie-cunningham-221145126.html"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "m",
+    "ai_score": 0.7184890137376918,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_r5su8r8c1_1750482056365",
+    "title": "Cost, 'shoddy' police work, 'no justice' for victim",
+    "date": "2025-06-20T23:42:28Z",
+    "description": "Juror #1, the foreman in the Karen Read retrial, told the Herald there was no \"a-ha moment\" in the grueling case that he said wasted the taxpayers' money on paper-thin evidence that failed to bring any comfort to the victim's family.",
+    "category": "General",
+    "imageurl": [
+      "https://www.bostonherald.com/wp-content/uploads/2025/06/READsc010.jpg?w=1024&h=674"
+    ],
+    "link": [
+      "https://www.bostonherald.com/2025/06/20/karen-read-jury-foreman-breaks-silence-after-grueling-retrial/"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "m",
+    "ai_score": 0.6023263377668739,
+    "challenge": false,
+    "challenge_id": null
+  },
+  {
+    "id": "gnews_rzr5fajji_1750482056365",
+    "title": "Anne Burrell Memorial Service Attended by Food Network Stars",
+    "date": "2025-06-20T23:34:14Z",
+    "description": "The Food Network chef, who died Tuesday at 55, was remembered in a star-studded service that sent her off with a singalong.",
+    "category": "General",
+    "imageurl": [
+      "https://static01.nyt.com/images/2025/06/20/multimedia/20FD-burrell-memorial-pqkf/20FD-burrell-memorial-pqkf-facebookJumbo.jpg"
+    ],
+    "link": [
+      "https://www.nytimes.com/2025/06/20/dining/anne-burrell-memorial-service.html"
+    ],
+    "comments": [],
+    "verification_status": false,
+    "size": "m",
+    "ai_score": 0.692561612172234,
+    "challenge": false,
+    "challenge_id": null
   }
-] 
+]
