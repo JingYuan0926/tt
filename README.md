@@ -10,7 +10,10 @@
 
 Check out the live demo of **Tea Time**: 👉 [Click here to try it out](https://tt-ruby-chi.vercel.app)
 
+ 
+## Demo Video
 
+https://github.com/user-attachments/assets/c3236e43-19b6-4966-934c-f485a9f14714
 
 ## Inspiration: How We Came Up With This Idea 💡
 
@@ -29,7 +32,8 @@ This exploration led us to design the platform Tea Time as a responsive PWA with
 - **Generates bias-analysis reports** on each article, flagging potential slants and offering reading guidance  
 - **Highlights “the bigger picture”** to prevent misinterpretation by using AI  
 - **Implements KYC verification** to ensure user accountability and constructive engagement  
-- **Encrypts user data** using elliptic curve cryptography for secure storage in the database  
+- **Encrypts user data** using elliptic curve cryptography for secure storage in the database
+- **Leverages OpenAI** to fetch and suggest related news and context, helping users explore more about the topic   
 
 
 ## Getting Started 🚀
@@ -93,6 +97,45 @@ npm run dev
 - **AI for Multi-News Source Aggregation**  
   `/pages/api/generate-sources.js`
   
+# TT  Web Extension
+
+A browser extension powered by OpenAI to enhance user productivity with intelligent features same as our platform, just a lightweight version that will work anywhere, anytime!
+
+## 🚀 Getting Started
+
+Follow these steps to set up and run the extension locally.
+
+---
+
+### 1. Clone the Repository
+
+Clone the project from GitHub:
+
+```bash
+git clone https://github.com/JingYuan0926/tt.git
+cd tt
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Set Up Environment Variables
+
+Create a .env file in the root directory and add the following:
+```
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+4. Run the Development Server
+
+Start the extension in development mode:
+```
+npm run dev
+```
+
+Note: The web application can be accessed via [the deployed link](https://tt-ruby-chi.vercel.app/), this setup is to run the web extension only!
 
 ## Team Members 👥
 
@@ -111,5 +154,8 @@ npm run dev
 - **Cedric Chung Theng Fung**  
   - *Role*: Full Stack  
   - [LinkedIn](https://www.linkedin.com/in/cedric-chung-2756b4310/)
+
+
+
 
 
