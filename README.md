@@ -96,9 +96,9 @@ npm run dev
 - **AI for Multi-News Source Aggregation**  
   `/pages/api/generate-sources.js`
   
-# TT Extension
+# TT  Web Extension
 
-A browser extension powered by OpenAI to enhance user productivity with intelligent features.
+A browser extension powered by OpenAI to enhance user productivity with intelligent features same as our platform, just a lightweight version that will work anywhere, anytime!
 
 ## 🚀 Getting Started
 
