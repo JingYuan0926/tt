@@ -142,28 +142,32 @@ export default function Subscribe() {
             <div className="w-24 h-1 bg-gray-300 mx-auto mb-8"></div>
 
             {/* Billing Toggle */}
-            <div className="flex items-center justify-center mb-8">
-              <span className={`mr-3 ${billingCycle === 'monthly' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>
-                Monthly
-              </span>
-              <button
-                onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-                className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-              <span className={`ml-3 ${billingCycle === 'yearly' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>
-                Yearly
-              </span>
-              {billingCycle === 'yearly' && (
-                <span className="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                  Save 17%
+            <div className="flex items-center justify-center mb-8 relative">
+              <div className="flex items-center gap-4">
+                <span className={`${billingCycle === 'monthly' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>
+                  Monthly
                 </span>
-              )}
+                <button
+                  onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+                  className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+                <span className={`${billingCycle === 'yearly' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>
+                  Yearly
+                </span>
+              </div>
+              <span className={`absolute left-1/2 ml-32 text-xs font-medium px-2.5 py-0.5 rounded-full transition-all duration-200 ${
+                billingCycle === 'yearly' 
+                  ? 'bg-green-100 text-green-800 opacity-100' 
+                  : 'bg-transparent text-transparent opacity-0'
+              }`}>
+                Save 17%
+              </span>
             </div>
           </motion.div>
 
@@ -256,7 +260,7 @@ export default function Subscribe() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-center mt-12"
+            className="text-center mt-20"
           >
             <p className="text-gray-600 mb-4">
               Have an existing plan? 
