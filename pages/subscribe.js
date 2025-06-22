@@ -1,10 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 export default function Subscribe() {
   const [billingCycle, setBillingCycle] = useState('monthly');
   const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const router = useRouter();
+
+  // Check authentication status on component mount
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      if (typeof window !== 'undefined') {
+        const storedUser = localStorage.getItem('currentUser');
+        const isStoredLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        
+        if (isStoredLoggedIn && storedUser) {
+          setIsLoggedIn(true);
+          setCurrentUser(JSON.parse(storedUser));
+        } else {
+          setIsLoggedIn(false);
+          setCurrentUser(null);
+        }
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
 
   const plans = [
     {
@@ -48,6 +73,13 @@ export default function Subscribe() {
   ];
 
   const handleSubscribe = async (planName) => {
+    // Check if user is logged in for both Free and Pro plans
+    if (!isLoggedIn || !currentUser) {
+      // Show modal instead of alert
+      setShowLoginModal(true);
+      return;
+    }
+
     if (planName === 'Free') {
       console.log('Subscribing to Free plan');
       // Handle free plan signup (maybe redirect to registration)
@@ -58,8 +90,9 @@ export default function Subscribe() {
       setLoading(true);
       
       try {
-        // Redirect to API endpoint that will handle Stripe checkout
-        window.location.href = `/api/create-checkout-session?billingCycle=${billingCycle}`;
+        // Redirect directly to Stripe payment link
+        // The success URL is already configured in Stripe Dashboard to redirect to /profile
+        window.location.href = 'https://buy.stripe.com/test_fZu3cx1KI1HJ3lD4TSdby01';
       } catch (error) {
         console.error('Error:', error);
         alert('Something went wrong. Please try again.');
@@ -78,13 +111,8 @@ export default function Subscribe() {
       <div className="min-h-screen bg-white pt-2">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
           
-          {/* Header - matching Download page style */}
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center border-b-4 border-gray-900 pb-6 mb-8 animate-in slide-in-from-top duration-700"
-          >
+          {/* Header - matching News page style with bottom-to-top animation */}
+          <div className="text-center border-b-4 border-gray-900 pb-6 mb-8 animate-in slide-in-from-bottom duration-700">
             <h1 className="text-5xl md:text-6xl font-serif font-bold text-gray-900 mb-2">PRICING</h1>
             <div className="flex justify-center items-center gap-4 text-sm text-gray-600 font-mono">
               <span>SUBSCRIPTION</span>
@@ -92,8 +120,14 @@ export default function Subscribe() {
               <span>PRICING TIERS</span>
               <span>•</span>
               <span>AI-POWERED ANALYSIS</span>
+              {isLoggedIn && currentUser && (
+                <>
+                  <span>•</span>
+                  <span>LOGGED IN AS {currentUser.username?.toUpperCase()}</span>
+                </>
+              )}
             </div>
-          </motion.div>
+          </div>
 
           {/* Subtitle */}
           <motion.div
@@ -103,33 +137,37 @@ export default function Subscribe() {
             className="text-center mb-12"
           >
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900 mb-4">
-              Get Tea Time Pro that helps you understand media perspectives and make informed decisions
+            Get Tea Time Pro — understand media bias and decide smarter.
             </h2>
             <div className="w-24 h-1 bg-gray-300 mx-auto mb-8"></div>
 
             {/* Billing Toggle */}
-            <div className="flex items-center justify-center mb-8">
-              <span className={`mr-3 ${billingCycle === 'monthly' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>
-                Monthly
-              </span>
-              <button
-                onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-                className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-              <span className={`ml-3 ${billingCycle === 'yearly' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>
-                Yearly
-              </span>
-              {billingCycle === 'yearly' && (
-                <span className="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                  Save 17%
+            <div className="flex items-center justify-center mb-8 relative">
+              <div className="flex items-center gap-4">
+                <span className={`${billingCycle === 'monthly' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>
+                  Monthly
                 </span>
-              )}
+                <button
+                  onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+                  className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+                <span className={`${billingCycle === 'yearly' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>
+                  Yearly
+                </span>
+              </div>
+              <span className={`absolute left-1/2 ml-32 text-xs font-medium px-2.5 py-0.5 rounded-full transition-all duration-200 ${
+                billingCycle === 'yearly' 
+                  ? 'bg-green-100 text-green-800 opacity-100' 
+                  : 'bg-transparent text-transparent opacity-0'
+              }`}>
+                Save 17%
+              </span>
             </div>
           </motion.div>
 
@@ -208,7 +246,9 @@ export default function Subscribe() {
                       Processing...
                     </div>
                   ) : (
-                    plan.buttonText
+                    <>
+                      {plan.buttonText}
+                    </>
                   )}
                 </motion.button>
               </motion.div>
@@ -220,7 +260,7 @@ export default function Subscribe() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-center mt-12"
+            className="text-center mt-20"
           >
             <p className="text-gray-600 mb-4">
               Have an existing plan? 
@@ -231,6 +271,59 @@ export default function Subscribe() {
           </motion.div>
         </div>
       </div>
+
+      {/* Login Required Modal */}
+      {showLoginModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowLoginModal(false);
+            }
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl"
+          >
+            <div className="text-center mb-6">
+              <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Authentication Required</h3>
+              <p className="text-gray-600">
+                Please login or create an account to subscribe to Tea Time plans.
+              </p>
+            </div>
+            
+            <div className="flex gap-3">
+              <motion.button
+                onClick={() => setShowLoginModal(false)}
+                className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl transition-colors duration-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Close
+              </motion.button>
+              <motion.button
+                onClick={() => {
+                  setShowLoginModal(false);
+                  router.push('/profile');
+                }}
+                className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors duration-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Sign In/Sign Up
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </>
   );
 }

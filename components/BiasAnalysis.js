@@ -192,7 +192,7 @@ export default function BiasAnalysis({ article }) {
     <>
       {/* Bias Analysis Button - Fixed Position */}
       <motion.div 
-        className="fixed right-12 top-[40%] z-30"
+        className="fixed left-4 bottom-20 sm:right-12 sm:left-auto sm:top-[40%] sm:bottom-auto z-30"
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 1.6 }}
