@@ -8,7 +8,7 @@
 ![Image](https://github.com/JingYuan0926/tt/blob/main/public/News.png?raw=true)
 
 
-Check out the live demo of **Tea Time**: 👉 [Click here to try it out](https://tt-ruby-chi.vercel.app)
+Check out the live demo of **Tea Time**: 👉 [Click here to try it out](https://tt-khaki.vercel.app/)
 
  
 ## Demo Video
