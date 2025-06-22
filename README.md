@@ -111,5 +111,10 @@ npm run dev
 - **Cedric Chung Theng Fung**  
   - *Role*: Full Stack  
   - [LinkedIn](https://www.linkedin.com/in/cedric-chung-2756b4310/)
+ 
+##Demo Video
+https://github.com/user-attachments/assets/c3236e43-19b6-4966-934c-f485a9f14714
+
+
 
 
