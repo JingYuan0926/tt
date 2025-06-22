@@ -384,7 +384,7 @@ export default function CommentsSection({ article, onAddComment }) {
 
       {/* Comments Button - Fixed Position */}
       <motion.div 
-        className="fixed right-6 top-1/2 transform -translate-y-1/2 z-30"
+        className="fixed left-4 bottom-4 sm:right-6 sm:left-auto sm:top-1/2 sm:bottom-auto sm:transform sm:-translate-y-1/2 z-30"
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 1.8 }}
