@@ -134,7 +134,7 @@ Start the extension in development mode:
 npm run dev
 ```
 
-Note: The web application can be accessed via [the deploy link](https://tt-ruby-chi.vercel.app/), this setup is to run the web extension only!
+Note: The web application can be accessed via [the deployed link](https://tt-ruby-chi.vercel.app/), this setup is to run the web extension only!
 
 ## Team Members 👥
 
