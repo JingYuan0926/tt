@@ -96,6 +96,45 @@ npm run dev
 - **AI for Multi-News Source Aggregation**  
   `/pages/api/generate-sources.js`
   
+# TT Extension
+
+A browser extension powered by OpenAI to enhance user productivity with intelligent features.
+
+## 🚀 Getting Started
+
+Follow these steps to set up and run the extension locally.
+
+---
+
+### 1. Clone the Repository
+
+Clone the project from GitHub:
+
+```bash
+git clone https://github.com/JingYuan0926/tt.git
+cd tt
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Set Up Environment Variables
+
+Create a .env file in the root directory and add the following:
+```
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+4. Run the Development Server
+
+Start the extension in development mode:
+```
+npm run dev
+```
+
+Note: The web application can be accessed via [the deploy link](https://tt-ruby-chi.vercel.app/), this setup is to run the web extension only!
 
 ## Team Members 👥
 
