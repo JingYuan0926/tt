@@ -256,10 +256,10 @@ export default function Details() {
                 </div>
               )}
 
-              {/* AI Generated Sources */}
+
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-blue-800 text-sm">AI-Generated Related Sources:</h4>
+                  <h4 className="font-medium text-blue-800 text-sm">AI-Aggregated Related Sources:</h4>
                   {!loadingSources && !sourcesError && (
                     <Button
                       size="sm"
