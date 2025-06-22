@@ -66,23 +66,33 @@ npm run dev
 - **Progressive Web App (PWA)** support for any device including web and mobile
 
 
-## Important Endpoints
-- **NLP for Comments Processing**
-/pages/api/analyzeComments.js
-- **Computer Vision for Document Parsing**
-/pages/api/parse-ic-documents.js
-- **Multi-Platform Support**
-/extension
-- **Stripe Payment for Secure Checkout**
-/pages/api/create-checkout-session.js
-- **Elliptic Curve Cryptography encryption**
-/lib/cryptography.js
-- **MongoDB Database Storage**
-/pages/api/comments.js | pages/api/fetch-news.js | pages/api/register.js
-- **LLM for News Analysis and Recommendation**
-/pages/api/analyze-news.js
-- **AI for Multi-News Source Aggregation**
-/pages/api/generate-sources.js
+### Important Endpoints
+- **NLP for Comments Processing**  
+  `/pages/api/analyzeComments.js`
+
+- **Computer Vision for Document Parsing**  
+  `/pages/api/parse-ic-documents.js`
+
+- **Multi-Platform Support**  
+  `/extension`
+
+- **Stripe Payment for Secure Checkout**  
+  `/pages/api/create-checkout-session.js`
+
+- **Elliptic Curve Cryptography encryption**  
+  `/lib/cryptography.js`
+
+- **MongoDB Database Storage**  
+  `/pages/api/comments.js`  
+  `/pages/api/fetch-news.js`  
+  `/pages/api/register.js`
+
+- **LLM for News Analysis and Recommendation**  
+  `/pages/api/analyze-news.js`
+
+- **AI for Multi-News Source Aggregation**  
+  `/pages/api/generate-sources.js`
+  
 
 ## Team Members 👥
 
