@@ -32,7 +32,8 @@ This exploration led us to design the platform Tea Time as a responsive PWA with
 - **Generates bias-analysis reports** on each article, flagging potential slants and offering reading guidance  
 - **Highlights “the bigger picture”** to prevent misinterpretation by using AI  
 - **Implements KYC verification** to ensure user accountability and constructive engagement  
-- **Encrypts user data** using elliptic curve cryptography for secure storage in the database  
+- **Encrypts user data** using elliptic curve cryptography for secure storage in the database
+- **Leverages OpenAI** to fetch and suggest related news and context, helping users explore more about the topic   
 
 
 ## Getting Started 🚀
