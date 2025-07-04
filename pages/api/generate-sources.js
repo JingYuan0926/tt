@@ -39,7 +39,7 @@ Example format:
 Make sure the URLs are realistic and follow proper domain structures for credible news sources, academic institutions, government sites, or official organizations. The sources should be directly relevant to the article topic.`;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
